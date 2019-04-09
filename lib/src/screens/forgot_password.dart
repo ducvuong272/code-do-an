@@ -10,8 +10,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.red,
-      width: 500,
-      height: 500,
     );
   }
 }

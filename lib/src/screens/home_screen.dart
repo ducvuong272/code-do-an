@@ -1,3 +1,5 @@
+import 'package:do_an_tn/src/screens/post_detail_screen.dart';
+import 'package:do_an_tn/src/widgets/home_screen_post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:dots_indicator/dots_indicator.dart';
@@ -21,83 +23,120 @@ class _HomeScreenState extends State<HomeScreen> {
     'assets/images/6.png',
   ];
   int _pageIndex = 0;
+  ScrollController _scrollController;
+
+  @override
+  void initState() {
+    _scrollController = ScrollController(
+      initialScrollOffset: 0.0,
+      keepScrollOffset: true,
+    )..addListener(() {
+        print(_scrollController.offset ==
+            _scrollController.position.maxScrollExtent);
+      });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
     return Scaffold(
       body: Container(
-        color: Color(0xffe8ebef),
+        color: Color(0xffb5bfce),
         child: Stack(
           children: <Widget>[
-            ListView(
-              children: <Widget>[
-                Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.only(bottom: 5),
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(50.0),
+            Container(
+              color: Colors.white,
+              padding: EdgeInsets.only(bottom: 5),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    height: 150.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(50.0),
+                      ),
+                    ),
+                    margin: EdgeInsets.only(
+                      top: 55.0,
+                      left: 10.0,
+                      right: 10.0,
+                    ),
+                    child: Swiper(
+                      autoplay: true,
+                      itemCount: _imagePaths.length,
+                      controller: SwiperController(),
+                      index: _pageIndex,
+                      itemBuilder: (context, index) {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: Image.asset(
+                            _imagePaths[index],
+                            fit: BoxFit.fill,
                           ),
-                        ),
-                        margin: EdgeInsets.only(
-                          top: 50.0,
-                          left: 10.0,
-                          right: 10.0,
-                        ),
-                        height: 200.0,
-                        child: Swiper(
-                          autoplay: true,
-                          itemCount: _imagePaths.length,
-                          controller: SwiperController(),
-                          index: _pageIndex,
-                          itemBuilder: (context, index) {
-                            return ClipRRect(
-                              borderRadius: BorderRadius.circular(10.0),
-                              child: Image.asset(
-                                _imagePaths[index],
+                        );
+                      },
+                      onIndexChanged: (index) {
+                        setState(() {
+                          _pageIndex = index;
+                        });
+                      },
+                    ),
+                  ),
+                  DotsIndicator(
+                    dotShape: CircleBorder(
+                      side: BorderSide(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    dotColor: Colors.white24,
+                    numberOfDot: _imagePaths.length,
+                    dotActiveColor: Colors.grey,
+                    dotSpacing: EdgeInsets.all(3.0),
+                    position: _pageIndex,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                  ),
+                  Container(
+                    color: Colors.white,
+                    height: 438,
+                    child: GridView.count(
+                      crossAxisCount: 2,
+                      controller: _scrollController,
+                      physics: ScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      childAspectRatio: 0.9,
+                      children: List.generate(
+                        50,
+                        (index) {
+                          return GestureDetector(
+                            child: HomeScreenPost(
+                              postTitle:
+                                  'Tiêu đề của bài đăng $index Tiêu đề của bài đăng $index',
+                              postDetail:
+                                  'Nội dung của bài đăng (chi tiết bài đăng/comment) ',
+                              postImage: Image.asset(
+                                'assets/images/1.png',
                                 fit: BoxFit.fill,
                               ),
-                            );
-                          },
-                          onIndexChanged: (index) {
-                            setState(() {
-                              _pageIndex = index;
-                            });
-                          },
-                        ),
+                            ),
+                            onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PostDetailScreen(
+                                          title:
+                                              'Tiêu đề của bài đăng $index Tiêu đề của bài đăng $index',
+                                        ),
+                                  ),
+                                ),
+                          );
+                        },
                       ),
-                      DotsIndicator(
-                        dotShape: CircleBorder(
-                          side: BorderSide(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        dotColor: Colors.white24,
-                        numberOfDot: _imagePaths.length,
-                        dotActiveColor: Colors.grey,
-                        dotSpacing: EdgeInsets.all(3.0),
-                        position: _pageIndex,
-                      ),
-                      // GridView.count(
-                      //   crossAxisCount: 2,
-                      // ),
-                      // Padding(
-                      //   padding: EdgeInsets.only(top: 50),
-                      // ),
-                      // Container(
-                      //   margin: EdgeInsets.only(top: 10),
-                      //   height: 900,
-                      //   width: MediaQuery.of(context).size.width,
-                      //   color: Colors.red,
-                      // ),
-                    ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             Container(
               padding: EdgeInsets.all(7.0),
@@ -115,22 +154,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    // Container(
-                    //   height: 45.0,
-                    //   width: 300.0,
-                    //   child: TextField(
-                    //     decoration: InputDecoration(
-                    //       border: InputBorder.none,
-                    //       fillColor: Colors.red,
-                    //       hintText: 'Tìm kiếm món ăn, địa điểm,... ',
-                    //       hintStyle: TextStyle(color: Colors.black54),
-                    //       prefixIcon: Icon(
-                    //         Icons.search,
-                    //         color: Colors.black54,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
                     Row(
                       children: <Widget>[
                         Icon(
@@ -162,21 +185,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      // bottomNavigationBar: BottomAppBar(
-      //   color: Colors.green,
-      //   shape: CircularNotchedRectangle(),
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //     mainAxisSize: MainAxisSize.max,
-      //     children: <Widget>[
-      //       IconButton(icon: Icon(Icons.ac_unit), onPressed: () {}),
-      //       IconButton(icon: Icon(Icons.ac_unit), onPressed: () {}),
-      //       IconButton(icon: Icon(Icons.ac_unit), onPressed: () {}),
-      //       IconButton(icon: Icon(Icons.ac_unit), onPressed: () {}),
-      //       IconButton(icon: Icon(Icons.ac_unit), onPressed: () {}),
-      //     ],
-      //   ),
-      // ),
     );
   }
 }

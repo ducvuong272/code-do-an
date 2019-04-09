@@ -1,17 +1,20 @@
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/home_dashboard.dart';
+import 'package:do_an_tn/src/screens/post_detail_screen.dart';
 import 'package:do_an_tn/src/services/api_handle.dart';
 import 'package:flutter/material.dart';
 import 'package:do_an_tn/src/utils/export_screen.dart';
+import 'dart:convert';
 
 // void main() async {
-//   ApiHandler apiHandleer = ApiHandler();
+//   ApiHandler apiHandler = ApiHandler();
 //   User _user = User(
-//     userName: "morpheus",
-//     job: "leader",
+//     userName: "thainguyen",
+//     password: "123456",
 //   );
-//   final response = await apiHandleer.postUser(_user);
-//   print(response);
+//   var response = await apiHandler.checkLogin(_user);
+//   Map map = jsonDecode(response);
+//   print(map['code']);
 // }
 
 void main() {

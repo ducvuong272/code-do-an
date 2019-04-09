@@ -1,18 +1,18 @@
 class User {
   String userName;
-  String job;
+  String password;
 
-  User({this.job, this.userName});
+  User({this.password, this.userName});
 
   User.fromJson(Map<String, dynamic> json) {
-    userName = json['name'];
-    job = json['job'];
+    userName = json['TenTaiKhoan'];
+    password = json['MatKhau'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.userName;
-    data['job'] = this.job;
+    data['TenTaiKhoan'] = this.userName;
+    data['MatKhau'] = this.password;
     return data;
   }
 }
