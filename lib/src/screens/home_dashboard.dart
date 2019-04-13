@@ -71,7 +71,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Icons.notification_important,
               color: _index == 2 ? Colors.purple : Colors.black38,
             ),
-            title: Text('Thông báo'),
+            title: Text('Địa điểm của tôi'),
           ),
           BottomNavigationBarItem(
             icon: Icon(

@@ -105,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       controller: _scrollController,
                       physics: ScrollPhysics(),
                       scrollDirection: Axis.vertical,
-                      childAspectRatio: 0.9,
+                      // childAspectRatio: 0.9,
                       children: List.generate(
                         50,
                         (index) {
@@ -163,18 +163,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           'Tìm kiếm món ăn, địa điểm...',
                           style: TextStyle(fontSize: 16, color: Colors.black45),
                         ),
-                        Container(
-                          margin: EdgeInsets.only(left: 80.0),
-                          child: Row(
-                            children: <Widget>[
-                              Text(
-                                'Đà Nẵng',
-                                style: TextStyle(fontSize: 16.0),
-                              ),
-                              Icon(Icons.arrow_drop_down),
-                            ],
-                          ),
-                        )
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          'Đà Nẵng',
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                        Icon(Icons.arrow_drop_down),
                       ],
                     ),
                   ],
