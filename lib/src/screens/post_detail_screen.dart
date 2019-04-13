@@ -1,3 +1,4 @@
+import 'package:do_an_tn/src/widgets/comment_section.dart';
 import 'package:flutter/material.dart';
 
 class PostDetailScreen extends StatefulWidget {
@@ -14,10 +15,11 @@ class PostDetailScreenState extends State<PostDetailScreen>
   @override
   Widget build(BuildContext context) {
     TabController _tabController = TabController(vsync: this, length: 5);
+    ScrollController _scrollController = ScrollController();
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100),
+        preferredSize: Size.fromHeight(50),
         child: AppBar(
           elevation: 0.0,
           backgroundColor: Colors.red,
@@ -29,43 +31,42 @@ class PostDetailScreenState extends State<PostDetailScreen>
             ),
           ),
           centerTitle: false,
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(40),
-            child: Container(
-              child: TabBar(
-                indicatorWeight: 0.1,
-                controller: _tabController,
-                tabs: <Widget>[
-                  Tab(
-                    child: Text(
-                      'Tải ảnh',
-                      strutStyle: StrutStyle(fontSize: 12),
-                    ),
-                  ),
-                  Tab(
-                    child: Text('Check-in'),
-                  ),
-                  Tab(
-                    child: Text(
-                      'Bình luận',
-                      strutStyle: StrutStyle(),
-                    ),
-                  ),
-                  Tab(
-                    child: Text('Lưu lại'),
-                  ),
-                  Tab(
-                    child: Text('Chia sẻ'),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // bottom: PreferredSize(
+          //   preferredSize: Size.fromHeight(40),
+          //   child: Container(
+          //     child: TabBar(
+          //       indicatorWeight: 0.1,
+          //       controller: _tabController,
+          //       tabs: <Widget>[
+          //         Tab(
+          //           child: Text(
+          //             'Tải ảnh',
+          //           ),
+          //         ),
+          //         Tab(
+          //           child: Text('Check-in'),
+          //         ),
+          //         Tab(
+          //           child: Text(
+          //             'Bình luận',
+          //           ),
+          //         ),
+          //         Tab(
+          //           child: Text('Lưu lại'),
+          //         ),
+          //         Tab(
+          //           child: Text('Chia sẻ'),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ),
       ),
       body: Container(
         color: Color(0xffc0c1c4),
         child: ListView(
+          controller: _scrollController,
           children: <Widget>[
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,20 +146,20 @@ class PostDetailScreenState extends State<PostDetailScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
                             _postStatus(52, 'Bình luận'),
                             _postStatus(124, 'Hình ảnh'),
                             _postStatus(15, 'Check-in'),
                             _postStatus(22, 'Lưu lại'),
-                            Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: CircleAvatar(
-                                backgroundColor: Color(0xff187a1d),
-                                child: Text(
-                                  '6.9',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
+                            CircleAvatar(
+                              backgroundColor: Color(0xff187a1d),
+                              radius: 18,
+                              child: Text(
+                                '6.9',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
                                 ),
                               ),
                             ),
@@ -193,7 +194,7 @@ class PostDetailScreenState extends State<PostDetailScreen>
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                    top: 10,
+                    top: 5,
                   ),
                   child: Container(
                     width: MediaQuery.of(context).size.width,
@@ -218,38 +219,44 @@ class PostDetailScreenState extends State<PostDetailScreen>
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 5),
-                  child: Container(
-                    color: Colors.white,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        _postInfor(
-                          Icons.restaurant_menu,
-                          'Xem thực đơn',
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          size: 15,
-                        ),
-                      ],
+                  child: GestureDetector(
+                    onTap: () => print('xem thực đơn'),
+                    child: Container(
+                      color: Colors.white,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          _postInfor(
+                            Icons.restaurant_menu,
+                            'Xem thực đơn',
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            size: 15,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 5),
-                  child: Container(
-                    color: Colors.white,
-                    padding: EdgeInsets.only(
-                      top: 15,
-                      bottom: 15,
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Xem tất cả thông tin',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.blue,
-                          fontWeight: FontWeight.w500,
+                  child: GestureDetector(
+                    onTap: () => print('xem thông tin'),
+                    child: Container(
+                      color: Colors.white,
+                      padding: EdgeInsets.only(
+                        top: 15,
+                        bottom: 15,
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Xem tất cả thông tin',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.blue,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ),
@@ -277,16 +284,26 @@ class PostDetailScreenState extends State<PostDetailScreen>
                             Container(
                               padding: EdgeInsets.only(
                                 right: 5,
-                                top: 15,
-                                bottom: 15,
                               ),
-                              child: Text(
-                                '6.9 Trung bình',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.green,
-                                ),
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    '6.9',
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Trung bình',
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -335,6 +352,10 @@ class PostDetailScreenState extends State<PostDetailScreen>
                     ),
                   ),
                 ),
+                CommentSection(
+                  postTitle: widget.title,
+                  scrollController: _scrollController,
+                ),
               ],
             ),
           ],
@@ -378,7 +399,7 @@ class PostDetailScreenState extends State<PostDetailScreen>
   Widget _postInfor(IconData iconData, String infor) {
     return Container(
       padding: EdgeInsets.only(
-        top: 5,
+        top: 10,
         bottom: 10,
       ),
       child: Row(
@@ -410,27 +431,24 @@ class PostDetailScreenState extends State<PostDetailScreen>
   }
 
   Widget _postStatus(int data, String title) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-      child: Column(
-        children: <Widget>[
-          Text(
-            '$data',
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: 20,
-            ),
+    return Column(
+      children: <Widget>[
+        Text(
+          '$data',
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
           ),
-          Text(
-            '$title',
-            style: TextStyle(
-              fontSize: 17,
-              color: Color(0xff6e7077),
-              fontWeight: FontWeight.w500,
-            ),
+        ),
+        Text(
+          '$title',
+          style: TextStyle(
+            fontSize: 15,
+            color: Color(0xff6e7077),
+            fontWeight: FontWeight.w500,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

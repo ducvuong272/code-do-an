@@ -1,3 +1,4 @@
+import 'package:do_an_tn/src/widgets/user_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -29,25 +30,7 @@ class UserAccountScreen extends StatelessWidget {
                 children: <Widget>[
                   Row(
                     children: <Widget>[
-                      Container(
-                        height: 50,
-                        width: 30,
-                        margin: EdgeInsets.only(right: 10),
-                        child: Center(
-                          child: Text(
-                            'V',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                          // borderRadius: BorderRadius.circular(50),
-                          shape: BoxShape.circle,
-                          color: Colors.purple,
-                        ),
-                      ),
+                      UserAvatar(),
                       Text(
                         'Vuong Do',
                         style: TextStyle(

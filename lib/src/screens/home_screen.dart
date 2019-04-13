@@ -24,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   int _pageIndex = 0;
   ScrollController _scrollController;
+  double androidBottomBarHeigh = 72.0;
 
   @override
   void initState() {
@@ -47,7 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             Container(
               color: Colors.white,
-              padding: EdgeInsets.only(bottom: 5),
               child: Column(
                 children: <Widget>[
                   Container(
@@ -95,12 +95,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     dotSpacing: EdgeInsets.all(3.0),
                     position: _pageIndex,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 10),
-                  ),
                   Container(
                     color: Colors.white,
-                    height: 438,
+                    height: MediaQuery.of(context).size.height -
+                        205 -
+                        androidBottomBarHeigh,
                     child: GridView.count(
                       crossAxisCount: 2,
                       controller: _scrollController,

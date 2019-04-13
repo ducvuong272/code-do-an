@@ -15,4 +15,12 @@ class ApiHandler {
     print(json.encode(user));
     return response.body;
   }
+
+  Future<String> getAllPost() async {
+    final response = await http.get(
+      kPostUrl,
+      headers: kApiHeader,
+    );
+    return response.body;
+  }
 }
