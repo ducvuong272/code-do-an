@@ -9,16 +9,18 @@ class LoginNotifyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(
-            Icons.lock,
-            size: 100,
-          ),
-          _loginNotifyButton(context),
-        ],
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.lock,
+              size: 100,
+            ),
+            _loginNotifyButton(context),
+          ],
+        ),
       ),
     );
   }

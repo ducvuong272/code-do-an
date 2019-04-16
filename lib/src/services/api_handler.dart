@@ -6,7 +6,7 @@ import 'package:do_an_tn/src/constants.dart';
 
 class ApiHandler {
   Future<String> checkLogin(User user) async {
-    final apiUrl = kUserUrl;
+    final apiUrl = kLoginUrl;
     final response = await http.post(
       apiUrl,
       body: json.encode(user.toJson()),
@@ -17,9 +17,13 @@ class ApiHandler {
 
   Future<String> getAllPost() async {
     final response = await http.get(
-      kPostUrl,
+      kAllPostsUrl,
       headers: kApiHeader,
     );
     return response.body;
+  }
+
+  Future<http.Response> checkSignUp(){
+    final apiUrl = kSingUpUrl;
   }
 }

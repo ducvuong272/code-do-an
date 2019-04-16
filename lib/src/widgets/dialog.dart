@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CustomDialog {
-  showCustomDialog(BuildContext context, String msg, bool barrierDismissible) {
+  showCustomDialog(BuildContext context, String msg, bool barrierDismissible,
+      bool showprogressIndicator) {
     showDialog(
       context: context,
       barrierDismissible: barrierDismissible,
@@ -10,7 +11,9 @@ class CustomDialog {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  CircularProgressIndicator(),
+                  showprogressIndicator
+                      ? CircularProgressIndicator()
+                      : Container(),
                   Padding(
                     padding: EdgeInsets.only(top: 10),
                     child: Text(msg),

@@ -136,19 +136,30 @@ class _LoginScreenState extends State<LoginScreen> {
                   RaisedButton(
                     color: Color(0xff50ce5f),
                     onPressed: () {
-                      print('object');
                       CustomDialog _dialog = CustomDialog();
-                      _dialog.showCustomDialog(context, 'Loading...', false);
-                      Future.delayed(Duration(seconds: 1), () {
-                        _dialog.hideCustomDialog(context);
-                        loginBloc.login(
-                            _userNameController.text,
-                            _passwordController.text,
-                            _onLoginSuccess(context), () {
+                      _dialog.showCustomDialog(
+                        context,
+                        'Loading...',
+                        false,
+                        true,
+                      );
+                      loginBloc.login(
+                        _userNameController.text.trim(),
+                        _passwordController.text,
+                        () {
                           _dialog.hideCustomDialog(context);
-                          _dialog.showCustomDialog(context, 'Login fail', true);
-                        });
-                      });
+                          _onLoginSuccess(context);
+                        },
+                        () {
+                          _dialog.hideCustomDialog(context);
+                          _dialog.showCustomDialog(
+                            context,
+                            'Đăng nhập không thành công',
+                            true,
+                            false,
+                          );
+                        },
+                      );
                     },
                     child: Container(
                       height: 50,
@@ -231,11 +242,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _onLoginSuccess(BuildContext context) {
-    // Navigator.pushAndRemoveUntil(
-    //     context,
-    //     MaterialPageRoute(builder: (context) => DashboardScreen()),
-    //     (Route<dynamic> route) => false);
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => DashboardScreen()));
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DashboardScreen(
+                username: _userNameController.text,
+              ),
+        ),
+        (Route<dynamic> route) => false);
   }
 }

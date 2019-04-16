@@ -3,6 +3,10 @@ import 'package:do_an_tn/src/utils/export_screen.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 class DashboardScreen extends StatefulWidget {
+  final String username;
+
+  const DashboardScreen({Key key, this.username}) : super(key: key);
+
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
 }
@@ -10,17 +14,11 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   SwiperController _pageController = new SwiperController();
   int _index = 0;
-  List<Widget> _widgetList = [
-    HomeScreen(),
-    UserSavedScreen(),
-    NotificationScreen(),
-    UserAccountScreen(),
-  ];
 
   @override
   void dispose() {
     _pageController.dispose();
-    print('object');
+    print('home dashboard disposed');
     super.dispose();
   }
 
@@ -30,6 +28,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> _widgetList = [
+      HomeScreen(),
+      UserSavedScreen(),
+      PostsOfUserScreen(
+        username: widget.username,
+      ),
+      UserAccountScreen(
+        username: widget.username,
+      ),
+    ];
     return Scaffold(
       body: Swiper(
         itemBuilder: (context, index) =>
