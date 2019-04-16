@@ -1,4 +1,5 @@
 import 'package:do_an_tn/src/models/user.dart';
+import 'package:do_an_tn/src/repository/login_repository.dart';
 import 'package:do_an_tn/src/screens/home_dashboard.dart';
 import 'package:do_an_tn/src/screens/post_detail_screen.dart';
 import 'package:do_an_tn/src/services/api_handler.dart';
@@ -8,13 +9,18 @@ import 'dart:convert';
 
 // void main() async {
 //   ApiHandler apiHandler = ApiHandler();
-//   User _user = User(
+//   final _user = User(
 //     userName: "thainguyen",
-//     password: "123456adaws",
+//     password: "123456",
 //   );
 //   // var response = await apiHandler.checkLogin(_user);
-//   var response = await apiHandler.getAllPost();
-//   // Map map = jsonDecode(response);
+//   // var response = await apiHandler.getAllPost();
+//   // Map<String, dynamic> map = jsonDecode(response);
+//   // print(response);
+//   // print(map['success'] == 'Đăng nhập thành công');
+
+//   LoginRepository _login = LoginRepository(_user);
+//   var response = await _login.callLoginApi();
 //   print(response);
 // }
 

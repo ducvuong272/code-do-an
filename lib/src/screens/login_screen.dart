@@ -1,3 +1,6 @@
+import 'package:do_an_tn/src/blocs/login_bloc.dart';
+import 'package:do_an_tn/src/screens/home_dashboard.dart';
+import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -132,7 +135,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   RaisedButton(
                     color: Color(0xff50ce5f),
-                    onPressed: () {},
+                    onPressed: () {
+                      print('object');
+                      CustomDialog _dialog = CustomDialog();
+                      _dialog.showCustomDialog(context, 'Loading...', false);
+                      Future.delayed(Duration(seconds: 1), () {
+                        _dialog.hideCustomDialog(context);
+                        loginBloc.login(
+                            _userNameController.text,
+                            _passwordController.text,
+                            _onLoginSuccess(context), () {
+                          _dialog.hideCustomDialog(context);
+                          _dialog.showCustomDialog(context, 'Login fail', true);
+                        });
+                      });
+                    },
                     child: Container(
                       height: 50,
                       width: 250,
@@ -211,5 +228,14 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ],
     );
+  }
+
+  _onLoginSuccess(BuildContext context) {
+    // Navigator.pushAndRemoveUntil(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => DashboardScreen()),
+    //     (Route<dynamic> route) => false);
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => DashboardScreen()));
   }
 }

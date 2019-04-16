@@ -12,7 +12,6 @@ class ApiHandler {
       body: json.encode(user.toJson()),
       headers: kApiHeader,
     );
-    print(json.encode(user));
     return response.body;
   }
 
