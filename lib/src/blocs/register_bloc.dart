@@ -118,5 +118,3 @@ class RegisterBloc {
     _usernameController.close();
   }
 }
-
-// RegisterBloc registerBloc = RegisterBloc();

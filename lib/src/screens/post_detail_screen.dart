@@ -1,3 +1,5 @@
+import 'package:do_an_tn/src/blocs/post_bloc.dart';
+import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/widgets/comment_section.dart';
 import 'package:flutter/material.dart';
 
@@ -10,8 +12,7 @@ class PostDetailScreen extends StatefulWidget {
   PostDetailScreenState createState() => PostDetailScreenState();
 }
 
-class PostDetailScreenState extends State<PostDetailScreen>
-    with TickerProviderStateMixin {
+class PostDetailScreenState extends State<PostDetailScreen> {
   @override
   Widget build(BuildContext context) {
     ScrollController _scrollController = ScrollController();
@@ -43,16 +44,13 @@ class PostDetailScreenState extends State<PostDetailScreen>
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Hero(
-                        tag: widget.title,
-                        child: Container(
-                          child: Image.asset(
-                            'assets/images/1.png',
-                            fit: BoxFit.fill,
-                          ),
-                          height: 250,
-                          width: MediaQuery.of(context).size.width,
+                      Container(
+                        child: Image.asset(
+                          'assets/images/1.png',
+                          fit: BoxFit.fill,
                         ),
+                        height: 250,
+                        width: MediaQuery.of(context).size.width,
                       ),
                       Container(
                         color: Colors.white,
@@ -327,10 +325,6 @@ class PostDetailScreenState extends State<PostDetailScreen>
                           ),
                         ),
                       ),
-                      CommentSection(
-                        postTitle: widget.title,
-                        scrollController: _scrollController,
-                      ),
                     ],
                   ),
                 ],
@@ -403,7 +397,7 @@ class PostDetailScreenState extends State<PostDetailScreen>
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
-          )
+          ),
         ],
       ),
     );
@@ -438,17 +432,31 @@ class PostDetailScreenState extends State<PostDetailScreen>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          _constantElements(Icons.photo_size_select_large, 'Tải ảnh'),
-          _constantElements(Icons.chat_bubble_outline, 'Bình luận'),
-          _constantElements(Icons.done_outline, 'Lưu lại'),
+          _constantElements(
+            Icons.photo_size_select_large,
+            'Tải ảnh',
+            () {},
+          ),
+          _constantElements(
+            Icons.chat_bubble_outline,
+            'Bình luận',
+            () {},
+          ),
+          _constantElements(
+            Icons.done_outline,
+            'Lưu lại',
+            () {},
+          ),
         ],
       ),
     );
   }
 
-  Widget _constantElements(IconData iconData, String text) {
+  Widget _constantElements(IconData iconData, String text, Function function) {
     return FlatButton(
-      onPressed: () {},
+      onPressed: () {
+        function();
+      },
       splashColor: Color(0xff6d6f72),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

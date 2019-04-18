@@ -27,12 +27,12 @@ class ApiHandler {
     return response.body;
   }
 
-  Future<String> getAllPost() async {
+  Future<String> getAllPosts() async {
     final response = await http.get(
       kAllPostsUrl,
       headers: kApiHeader,
     );
-    return response.body;
+    return response.statusCode == 200 ? response.body : 'Lỗi';
   }
 
   Future<String> getUser() async {

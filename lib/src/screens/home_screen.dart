@@ -1,3 +1,5 @@
+import 'package:do_an_tn/src/blocs/post_bloc.dart';
+import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/screens/post_detail_screen.dart';
 import 'package:do_an_tn/src/widgets/home_screen_post.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _pageIndex = 0;
   ScrollController _scrollController;
   double androidBottomBarHeigh = 72.0;
+  PostBloc _postBLoc = PostBloc();
 
   @override
   void initState() {
@@ -35,6 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
         print(_scrollController.offset ==
             _scrollController.position.maxScrollExtent);
       });
+    _postBLoc.getAllPost();
+    print('asd');
     super.initState();
   }
 
@@ -100,38 +105,49 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: MediaQuery.of(context).size.height -
                         205 -
                         androidBottomBarHeigh,
-                    child: GridView.count(
-                      crossAxisCount: 2,
-                      controller: _scrollController,
-                      physics: ScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      // childAspectRatio: 0.9,
-                      children: List.generate(
-                        50,
-                        (index) {
-                          return GestureDetector(
-                            child: HomeScreenPost(
-                              postTitle:
-                                  'Tiêu đề của bài đăng $index Tiêu đề của bài đăng $index',
-                              postDetail:
-                                  'Nội dung của bài đăng (chi tiết bài đăng/comment) ',
-                              postImage: Image.asset(
-                                'assets/images/1.png',
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                            onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => PostDetailScreen(
-                                          title:
-                                              'Tiêu đề của bài đăng $index Tiêu đề của bài đăng $index',
-                                        ),
+                    child: StreamBuilder<Object>(
+                      stream: _postBLoc.getAllPostStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          List<Post> _listPost = snapshot.data;
+                          return GridView.count(
+                            crossAxisCount: 2,
+                            controller: _scrollController,
+                            physics: ScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            // childAspectRatio: 0.9,
+                            children: List.generate(
+                              _listPost.length,
+                              (index) {
+                                return GestureDetector(
+                                  child: HomeScreenPost(
+                                    postTitle: '${_listPost[index].postTitle}',
+                                    postDetail:
+                                        '${_listPost[index].postDetail}',
+                                    postImage: Image.network(
+                                      '${_listPost[index].imageUrl}',
+                                      fit: BoxFit.fill,
+                                    ),
                                   ),
-                                ),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => PostDetailScreen(
+                                              title:
+                                                  '${_listPost[index].postTitle}',
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
                           );
-                        },
-                      ),
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      },
                     ),
                   ),
                 ],

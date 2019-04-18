@@ -1,3 +1,4 @@
+import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/repository/login_repository.dart';
 import 'package:do_an_tn/src/screens/home_dashboard.dart';
@@ -14,16 +15,19 @@ import 'dart:convert';
 //     password: "vuong",
 //   );
 //   // var response = await apiHandler.checkLogin(_user);
-//   var response =
-//       await apiHandler.getAllPost();
+//   var response = await apiHandler.getAllPosts();
+//   var list =
+//       (json.decode(response) as List).map((e) => new Post.fromJson(e)).toList();
+//       print(list[0].imageUrl);
+
 //   // Map<String, dynamic> map = jsonDecode(response);
 //   // print(response);
 //   // print(map['success'] == 'Đăng nhập thành công');
 //   // var response = await apiHandler.getUser();
 //   // Map<String, dynamic> map = jsonDecode(response);
 
-//   response.split('},').forEach((word) => print('},' + word));
-//   debugPrint(response.toString());
+//   // response.split('},').forEach((word) => print('},' + word));
+//   // debugPrint(response.toString());
 
 //   // User vuong = User.fromJson(jsonDecode(response));
 //   // print(vuong.password + vuong.name);

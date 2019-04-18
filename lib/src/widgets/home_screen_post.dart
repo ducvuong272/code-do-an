@@ -26,17 +26,14 @@ class HomeScreenPost extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               ClipRRect(
-                child: Hero(
-                  tag: postTitle,
-                  child: Container(
-                    height:
-                        (MediaQuery.of(context).size.height - 205 - 72.0) / 2 -
-                            100 *
-                                731.4285714285714 /
-                                MediaQuery.of(context).size.height,
-                    width: 400,
-                    child: postImage,
-                  ),
+                child: Container(
+                  height:
+                      (MediaQuery.of(context).size.height - 205 - 72.0) / 2 -
+                          100 *
+                              731.4285714285714 /
+                              MediaQuery.of(context).size.height,
+                  width: 400,
+                  child: postImage,
                 ),
                 borderRadius: BorderRadius.circular(12),
               ),
