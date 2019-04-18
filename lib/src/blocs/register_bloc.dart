@@ -57,6 +57,10 @@ class RegisterBloc {
     if (username.trim() == '') {
       _usernameController.sink.addError('Tên đăng nhập không được để trống');
       return false;
+    } else if (username.contains(' ')) {
+      _usernameController.sink
+          .addError('Tên đăng nhập không được chứa dấu cách');
+      return false;
     }
     _usernameController.sink.add('OK');
     return true;

@@ -31,13 +31,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    _scrollController = ScrollController(
-      initialScrollOffset: 0.0,
-      keepScrollOffset: true,
-    )..addListener(() {
-        print(_scrollController.offset ==
-            _scrollController.position.maxScrollExtent);
-      });
+    // _scrollController = ScrollController(
+    //   initialScrollOffset: 0.0,
+    //   keepScrollOffset: true,
+    // )..addListener(() {
+    //     print(_scrollController.offset ==
+    //         _scrollController.position.maxScrollExtent);
+    //   });
     _postBLoc.getAllPost();
     print('asd');
     super.initState();
@@ -124,10 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     postTitle: '${_listPost[index].postTitle}',
                                     postDetail:
                                         '${_listPost[index].postDetail}',
-                                    postImage: Image.network(
-                                      '${_listPost[index].imageUrl}',
-                                      fit: BoxFit.fill,
-                                    ),
+                                    postImage: '${_listPost[index].imageUrl}',
                                   ),
                                   onTap: () {
                                     Navigator.push(
@@ -145,7 +142,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           );
                         } else {
-                          return CircularProgressIndicator();
+                          return Container(
+                            color: Color(0xffb5bfce),
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
                         }
                       },
                     ),
@@ -198,5 +200,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _postBLoc.dispose();
+    super.dispose();
   }
 }

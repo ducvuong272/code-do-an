@@ -25,7 +25,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
           title: Text(
             widget.title != null ? widget.title : '',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 23,
               fontWeight: FontWeight.w400,
             ),
           ),
@@ -324,6 +324,10 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                             ),
                           ),
                         ),
+                      ),
+                      CommentSection(
+                        postTitle: widget.title,
+                        scrollController: _scrollController,
                       ),
                     ],
                   ),

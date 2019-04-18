@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class HomeScreenPost extends StatelessWidget {
+class HomeScreenPost extends StatefulWidget {
   final String postTitle, postDetail;
-  final Image postImage;
+  final String postImage;
 
   const HomeScreenPost({
     Key key,
@@ -10,6 +10,27 @@ class HomeScreenPost extends StatelessWidget {
     this.postDetail,
     this.postImage,
   }) : super(key: key);
+
+  @override
+  HomeScreenPostState createState() => HomeScreenPostState();
+}
+
+class HomeScreenPostState extends State<HomeScreenPost> {
+  Image _image;
+  bool _imageLoading = true;
+
+  @override
+  void initState() {
+    _image = Image.network(widget.postImage);
+    _image.image.resolve(ImageConfiguration()).addListener((_, __) {
+      if (mounted) {
+        setState(() {
+          _imageLoading = false;
+        });
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,14 +54,21 @@ class HomeScreenPost extends StatelessWidget {
                               731.4285714285714 /
                               MediaQuery.of(context).size.height,
                   width: 400,
-                  child: postImage,
+                  child: _imageLoading
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : _image,
                 ),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                ),
               ),
               Container(
                 margin: EdgeInsets.only(left: 5),
                 child: Text(
-                  postTitle,
+                  widget.postTitle,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
@@ -49,7 +77,7 @@ class HomeScreenPost extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(left: 5),
                 child: Text(
-                  postDetail,
+                  widget.postDetail,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 14,

@@ -83,23 +83,19 @@ class CommentSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Column(
-              children: <Widget>[
-                Text(
-                  '$postTitle',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
+            Text(
+              '$postTitle',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
             ),
             Padding(
               padding: EdgeInsets.only(
                 top: 5,
               ),
               child: Text(
-                'Đồ ăn ngon, quán sạch sẽ, rộng rãi, vị trí đẹp. Nhân viên nhiệt tình',
+                'Đồ ăn ngon, quán sạch sẽ, rộng rãi, vị trí đẹp. Nhân viên nhiệt tình ',
                 style: TextStyle(fontSize: 16),
               ),
             ),
