@@ -15,6 +15,18 @@ class ApiHandler {
     return response.body;
   }
 
+  Future<String> checkSignUp(User user) async {
+    final apiUrl = kSingUpUrl;
+    final response = await http.post(
+      apiUrl,
+      body: json.encode(
+        user.toRegisterJson(),
+      ),
+      headers: kApiHeader,
+    );
+    return response.body;
+  }
+
   Future<String> getAllPost() async {
     final response = await http.get(
       kAllPostsUrl,
@@ -23,7 +35,15 @@ class ApiHandler {
     return response.body;
   }
 
-  Future<http.Response> checkSignUp(){
-    final apiUrl = kSingUpUrl;
+  Future<String> getUser() async {
+    final apiUrl = 'https://projectapi-khanhpham.herokuapp.com/tai-khoan/4';
+    final response = await http.get(apiUrl, headers: kApiHeader);
+    return response.body;
+  }
+
+  Future<String> getAllUsers() async {
+    final apiUrl = 'https://projectapi-khanhpham.herokuapp.com/tai-khoan';
+    final response = await http.get(apiUrl, headers: kApiHeader);
+    return response.body;
   }
 }

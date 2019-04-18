@@ -10,18 +10,23 @@ import 'dart:convert';
 // void main() async {
 //   ApiHandler apiHandler = ApiHandler();
 //   final _user = User(
-//     userName: "thainguyen",
-//     password: "123456",
+//     username: "vuongdo272",
+//     password: "vuong",
 //   );
 //   // var response = await apiHandler.checkLogin(_user);
-//   // var response = await apiHandler.getAllPost();
+//   var response =
+//       await apiHandler.getAllPost();
 //   // Map<String, dynamic> map = jsonDecode(response);
 //   // print(response);
 //   // print(map['success'] == 'Đăng nhập thành công');
+//   // var response = await apiHandler.getUser();
+//   // Map<String, dynamic> map = jsonDecode(response);
 
-//   LoginRepository _login = LoginRepository(_user);
-//   var response = await _login.callLoginApi();
-//   print(response);
+//   response.split('},').forEach((word) => print('},' + word));
+//   debugPrint(response.toString());
+
+//   // User vuong = User.fromJson(jsonDecode(response));
+//   // print(vuong.password + vuong.name);
 // }
 
 void main() {

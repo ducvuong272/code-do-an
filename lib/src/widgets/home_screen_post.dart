@@ -43,14 +43,17 @@ class HomeScreenPost extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(left: 5),
                 child: Text(
-                  postTitle.substring(0, 40) + '...',
+                  postTitle,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                 ),
               ),
               Container(
                 margin: EdgeInsets.only(left: 5),
                 child: Text(
-                  postDetail.substring(0, 25) + '...',
+                  postDetail,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 14,
                   ),

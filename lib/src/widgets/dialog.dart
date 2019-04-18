@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
 class CustomDialog {
-  showCustomDialog(BuildContext context, String msg, bool barrierDismissible,
-      bool showprogressIndicator) {
+  showCustomDialog({
+    BuildContext context,
+    String msg,
+    bool barrierDismissible,
+    bool showprogressIndicator,
+    String action,
+  }) {
     showDialog(
       context: context,
       barrierDismissible: barrierDismissible,

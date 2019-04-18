@@ -1,3 +1,4 @@
+import 'package:do_an_tn/src/screens/add_post_screen.dart';
 import 'package:do_an_tn/src/widgets/login_notify_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,10 +43,19 @@ class _PostsOfUserScreenState extends State<PostsOfUserScreen> {
                 ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
-      ),
+      floatingActionButton: _username != ''
+          ? FloatingActionButton(
+              backgroundColor: Colors.red,
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => AddPost(),
+                  ),
+                );
+              },
+              child: Icon(Icons.add),
+            )
+          : Container(),
     );
   }
 }

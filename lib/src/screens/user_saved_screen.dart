@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class UserSavedScreen extends StatefulWidget {
+  final String username;
+
+  const UserSavedScreen({Key key, this.username}) : super(key: key);
+
   @override
   _UserSavedScreenState createState() => _UserSavedScreenState();
 }
@@ -11,6 +15,7 @@ class _UserSavedScreenState extends State<UserSavedScreen>
     with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
+    String _username = widget.username;
     SystemChrome.setEnabledSystemUIOverlays([]);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     TabController _tabController = TabController(length: 4, vsync: this);
@@ -25,7 +30,7 @@ class _UserSavedScreenState extends State<UserSavedScreen>
             backgroundColor: Colors.red,
             titleSpacing: 12,
             centerTitle: true,
-            title: Text('Đã lưu'),
+            title: Text('Địa điểm đã lưu'),
             bottom: PreferredSize(
               preferredSize: Size.fromHeight(10),
               child: Container(
@@ -78,19 +83,32 @@ class _UserSavedScreenState extends State<UserSavedScreen>
           children: <Widget>[
             Container(
               color: Color(0xffc0cde0),
-              child: LoginNotifyWidget(context: context,),
+              child: _username != null
+                  ? Container()
+                  : LoginNotifyWidget(
+                      context: context,
+                    ),
             ),
             Container(
               color: Colors.green,
-              child: Center(child: LoginNotifyWidget(context: context)),
+              child: Center(
+                  child: _username != null
+                      ? Container()
+                      : LoginNotifyWidget(context: context)),
             ),
             Container(
               color: Colors.blue,
-              child: Center(child: LoginNotifyWidget(context: context)),
+              child: Center(
+                  child: _username != null
+                      ? Container()
+                      : LoginNotifyWidget(context: context)),
             ),
             Container(
               color: Colors.yellow,
-              child: Center(child: LoginNotifyWidget(context: context)),
+              child: Center(
+                  child: _username != null
+                      ? Container()
+                      : LoginNotifyWidget(context: context)),
             ),
           ],
         ),

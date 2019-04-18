@@ -15,15 +15,13 @@ class LoginBloc {
     Function onLoginSuccess,
     Function onLoginFail,
   ) {
-    final user = User(userName: username, password: password);
+    final user = User(username: username, password: password);
     LoginRepository _loginRepository = LoginRepository(user);
     Future<String> future = _loginRepository.callLoginApi();
     future.then((onValue) {
       if (onValue == '200') {
         onLoginSuccess();
-        // print('success');
       } else {
-        // print('fail');
         onLoginFail();
       }
     });

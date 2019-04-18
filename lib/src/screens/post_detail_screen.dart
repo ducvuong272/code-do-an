@@ -36,300 +36,305 @@ class PostDetailScreenState extends State<PostDetailScreen>
           Container(
             margin: EdgeInsets.only(top: 50),
             color: Color(0xffc0c1c4),
-            child: ListView(
-              controller: _scrollController,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Hero(
-                      tag: widget.title,
-                      child: Container(
-                        child: Image.asset(
-                          'assets/images/1.png',
-                          fit: BoxFit.fill,
-                        ),
-                        height: 250,
-                        width: MediaQuery.of(context).size.width,
-                      ),
-                    ),
-                    Container(
-                      color: Colors.white,
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.fromLTRB(5, 10, 0, 10),
-                      child: Text(
-                        widget.title,
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w900,
+            child: Scrollbar(
+              child: ListView(
+                controller: _scrollController,
+                children: <Widget>[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Hero(
+                        tag: widget.title,
+                        child: Container(
+                          child: Image.asset(
+                            'assets/images/1.png',
+                            fit: BoxFit.fill,
+                          ),
+                          height: 250,
+                          width: MediaQuery.of(context).size.width,
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 2),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 5),
-                      height: 50,
-                      color: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              CircleAvatar(
-                                child: Icon(
-                                  Icons.store_mall_directory,
-                                  color: Colors.white,
-                                ),
-                                backgroundColor: Colors.blue,
-                                radius: 18,
-                              ),
-                              Container(
-                                child: Text(
-                                  '3 Địa điểm cùng hệ thống',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                padding: EdgeInsets.only(
-                                  left: 10,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            size: 15,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: 2,
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.only(left: 10),
+                      Container(
                         color: Colors.white,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        width: MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.fromLTRB(5, 10, 0, 10),
+                        child: Text(
+                          widget.title,
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 2),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 5),
+                        height: 50,
+                        color: Colors.white,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
-                                _postStatus(52, 'Bình luận'),
-                                _postStatus(124, 'Hình ảnh'),
-                                _postStatus(15, 'Check-in'),
-                                _postStatus(22, 'Lưu lại'),
                                 CircleAvatar(
-                                  backgroundColor: Color(0xff187a1d),
+                                  child: Icon(
+                                    Icons.store_mall_directory,
+                                    color: Colors.white,
+                                  ),
+                                  backgroundColor: Colors.blue,
                                   radius: 18,
+                                ),
+                                Container(
                                   child: Text(
-                                    '6.9',
+                                    '3 Địa điểm cùng hệ thống',
                                     style: TextStyle(
-                                      color: Colors.white,
                                       fontSize: 20,
+                                      fontWeight: FontWeight.w500,
                                     ),
+                                  ),
+                                  padding: EdgeInsets.only(
+                                    left: 10,
                                   ),
                                 ),
                               ],
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              size: 15,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 2,
+                        ),
+                        child: Container(
+                          padding: EdgeInsets.only(left: 10),
+                          color: Colors.white,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: <Widget>[
-                                  Text(
-                                    'ĐANG MỞ CỬA',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
-                                      color: Color(0xff04cc0e),
+                                  _postStatus(52, 'Bình luận'),
+                                  _postStatus(124, 'Hình ảnh'),
+                                  _postStatus(15, 'Check-in'),
+                                  _postStatus(22, 'Lưu lại'),
+                                  CircleAvatar(
+                                    backgroundColor: Color(0xff187a1d),
+                                    radius: 18,
+                                    child: Text(
+                                      '6.9',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    '8:00 - 21:00',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 15),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: 5,
-                      ),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        color: Colors.white,
-                        child: Column(
-                          children: <Widget>[
-                            _postInfor(
-                              Icons.location_on,
-                              '14 Nguyễn Chí Thanh, Hải Châu, Đà Nẵng',
-                            ),
-                            _postInfor(
-                              Icons.fastfood,
-                              'Quán ăn - Đà Nẵng',
-                            ),
-                            _postInfor(
-                              Icons.attach_money,
-                              '20000 đồng - 50000 đồng',
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 5),
-                      child: GestureDetector(
-                        onTap: () => print('xem thực đơn'),
-                        child: Container(
-                          color: Colors.white,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              _postInfor(
-                                Icons.restaurant_menu,
-                                'Xem thực đơn',
-                              ),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                size: 15,
+                              Padding(
+                                padding: EdgeInsets.only(top: 20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      'ĐANG MỞ CỬA',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color(0xff04cc0e),
+                                      ),
+                                    ),
+                                    Text(
+                                      '8:00 - 21:00',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 15),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 5),
-                      child: GestureDetector(
-                        onTap: () => print(MediaQuery.of(context).size.height),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 5,
+                        ),
                         child: Container(
+                          width: MediaQuery.of(context).size.width,
                           color: Colors.white,
-                          padding: EdgeInsets.only(
-                            top: 15,
-                            bottom: 15,
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Xem tất cả thông tin',
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w500,
+                          child: Column(
+                            children: <Widget>[
+                              _postInfor(
+                                Icons.location_on,
+                                '14 Nguyễn Chí Thanh, Hải Châu, Đà Nẵng',
                               ),
-                            ),
+                              _postInfor(
+                                Icons.fastfood,
+                                'Quán ăn - Đà Nẵng',
+                              ),
+                              _postInfor(
+                                Icons.attach_money,
+                                '20000 đồng - 50000 đồng',
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 5),
-                      child: Container(
-                        color: Colors.white,
-                        child: Column(
-                          children: <Widget>[
-                            Row(
+                      Padding(
+                        padding: EdgeInsets.only(top: 5),
+                        child: GestureDetector(
+                          onTap: () => print('xem thực đơn'),
+                          child: Container(
+                            color: Colors.white,
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Container(
-                                  child: Text(
-                                    '52 Bình luận',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                  padding: EdgeInsets.only(left: 5),
+                                _postInfor(
+                                  Icons.restaurant_menu,
+                                  'Xem thực đơn',
                                 ),
-                                Container(
-                                  padding: EdgeInsets.only(
-                                    right: 5,
-                                  ),
-                                  child: Column(
-                                    children: <Widget>[
-                                      Text(
-                                        '6.9',
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.green,
-                                        ),
-                                      ),
-                                      Text(
-                                        'Trung bình',
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.green,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 15,
                                 ),
                               ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: 3,
+                      Padding(
+                        padding: EdgeInsets.only(top: 5),
+                        child: GestureDetector(
+                          onTap: () =>
+                              print(MediaQuery.of(context).size.height),
+                          child: Container(
+                            color: Colors.white,
+                            padding: EdgeInsets.only(
+                              top: 15,
+                              bottom: 15,
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Xem tất cả thông tin',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                      child: Container(
-                        color: Colors.white,
+                      Padding(
+                        padding: EdgeInsets.only(top: 5),
                         child: Container(
-                          padding: EdgeInsets.only(top: 5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          color: Colors.white,
+                          child: Column(
                             children: <Widget>[
-                              _emotionSection(
-                                'assets/images/exellent.png',
-                                'Tuyệt vời',
-                                '5',
-                                Colors.blue,
-                              ),
-                              _emotionSection(
-                                'assets/images/good.png',
-                                'Khá tốt',
-                                '5',
-                                Colors.green,
-                              ),
-                              _emotionSection(
-                                'assets/images/ok.png',
-                                'Trung bình',
-                                '5',
-                                Colors.black,
-                              ),
-                              _emotionSection(
-                                'assets/images/bad.png',
-                                'Kém',
-                                '5',
-                                Colors.red,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Container(
+                                    child: Text(
+                                      '52 Bình luận',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.only(left: 5),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                      right: 5,
+                                    ),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Text(
+                                          '6.9',
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Trung bình',
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
                         ),
                       ),
-                    ),
-                    CommentSection(
-                      postTitle: widget.title,
-                      scrollController: _scrollController,
-                    ),
-                  ],
-                ),
-              ],
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 3,
+                        ),
+                        child: Container(
+                          color: Colors.white,
+                          child: Container(
+                            padding: EdgeInsets.only(top: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                _emotionSection(
+                                  'assets/images/exellent.png',
+                                  'Tuyệt vời',
+                                  '5',
+                                  Colors.blue,
+                                ),
+                                _emotionSection(
+                                  'assets/images/good.png',
+                                  'Khá tốt',
+                                  '5',
+                                  Colors.green,
+                                ),
+                                _emotionSection(
+                                  'assets/images/ok.png',
+                                  'Trung bình',
+                                  '5',
+                                  Colors.black,
+                                ),
+                                _emotionSection(
+                                  'assets/images/bad.png',
+                                  'Kém',
+                                  '5',
+                                  Colors.red,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      CommentSection(
+                        postTitle: widget.title,
+                        scrollController: _scrollController,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           _constantSection(),
@@ -442,20 +447,24 @@ class PostDetailScreenState extends State<PostDetailScreen>
   }
 
   Widget _constantElements(IconData iconData, String text) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Icon(
-          iconData,
-          color: Colors.white,
-        ),
-        Text(
-          text,
-          style: TextStyle(
+    return FlatButton(
+      onPressed: () {},
+      splashColor: Color(0xff6d6f72),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(
+            iconData,
             color: Colors.white,
           ),
-        ),
-      ],
+          Text(
+            text,
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -34,41 +34,46 @@ class _LoginDashboard extends State<LoginDashboard> {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xff42f45f),
-                  Color(0xff41f4b8),
-                ],
+      body: GestureDetector(
+        onTap: (){
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+              child: Stack(
+          children: <Widget>[
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xff42f45f),
+                    Color(0xff41f4b8),
+                  ],
+                ),
+              ),
+              child: Swiper(
+                onIndexChanged: (index) {
+                  setState(() {
+                    _pageIndex = index;
+                  });
+                },
+                loop: false,
+                index: _pageIndex,
+                itemCount: 3,
+                controller: _pageController,
+                itemBuilder: (context, index) => _listWidget[index],
               ),
             ),
-            child: Swiper(
-              onIndexChanged: (index) {
-                setState(() {
-                  _pageIndex = index;
-                });
-              },
-              loop: false,
-              index: _pageIndex,
-              itemCount: 3,
-              controller: _pageController,
-              itemBuilder: (context, index) => _listWidget[index],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.fromLTRB(5, 5, 0, 0),
-            child: GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: Icon(
-                Icons.arrow_back,
-                size: 30,
+            Container(
+              margin: EdgeInsets.fromLTRB(5, 5, 0, 0),
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Icon(
+                  Icons.arrow_back,
+                  size: 30,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

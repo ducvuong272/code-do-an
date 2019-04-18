@@ -1,3 +1,5 @@
+import 'package:do_an_tn/src/screens/home_dashboard.dart';
+import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:do_an_tn/src/widgets/login_notify_button.dart';
 import 'package:do_an_tn/src/widgets/user_avatar.dart';
 import 'package:flutter/material.dart';
@@ -46,19 +48,70 @@ class UserAccountScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              'Đăng xuất',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 17),
-                            ),
-                            Icon(
-                              Icons.navigate_next,
-                              size: 25,
-                              color: Colors.white,
-                            ),
-                          ],
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                    content: Text(
+                                      'Xác nhận đăng xuất?',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        highlightColor: Color(0xfff2a98e),
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pushAndRemoveUntil(
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        DashboardScreen(),
+                                                  ),
+                                                  (Route<dynamic> route) =>
+                                                      false);
+                                        },
+                                        child: Text(
+                                          'XÁC NHẬN',
+                                          style: TextStyle(
+                                            color: Colors.blue,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ),
+                                      FlatButton(
+                                        highlightColor: Color(0xfff2a98e),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text(
+                                          'HỦY',
+                                          style: TextStyle(
+                                            color: Colors.blue,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                            );
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Text(
+                                'Đăng xuất',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 17),
+                              ),
+                              Icon(
+                                Icons.navigate_next,
+                                size: 25,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -70,32 +123,37 @@ class UserAccountScreen extends StatelessWidget {
                     children: <Widget>[
                       Container(
                         height: 50,
-                        padding: EdgeInsets.only(left: 10),
                         color: Colors.white,
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.only(right: 20),
-                              height: 40,
-                              width: 40,
-                              child: Icon(
-                                Icons.image,
-                                size: 30,
-                                color: Colors.white,
+                        child: FlatButton(
+                          splashColor: Color(0xff8df4a0),
+                          padding: EdgeInsets.only(left: 10),
+                          onPressed: () {},
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Container(
+                                margin: EdgeInsets.only(right: 20),
+                                height: 40,
+                                width: 40,
+                                child: Icon(
+                                  Icons.image,
+                                  size: 30,
+                                  color: Colors.white,
+                                ),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.blue,
+                                ),
                               ),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.grey,
+                              Text(
+                                'Ảnh đại diện & bìa',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                            Text(
-                              'Ảnh đại diện & bìa',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       Padding(
@@ -103,32 +161,36 @@ class UserAccountScreen extends StatelessWidget {
                       ),
                       Container(
                         height: 50,
-                        padding: EdgeInsets.only(left: 10),
                         color: Colors.white,
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.only(right: 20),
-                              height: 40,
-                              width: 40,
-                              child: Icon(
-                                Icons.lock_outline,
-                                size: 30,
-                                color: Colors.white,
+                        child: FlatButton(
+                          onPressed: () {},
+                          splashColor: Color(0xff8df4a0),
+                          padding: EdgeInsets.only(left: 10),
+                          child: Row(
+                            children: <Widget>[
+                              Container(
+                                margin: EdgeInsets.only(right: 20),
+                                height: 40,
+                                width: 40,
+                                child: Icon(
+                                  Icons.lock_outline,
+                                  size: 30,
+                                  color: Colors.white,
+                                ),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.blue,
+                                ),
                               ),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.grey,
+                              Text(
+                                'Đổi mật khẩu',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                            Text(
-                              'Đổi mật khẩu',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       Padding(
@@ -136,32 +198,36 @@ class UserAccountScreen extends StatelessWidget {
                       ),
                       Container(
                         height: 50,
-                        padding: EdgeInsets.only(left: 10),
                         color: Colors.white,
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.only(right: 20),
-                              height: 40,
-                              width: 40,
-                              child: Icon(
-                                Icons.person_outline,
-                                size: 30,
-                                color: Colors.white,
+                        child: FlatButton(
+                          onPressed: () {},
+                          splashColor: Color(0xff8df4a0),
+                          padding: EdgeInsets.only(left: 10),
+                          child: Row(
+                            children: <Widget>[
+                              Container(
+                                margin: EdgeInsets.only(right: 20),
+                                height: 40,
+                                width: 40,
+                                child: Icon(
+                                  Icons.person_outline,
+                                  size: 30,
+                                  color: Colors.white,
+                                ),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.blue,
+                                ),
                               ),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.grey,
+                              Text(
+                                'Thông tin & liên hệ',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                            Text(
-                              'Thông tin & liên hệ',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],

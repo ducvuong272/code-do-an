@@ -23,6 +23,12 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _passwordInvisible = true;
 
   @override
+  void dispose() {
+    loginBloc.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
     return ListView(
@@ -64,9 +70,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   Container(
                     padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                     child: TextField(
+                      style: TextStyle(fontSize: 25),
                       autocorrect: false,
                       controller: _userNameController,
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(0),
                         suffix: GestureDetector(
                           child: Icon(
                             Icons.clear,
@@ -102,10 +110,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   Container(
                     padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
                     child: TextField(
+                      style: TextStyle(fontSize: 25),
                       obscureText: _passwordInvisible,
                       autocorrect: false,
                       controller: _passwordController,
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(0),
                         suffix: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
@@ -138,10 +148,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       CustomDialog _dialog = CustomDialog();
                       _dialog.showCustomDialog(
-                        context,
-                        'Loading...',
-                        false,
-                        true,
+                        context: context,
+                        msg: 'Đang tiến hành đăng nhập...',
+                        barrierDismissible: false,
+                        showprogressIndicator: true,
                       );
                       loginBloc.login(
                         _userNameController.text.trim(),
@@ -153,10 +163,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         () {
                           _dialog.hideCustomDialog(context);
                           _dialog.showCustomDialog(
-                            context,
-                            'Đăng nhập không thành công',
-                            true,
-                            false,
+                            context: context,
+                            msg: 'Đăng nhập không thành công!',
+                            barrierDismissible: true,
+                            showprogressIndicator: false,
                           );
                         },
                       );

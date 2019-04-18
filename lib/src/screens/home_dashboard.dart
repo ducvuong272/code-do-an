@@ -30,7 +30,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     List<Widget> _widgetList = [
       HomeScreen(),
-      UserSavedScreen(),
+      UserSavedScreen(username: widget.username,),
       PostsOfUserScreen(
         username: widget.username,
       ),
@@ -63,28 +63,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
-              color: _index == 0 ? Colors.purple : Colors.black38,
+              color: _index == 0 ? Colors.red : Colors.black38,
             ),
             title: Text('Trang chủ'),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.library_books,
-              color: _index == 1 ? Colors.purple : Colors.black38,
+              color: _index == 1 ? Colors.red : Colors.black38,
             ),
             title: Text('Đã Lưu'),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.notification_important,
-              color: _index == 2 ? Colors.purple : Colors.black38,
+              color: _index == 2 ? Colors.red : Colors.black38,
             ),
             title: Text('Địa điểm của tôi'),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.account_circle,
-              color: _index == 3 ? Colors.purple : Colors.black38,
+              color: _index == 3 ? Colors.red : Colors.black38,
             ),
             title: Text('Tài khoản'),
           ),
