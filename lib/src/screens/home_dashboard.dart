@@ -1,11 +1,12 @@
+import 'package:do_an_tn/src/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:do_an_tn/src/utils/export_screen.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 class DashboardScreen extends StatefulWidget {
-  final String username;
+  final User user;
 
-  const DashboardScreen({Key key, this.username}) : super(key: key);
+  const DashboardScreen({Key key, this.user}) : super(key: key);
 
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
@@ -30,12 +31,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     List<Widget> _widgetList = [
       HomeScreen(),
-      UserSavedScreen(username: widget.username,),
+      UserSavedScreen(
+        user: widget.user,
+      ),
       PostsOfUserScreen(
-        username: widget.username,
+        user: widget.user,
       ),
       UserAccountScreen(
-        username: widget.username,
+        user: widget.user,
       ),
     ];
     return Scaffold(
@@ -86,7 +89,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Icons.account_circle,
               color: _index == 3 ? Colors.red : Colors.black38,
             ),
-            title: Text('Tài khoản'),
+            title: Text('Cài đặt'),
           ),
         ],
       ),

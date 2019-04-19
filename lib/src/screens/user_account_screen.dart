@@ -1,3 +1,4 @@
+import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/home_dashboard.dart';
 import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:do_an_tn/src/widgets/login_notify_button.dart';
@@ -6,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class UserAccountScreen extends StatelessWidget {
-  final String username;
+  final User user;
 
-  const UserAccountScreen({Key key, this.username}) : super(key: key);
+  const UserAccountScreen({Key key, this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class UserAccountScreen extends StatelessWidget {
       ),
       body: Container(
         color: Color(0xffc0cde0),
-        child: username != null
+        child: user != null
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -38,9 +39,11 @@ class UserAccountScreen extends StatelessWidget {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            UserAvatar(),
+                            UserAvatar(
+                              user: user,
+                            ),
                             Text(
-                              'Vuong Do',
+                              '${user.name}',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -127,7 +130,9 @@ class UserAccountScreen extends StatelessWidget {
                         child: FlatButton(
                           splashColor: Color(0xff8df4a0),
                           padding: EdgeInsets.only(left: 10),
-                          onPressed: () {},
+                          onPressed: () {
+                            print(user.imageUrl);
+                          },
                           child: Row(
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[

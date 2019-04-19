@@ -13,7 +13,6 @@ class PostBloc {
     Future<List<Post>> future = postRepository.getAllPosts();
     future.then(
       (value) {
-        print(value.elementAt(0).imageUrl);
         _getAllPostsController.sink.add(value);
       },
     );

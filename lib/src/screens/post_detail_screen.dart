@@ -5,8 +5,13 @@ import 'package:flutter/material.dart';
 
 class PostDetailScreen extends StatefulWidget {
   final String title;
+  final String imageUrl;
 
-  const PostDetailScreen({Key key, this.title}) : super(key: key);
+  const PostDetailScreen({
+    Key key,
+    this.title,
+    this.imageUrl,
+  }) : super(key: key);
 
   @override
   PostDetailScreenState createState() => PostDetailScreenState();
@@ -35,7 +40,6 @@ class PostDetailScreenState extends State<PostDetailScreen> {
       body: Stack(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 50),
             color: Color(0xffc0c1c4),
             child: Scrollbar(
               child: ListView(
@@ -45,8 +49,9 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Container(
-                        child: Image.asset(
-                          'assets/images/1.png',
+                        margin: EdgeInsets.only(top: 50),
+                        child: Image.network(
+                          widget.imageUrl,
                           fit: BoxFit.fill,
                         ),
                         height: 250,
@@ -431,14 +436,14 @@ class PostDetailScreenState extends State<PostDetailScreen> {
 
   Widget _constantSection() {
     return Container(
-      color: Color(0xff484b4f),
+      color: Color(0xff484b4f).withOpacity(0.85),
       height: 50,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           _constantElements(
             Icons.photo_size_select_large,
-            'Tải ảnh',
+            'Hình ảnh',
             () {},
           ),
           _constantElements(

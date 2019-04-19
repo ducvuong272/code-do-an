@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _pageIndex = 0;
   ScrollController _scrollController;
   double androidBottomBarHeigh = 72.0;
-  PostBloc _postBLoc = PostBloc();
+  PostBloc _postBLoc;
 
   @override
   void initState() {
@@ -38,8 +38,9 @@ class _HomeScreenState extends State<HomeScreen> {
     //     print(_scrollController.offset ==
     //         _scrollController.position.maxScrollExtent);
     //   });
+    _postBLoc = PostBloc();
     _postBLoc.getAllPost();
-    print('asd');
+    // print('asd');
     super.initState();
   }
 
@@ -133,6 +134,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         builder: (context) => PostDetailScreen(
                                               title:
                                                   '${_listPost[index].postTitle}',
+                                              imageUrl:
+                                                  '${_listPost[index].imageUrl}',
                                             ),
                                       ),
                                     );
@@ -142,11 +145,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           );
                         } else {
-                          return Container(
-                            color: Color(0xffb5bfce),
-                            child: Center(
-                              child: CircularProgressIndicator(),
-                            ),
+                          return Center(
+                            child: CircularProgressIndicator(),
                           );
                         }
                       },

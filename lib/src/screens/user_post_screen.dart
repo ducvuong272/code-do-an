@@ -1,12 +1,13 @@
+import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/add_post_screen.dart';
 import 'package:do_an_tn/src/widgets/login_notify_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class PostsOfUserScreen extends StatefulWidget {
-  final String username;
+  final User user;
 
-  const PostsOfUserScreen({Key key, this.username}) : super(key: key);
+  const PostsOfUserScreen({Key key, this.user}) : super(key: key);
 
   @override
   _PostsOfUserScreenState createState() => _PostsOfUserScreenState();
@@ -17,7 +18,6 @@ class _PostsOfUserScreenState extends State<PostsOfUserScreen> {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    String _username = widget.username == null ? '' : widget.username;
 
     return Scaffold(
       appBar: PreferredSize(
@@ -33,7 +33,7 @@ class _PostsOfUserScreenState extends State<PostsOfUserScreen> {
       body: Container(
         color: Color(0xffc0cde0),
         child: Center(
-          child: _username == ''
+          child: widget.user == null
               ? LoginNotifyWidget(
                   context: context,
                 )
@@ -43,7 +43,7 @@ class _PostsOfUserScreenState extends State<PostsOfUserScreen> {
                 ),
         ),
       ),
-      floatingActionButton: _username != ''
+      floatingActionButton: widget.user != null
           ? FloatingActionButton(
               backgroundColor: Colors.red,
               onPressed: () {

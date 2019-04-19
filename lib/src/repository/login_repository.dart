@@ -9,9 +9,16 @@ class LoginRepository {
 
   ApiHandler _apiHandler = ApiHandler();
 
-  Future<String> callLoginApi() async {
+  Future<Map<String,dynamic>> callLoginApi() async {
     var response = await _apiHandler.checkLogin(user);
-    Map<String, dynamic> map = jsonDecode(response.toString());
-    return map['code'].toString();
+    Map<String, dynamic> map = jsonDecode(response);
+    return map;
+    // List<Map> mapList = [];
+    // mapList.addAll([
+    //   // jsonDecode(map['code'].toString()),
+    //   // jsonDecode(map['data']),
+    // ]);
+    // print(mapList[0].toString());
+    // return mapList;   
   }
 }

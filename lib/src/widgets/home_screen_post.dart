@@ -21,7 +21,7 @@ class HomeScreenPostState extends State<HomeScreenPost> {
 
   @override
   void initState() {
-    _image = Image.network(widget.postImage);
+    _image = Image.network(widget.postImage,fit: BoxFit.fill,);
     _image.image.resolve(ImageConfiguration()).addListener((_, __) {
       if (mounted) {
         setState(() {

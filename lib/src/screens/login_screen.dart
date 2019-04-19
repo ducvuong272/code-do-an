@@ -1,4 +1,5 @@
 import 'package:do_an_tn/src/blocs/login_bloc.dart';
+import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/home_dashboard.dart';
 import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
@@ -108,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   Container(
-                    padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
+                    padding: EdgeInsets.fromLTRB(20, 0, 20, 50),
                     child: TextField(
                       style: TextStyle(fontSize: 25),
                       obscureText: _passwordInvisible,
@@ -156,19 +157,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       loginBloc.login(
                         _userNameController.text.trim(),
                         _passwordController.text,
-                        () {
-                          _dialog.hideCustomDialog(context);
-                          _onLoginSuccess(context);
-                        },
-                        () {
-                          _dialog.hideCustomDialog(context);
-                          _dialog.showCustomDialog(
-                            context: context,
-                            msg: 'Đăng nhập không thành công!',
-                            barrierDismissible: true,
-                            showprogressIndicator: false,
-                          );
-                        },
+                        context,
+                        _dialog,
                       );
                     },
                     child: Container(
@@ -251,12 +241,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  _onLoginSuccess(BuildContext context) {
+  _navigateToHome(BuildContext context, User user) {
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
           builder: (context) => DashboardScreen(
-                username: _userNameController.text,
+                user: user,
               ),
         ),
         (Route<dynamic> route) => false);
