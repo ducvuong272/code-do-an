@@ -48,156 +48,154 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
     return Scaffold(
-      body: Container(
-        color: Color(0xffb5bfce),
-        child: Stack(
-          children: <Widget>[
-            Container(
-              color: Colors.white,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    height: 150.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(50.0),
-                      ),
-                    ),
-                    margin: EdgeInsets.only(
-                      top: 55.0,
-                      left: 10.0,
-                      right: 10.0,
-                    ),
-                    child: Swiper(
-                      autoplay: true,
-                      itemCount: _imagePaths.length,
-                      controller: SwiperController(),
-                      index: _pageIndex,
-                      itemBuilder: (context, index) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(10.0),
-                          child: Image.asset(
-                            _imagePaths[index],
-                            fit: BoxFit.fill,
+      body: ListView(
+        controller: _scrollController,
+        children: <Widget>[
+          Container(
+            color: Color(0xffb5bfce),
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        height: 150.0,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(50.0),
                           ),
-                        );
-                      },
-                      onIndexChanged: (index) {
-                        setState(() {
-                          _pageIndex = index;
-                        });
-                      },
-                    ),
+                        ),
+                        margin: EdgeInsets.only(
+                          top: 55.0,
+                          left: 10.0,
+                          right: 10.0,
+                        ),
+                        child: Swiper(
+                          autoplay: true,
+                          itemCount: _imagePaths.length,
+                          controller: SwiperController(),
+                          index: _pageIndex,
+                          itemBuilder: (context, index) {
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0),
+                              child: Image.asset(
+                                _imagePaths[index],
+                                fit: BoxFit.fill,
+                              ),
+                            );
+                          },
+                          onIndexChanged: (index) {
+                            setState(() {
+                              _pageIndex = index;
+                            });
+                          },
+                        ),
+                      ),
+                      DotsIndicator(
+                        dotShape: CircleBorder(
+                          side: BorderSide(
+                            color: Colors.grey,
+                          ),
+                        ),
+                        dotColor: Colors.white24,
+                        numberOfDot: _imagePaths.length,
+                        dotActiveColor: Colors.grey,
+                        dotSpacing: EdgeInsets.all(3.0),
+                        position: _pageIndex,
+                      ),
+                    ],
                   ),
-                  DotsIndicator(
-                    dotShape: CircleBorder(
-                      side: BorderSide(
-                        color: Colors.grey,
+                ),
+                Container(
+                  padding: EdgeInsets.all(7.0),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                  ),
+                  height: 50.0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(7.0),
                       ),
                     ),
-                    dotColor: Colors.white24,
-                    numberOfDot: _imagePaths.length,
-                    dotActiveColor: Colors.grey,
-                    dotSpacing: EdgeInsets.all(3.0),
-                    position: _pageIndex,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Icon(
+                              Icons.search,
+                              color: Colors.black54,
+                            ),
+                            Text(
+                              'Tìm kiếm món ăn, địa điểm...',
+                              style: TextStyle(
+                                  fontSize: 16, color: Colors.black45),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              'Đà Nẵng',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            Icon(Icons.arrow_drop_down),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  Container(
-                    color: Colors.white,
-                    height: MediaQuery.of(context).size.height -
-                        205 -
-                        androidBottomBarHeigh,
-                    child: StreamBuilder<Object>(
-                      stream: _postBLoc.getAllPostStream,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          List<Post> _listPost = snapshot.data;
-                          return GridView.count(
-                            crossAxisCount: 2,
-                            controller: _scrollController,
-                            physics: ScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            // childAspectRatio: 0.9,
-                            children: List.generate(
-                              _listPost.length,
-                              (index) {
-                                return GestureDetector(
-                                  child: HomeScreenPost(
-                                    postTitle: '${_listPost[index].postTitle}',
-                                    postDetail:
-                                        '${_listPost[index].postDetail}',
-                                    postImage: '${_listPost[index].imageUrl}',
+                ),
+              ],
+            ),
+          ),
+          StreamBuilder<Object>(
+            stream: _postBLoc.getAllPostStream,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                List<Post> _listPost = snapshot.data;
+                return GridView.count(
+                  shrinkWrap: true,
+                  crossAxisCount: 2,
+                  controller: _scrollController,
+                  physics: NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  // childAspectRatio: 0.9,
+                  children: List.generate(
+                    _listPost.length,
+                    (index) {
+                      return GestureDetector(
+                        child: HomeScreenPost(
+                          postTitle: '${_listPost[index].postTitle}',
+                          address: '${_listPost[index].address}',
+                          postImage: '${_listPost[index].imageUrl}',
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PostDetailScreen(
+                                    title: '${_listPost[index].postTitle}',
+                                    imageUrl: '${_listPost[index].imageUrl}',
                                   ),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => PostDetailScreen(
-                                              title:
-                                                  '${_listPost[index].postTitle}',
-                                              imageUrl:
-                                                  '${_listPost[index].imageUrl}',
-                                            ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
                             ),
                           );
-                        } else {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      },
-                    ),
+                        },
+                      );
+                    },
                   ),
-                ],
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.all(7.0),
-              decoration: BoxDecoration(
-                color: Colors.red,
-              ),
-              height: 50.0,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(7.0),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.search,
-                          color: Colors.black54,
-                        ),
-                        Text(
-                          'Tìm kiếm món ăn, địa điểm...',
-                          style: TextStyle(fontSize: 16, color: Colors.black45),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          'Đà Nẵng',
-                          style: TextStyle(fontSize: 16.0),
-                        ),
-                        Icon(Icons.arrow_drop_down),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          ),
+        ],
       ),
     );
   }
@@ -206,5 +204,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _postBLoc.dispose();
     super.dispose();
+  }
+
+  @override
+  void deactivate() {
+    _postBLoc.dispose();
+    super.deactivate();
   }
 }

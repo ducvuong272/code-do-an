@@ -43,7 +43,7 @@ class UserAccountScreen extends StatelessWidget {
                               user: user,
                             ),
                             Text(
-                              '${user.name}',
+                              '${user.lastName}',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,

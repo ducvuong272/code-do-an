@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class HomeScreenPost extends StatefulWidget {
-  final String postTitle, postDetail;
+  final String postTitle, address;
   final String postImage;
 
   const HomeScreenPost({
     Key key,
     this.postTitle,
-    this.postDetail,
+    this.address,
     this.postImage,
   }) : super(key: key);
 
@@ -77,7 +77,7 @@ class HomeScreenPostState extends State<HomeScreenPost> {
               Container(
                 margin: EdgeInsets.only(left: 5),
                 child: Text(
-                  widget.postDetail,
+                  widget.address,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 14,

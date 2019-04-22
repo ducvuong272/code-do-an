@@ -14,7 +14,7 @@ class UserAvatar extends StatelessWidget {
       margin: EdgeInsets.only(right: 10),
       child: Center(
         child: Text(
-          user == null ? 'V' : user.name.substring(0, 1).toUpperCase(),
+          user == null ? 'V' : user.lastName.substring(0, 1).toUpperCase(),
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,

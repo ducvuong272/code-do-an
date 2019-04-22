@@ -1,5 +1,5 @@
 class User {
-  String username, password, imageUrl, email, name;
+  String username, password, imageUrl, email, firstName, lastName;
   int userId, roleId;
 
   User({
@@ -9,7 +9,8 @@ class User {
     this.roleId,
     this.imageUrl,
     this.userId,
-    this.name,
+    this.firstName,
+    this.lastName,
   });
 
   User.fromJson(Map<String, dynamic> json) {
@@ -19,7 +20,8 @@ class User {
     imageUrl = json['TapTinTaiKhoan'];
     roleId = json['Id_VaiTro'];
     userId = json['Id_TaiKhoan'];
-    name = json['HoTen'];
+    firstName = json['Ho'];
+    lastName = json['Ten'];
   }
 
   Map<String, dynamic> toJson() {
@@ -30,15 +32,17 @@ class User {
     data['TapTinTaiKhoan'] = this.imageUrl;
     data['Id_VaiTro'] = this.roleId;
     data['Id_TaiKhoan'] = this.userId;
-    data['HoTen'] = this.name;
+    data['Ho'] = this.firstName;
+    data['Ten'] = this.lastName;
     return data;
   }
 
-  Map<String, dynamic> toRegisterJson(){
+  Map<String, dynamic> toRegisterJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['TenTaiKhoan'] = this.username;
     data['MatKhau'] = this.password;
-    data['HoTen'] = this.name;
+    data['Ho'] = this.firstName;
+    data['Ten'] = this.lastName;
     data['Email'] = this.email;
     return data;
   }

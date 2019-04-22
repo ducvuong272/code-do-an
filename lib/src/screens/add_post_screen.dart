@@ -1,4 +1,5 @@
 import 'package:do_an_tn/src/blocs/add_post_bloc.dart';
+import 'package:do_an_tn/src/screens/image_selection_screen.dart';
 import 'package:flutter/material.dart';
 
 class AddPost extends StatefulWidget {
@@ -14,6 +15,14 @@ class AddPostState extends State<AddPost> {
   TimeOfDay _time1 = TimeOfDay(hour: 9, minute: 0),
       _time2 = TimeOfDay(hour: 21, minute: 0);
   AddPostBloc _addPostBloc = AddPostBloc();
+  Map<int, String> _areaMap = {
+    1: 'Hải Châu',
+    2: 'Sơn Trà',
+    3: 'Liên Chiểu',
+    4: 'Thanh Khê',
+    5: 'Ngũ Hành Sơn'
+  };
+  int _areaIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +31,17 @@ class AddPostState extends State<AddPost> {
         preferredSize: Size.fromHeight(60),
         child: AppBar(
           actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.photo),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.photo_camera),
-              onPressed: () {},
-            ),
+            GestureDetector(
+              onTap: () {},
+              child: Center(
+                child: Text(
+                  'Xong',
+                  style: TextStyle(
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            )
           ],
           backgroundColor: Colors.red,
           title: Text('Thêm địa điểm'),
@@ -50,6 +62,7 @@ class AddPostState extends State<AddPost> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
+                    _buildImageSection(),
                     _headerSection('Chọn Tỉnh/Thành phố'),
                     Container(
                       height: 45,
@@ -57,9 +70,18 @@ class AddPostState extends State<AddPost> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          _locationPickingSection('Việt Nam', context),
-                          _locationPickingSection('Đà Nẵng', context),
-                          _locationPickingSection('Chọn quận', context),
+                          _locationPickingSection(
+                              text: 'Việt Nam', context: context),
+                          _locationPickingSection(
+                              text: 'Đà Nẵng', context: context),
+                          _locationPickingSection(
+                              text: _areaIndex == null
+                                  ? 'Chọn quận'
+                                  : _areaMap.values.elementAt(_areaIndex),
+                              context: context,
+                              function: () {
+                                _buildDistricPicker(context);
+                              }),
                         ],
                       ),
                     ),
@@ -207,10 +229,15 @@ class AddPostState extends State<AddPost> {
                               Expanded(
                                 child: TextField(
                                   keyboardType: TextInputType.multiline,
+                                  controller: _postDetailController,
                                   maxLines: 30,
                                   decoration: InputDecoration(
                                     contentPadding: EdgeInsets.all(0),
                                     labelText: 'Nhập mô tả',
+                                    labelStyle: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                     alignLabelWithHint: true,
                                   ),
                                 ),
@@ -226,6 +253,10 @@ class AddPostState extends State<AddPost> {
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.add_photo_alternate),
       ),
     );
   }
@@ -342,7 +373,11 @@ class AddPostState extends State<AddPost> {
     );
   }
 
-  Widget _locationPickingSection(String text, BuildContext context) {
+  Widget _locationPickingSection({
+    String text,
+    BuildContext context,
+    Function function,
+  }) {
     return Container(
       width: (MediaQuery.of(context).size.width - 50) / 3,
       margin: EdgeInsets.all(8),
@@ -355,18 +390,79 @@ class AddPostState extends State<AddPost> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        onPressed: () {},
+        onPressed: function == null ? () {} : function,
         child: Center(
           child: Text(
             text,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 14,
               color: Colors.white,
             ),
           ),
         ),
       ),
     );
+  }
+
+  _buildDistricPicker(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return ListView.builder(
+            itemCount: _areaMap.length,
+            padding: EdgeInsets.only(left: 20),
+            itemBuilder: (context, index) {
+              return StatefulBuilder(
+                builder: (context, state) {
+                  return GestureDetector(
+                    onTap: () {
+                      debugPrint(_areaMap.values.elementAt(index));
+                      setState(() {
+                        _areaIndex = index;
+                        Navigator.of(context).pop();
+                      });
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 20),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            _areaMap.values.elementAt(index),
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          _areaIndex == index
+                              ? Container(
+                                  child: Icon(
+                                    Icons.check,
+                                    color: Colors.red,
+                                  ),
+                                  padding: EdgeInsets.only(left: 20),
+                                )
+                              : Container(),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          );
+        });
+  }
+
+  Widget _buildImageSection() {
+    return Center(child: CircularProgressIndicator());
+  }
+
+  Widget _buildPostCategory() {
+    return ListView.builder(
+      itemCount: 6,
+      itemBuilder: (context, index) {},
+    );
+  }
+
+  _updateBottomSheet(StateSetter updateState) {
+    updateState(() {});
   }
 
   @override

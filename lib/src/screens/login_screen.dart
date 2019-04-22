@@ -22,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _userNameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   bool _passwordInvisible = true;
+  FocusNode _usernameFocusNode = FocusNode(), _passwordFocusNode = FocusNode();
 
   @override
   void dispose() {
@@ -37,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Column(
           children: <Widget>[
             Container(
-              height: 350,
+              padding: EdgeInsets.only(bottom: 20),
               margin: EdgeInsets.fromLTRB(30, 150, 30, 20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
@@ -74,6 +75,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(fontSize: 25),
                       autocorrect: false,
                       controller: _userNameController,
+                      focusNode: _usernameFocusNode,
+                      onEditingComplete: () {
+                        FocusScope.of(context).requestFocus(_passwordFocusNode);
+                        _passwordController.selection = TextSelection(
+                          baseOffset: 0,
+                          extentOffset: _passwordController.text.length,
+                        );
+                      },
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(0),
                         suffix: GestureDetector(
@@ -109,12 +118,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   Container(
-                    padding: EdgeInsets.fromLTRB(20, 0, 20, 50),
+                    padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
                     child: TextField(
                       style: TextStyle(fontSize: 25),
                       obscureText: _passwordInvisible,
                       autocorrect: false,
                       controller: _passwordController,
+                      focusNode: _passwordFocusNode,
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(0),
                         suffix: Row(
@@ -142,6 +152,26 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                       ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 20, right: 25),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        GestureDetector(
+                          onTap: () {
+                            widget.onForgetPassTapped();
+                          },
+                          child: Text(
+                            'Quên mật khẩu ?',
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   RaisedButton(
@@ -176,60 +206,33 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     elevation: 0.0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(30),
                     ),
                   ),
-                ],
-              ),
-            ),
-            Container(
-              height: 100,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      widget.onForgetPassTapped();
-                    },
-                    child: Text(
-                      'Quên mật khẩu ?',
-                      style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Text(
-                      'Hoặc',
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  RaisedButton(
-                    color: Color(0xff557ce0),
-                    onPressed: () {
-                      widget.onSignUpTapped();
-                    },
-                    child: Container(
-                      height: 50,
-                      width: 250,
-                      child: Center(
-                        child: Text(
-                          'Tại tài khoản mới',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
+                  Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: RaisedButton(
+                      color: Color(0xff557ce0),
+                      onPressed: () {
+                        widget.onSignUpTapped();
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 250,
+                        child: Center(
+                          child: Text(
+                            'Tạo tài khoản mới',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    elevation: 0.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                      elevation: 0.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
                     ),
                   ),
                 ],
@@ -239,16 +242,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ],
     );
-  }
-
-  _navigateToHome(BuildContext context, User user) {
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => DashboardScreen(
-                user: user,
-              ),
-        ),
-        (Route<dynamic> route) => false);
   }
 }
