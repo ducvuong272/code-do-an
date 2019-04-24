@@ -14,24 +14,29 @@ class RegisterBloc {
   Stream get password2Stream => _password2Controller.stream;
   StreamController<String> _usernameController = StreamController<String>();
   Stream get usernameStream => _usernameController.stream;
-  StreamController<String> _nameController = StreamController<String>();
-  Stream get nameStream => _nameController.stream;
+  StreamController<String> _firstNameController = StreamController<String>();
+  Stream get firstNameStream => _firstNameController.stream;
+  StreamController<String> _lastNameController = StreamController<String>();
+  Stream get lastNameStream => _lastNameController.stream;
 
   bool isValidInfo(
     String email,
-    String name,
+    String firstName,
+    String lastName,
     String username,
     String password,
     String checkPassword,
   ) {
     _isValidEmail(email);
     _isValidUsername(username);
-    _isValidName(name);
+    _isValidFirstName(firstName);
+    _isValidLastName(lastName);
     _isValidPassword(password);
     _isValidCheckPassword(password, checkPassword);
     return _isValidEmail(email) &&
             _isValidUsername(username) &&
-            _isValidName(name) &&
+            _isValidFirstName(firstName) &&
+            _isValidLastName(lastName) &&
             _isValidPassword(password) &&
             _isValidCheckPassword(
               password,
@@ -66,12 +71,21 @@ class RegisterBloc {
     return true;
   }
 
-  _isValidName(String name) {
-    if (name.trim() == '') {
-      _nameController.sink.addError('Họ tên không được để trống');
+  _isValidFirstName(String firstName) {
+    if (firstName.trim() == '') {
+      _firstNameController.sink.addError('Họ không được để trống');
       return false;
     }
-    _nameController.sink.add('OK');
+    _firstNameController.sink.add('OK');
+    return true;
+  }
+
+  _isValidLastName(String lastName) {
+    if (lastName.trim() == '') {
+      _lastNameController.sink.addError('Tên không được để trống');
+      return false;
+    }
+    _lastNameController.sink.add('OK');
     return true;
   }
 
@@ -118,7 +132,8 @@ class RegisterBloc {
     _emailController.close();
     _password1Controller.close();
     _password2Controller.close();
-    _nameController.close();
+    _firstNameController.close();
     _usernameController.close();
+    _lastNameController.close();
   }
 }

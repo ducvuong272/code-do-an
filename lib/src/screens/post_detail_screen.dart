@@ -1,5 +1,6 @@
 import 'package:do_an_tn/src/blocs/post_bloc.dart';
 import 'package:do_an_tn/src/models/post.dart';
+import 'package:do_an_tn/src/screens/comment_screen.dart';
 import 'package:do_an_tn/src/widgets/comment_section.dart';
 import 'package:flutter/material.dart';
 
@@ -126,7 +127,6 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                                 children: <Widget>[
                                   _postStatus(52, 'Bình luận'),
                                   _postStatus(124, 'Hình ảnh'),
-                                  _postStatus(15, 'Check-in'),
                                   _postStatus(22, 'Lưu lại'),
                                   CircleAvatar(
                                     backgroundColor: Color(0xff187a1d),
@@ -449,7 +449,13 @@ class PostDetailScreenState extends State<PostDetailScreen> {
           _constantElements(
             Icons.chat_bubble_outline,
             'Bình luận',
-            () {},
+            () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => CommentScreen(),
+                ),
+              );
+            },
           ),
           _constantElements(
             Icons.done_outline,

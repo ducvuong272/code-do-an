@@ -18,7 +18,10 @@ class LoginBloc {
     BuildContext context,
     CustomDialog dialog,
   ) {
-    final checkUser = User(username: username, password: password);
+    final checkUser = User(
+      username: username,
+      password: password,
+    );
     LoginRepository _loginRepository = LoginRepository(checkUser);
     Future<Map<String, dynamic>> future = _loginRepository.callLoginApi();
     future.then((onValue) {

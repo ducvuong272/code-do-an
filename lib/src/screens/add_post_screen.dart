@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:do_an_tn/src/blocs/add_post_bloc.dart';
 import 'package:do_an_tn/src/screens/image_selection_screen.dart';
 import 'package:flutter/material.dart';
@@ -22,10 +23,19 @@ class AddPostState extends State<AddPost> {
     4: 'Thanh Khê',
     5: 'Ngũ Hành Sơn'
   };
-  int _areaIndex;
+  Map<int, String> _postCategoryMap = {
+    1: 'Ăn uống',
+    2: 'Du lịch',
+    3: 'Văn hóa',
+    4: 'Dịch vụ',
+    5: 'Giải trí'
+  };
+  int _areaIndex, _postCategoryIndex;
+  File _imageFile;
 
   @override
   Widget build(BuildContext context) {
+    Size _screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60),
@@ -62,7 +72,7 @@ class AddPostState extends State<AddPost> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    _buildImageSection(),
+                    _buildImageSection(_screenSize.height / 3),
                     _headerSection('Chọn Tỉnh/Thành phố'),
                     Container(
                       height: 45,
@@ -80,12 +90,12 @@ class AddPostState extends State<AddPost> {
                                   : _areaMap.values.elementAt(_areaIndex),
                               context: context,
                               function: () {
-                                _buildDistricPicker(context);
+                                _buildBottomSheet(context, _areaMap, true);
                               }),
                         ],
                       ),
                     ),
-                    _headerSection('Thông tin bắt buộc'),
+                    _headerSection('Thông tin chính'),
                     _infoSection(
                       iconData: Icons.account_balance,
                       textField: true,
@@ -97,9 +107,22 @@ class AddPostState extends State<AddPost> {
                       child: _infoSection(
                         iconData: Icons.add_to_photos,
                         textField: false,
-                        text: 'Loại hình địa điểm',
-                        widget: Icon(Icons.navigate_next),
-                        function: () {},
+                        text: _postCategoryIndex == null
+                            ? 'Chọn loại hình địa điểm'
+                            : 'Loại hình địa điểm: ' +
+                                _postCategoryMap.values
+                                    .elementAt(_postCategoryIndex),
+                        widget: Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.black,
+                        ),
+                        function: () {
+                          _buildBottomSheet(
+                            context,
+                            _postCategoryMap,
+                            false,
+                          );
+                        },
                       ),
                     ),
                     _infoSection(
@@ -169,41 +192,52 @@ class AddPostState extends State<AddPost> {
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 2, bottom: 2),
-                      child: _infoSection(
-                        iconData: Icons.monetization_on,
-                        textField: false,
-                        text: 'Mức giá',
-                        widget: Container(
-                          width: 250,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Expanded(
-                                child: TextField(
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.all(5),
-                                    labelText: 'Giá thấp nhất',
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                child: Text('Đến'),
-                                margin: EdgeInsets.only(left: 5, right: 5),
-                              ),
-                              Expanded(
-                                child: TextField(
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.all(5),
-                                    labelText: 'Giá cao nhất',
-                                  ),
-                                ),
-                              ),
-                            ],
+                      child: Column(
+                        children: <Widget>[
+                          _infoSection(
+                            iconData: Icons.monetization_on,
+                            textField: false,
+                            text: 'Mức giá (VND)',
                           ),
-                        ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 2),
+                            child: Container(
+                              height: 45,
+                              padding: EdgeInsets.only(left: 15),
+                              color: Colors.white,
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: TextField(
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.all(0),
+                                          labelText: 'Giá cao nhất'),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(left: 5, right: 5),
+                                    child: Text(
+                                      'Đến',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: TextField(
+                                      keyboardType: TextInputType.number,
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.all(0),
+                                        labelText: 'Giá thấp nhất',
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     Column(
@@ -218,7 +252,7 @@ class AddPostState extends State<AddPost> {
                                 margin: EdgeInsets.only(
                                   right: 10,
                                   left: 10,
-                                  top: 10,
+                                  top: 15,
                                 ),
                                 child: Icon(
                                   Icons.library_books,
@@ -230,7 +264,8 @@ class AddPostState extends State<AddPost> {
                                 child: TextField(
                                   keyboardType: TextInputType.multiline,
                                   controller: _postDetailController,
-                                  maxLines: 30,
+                                  maxLines: 20,
+                                  maxLengthEnforced: false,
                                   decoration: InputDecoration(
                                     contentPadding: EdgeInsets.all(0),
                                     labelText: 'Nhập mô tả',
@@ -255,7 +290,13 @@ class AddPostState extends State<AddPost> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          _addPostBloc.pickImageFromCamera().then((onValue) {
+            setState(() {
+              _imageFile = onValue;
+            });
+          });
+        },
         child: Icon(Icons.add_photo_alternate),
       ),
     );
@@ -314,6 +355,7 @@ class AddPostState extends State<AddPost> {
                       ? Expanded(
                           child: TextField(
                             style: TextStyle(
+                              fontSize: 20,
                               fontWeight: FontWeight.w400,
                             ),
                             keyboardType:
@@ -404,21 +446,25 @@ class AddPostState extends State<AddPost> {
     );
   }
 
-  _buildDistricPicker(BuildContext context) {
+  _buildBottomSheet(
+      BuildContext context, Map<int, String> map, bool isAreaIndex) {
+    String result;
     showModalBottomSheet(
         context: context,
         builder: (context) {
           return ListView.builder(
-            itemCount: _areaMap.length,
+            itemCount: map.length,
             padding: EdgeInsets.only(left: 20),
             itemBuilder: (context, index) {
               return StatefulBuilder(
                 builder: (context, state) {
                   return GestureDetector(
                     onTap: () {
-                      debugPrint(_areaMap.values.elementAt(index));
                       setState(() {
-                        _areaIndex = index;
+                        isAreaIndex
+                            ? _areaIndex = index
+                            : _postCategoryIndex = index;
+                        result = map.values.elementAt(index);
                         Navigator.of(context).pop();
                       });
                     },
@@ -427,16 +473,16 @@ class AddPostState extends State<AddPost> {
                       child: Row(
                         children: <Widget>[
                           Text(
-                            _areaMap.values.elementAt(index),
+                            map.values.elementAt(index),
                             style: TextStyle(fontSize: 20),
                           ),
-                          _areaIndex == index
+                          _postCategoryIndex == index
                               ? Container(
+                                  padding: EdgeInsets.only(left: 20),
                                   child: Icon(
                                     Icons.check,
                                     color: Colors.red,
                                   ),
-                                  padding: EdgeInsets.only(left: 20),
                                 )
                               : Container(),
                         ],
@@ -448,21 +494,18 @@ class AddPostState extends State<AddPost> {
             },
           );
         });
+    return result;
   }
 
-  Widget _buildImageSection() {
-    return Center(child: CircularProgressIndicator());
-  }
-
-  Widget _buildPostCategory() {
-    return ListView.builder(
-      itemCount: 6,
-      itemBuilder: (context, index) {},
-    );
-  }
-
-  _updateBottomSheet(StateSetter updateState) {
-    updateState(() {});
+  Widget _buildImageSection(double height) {
+    return _imageFile == null
+        ? Container()
+        : Container(
+            height: height,
+            child: Image.file(
+              _imageFile,
+            ),
+          );
   }
 
   @override

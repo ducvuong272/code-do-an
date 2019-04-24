@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class AddPostBloc {
   StreamController<TimeOfDay> _openTimeController =
@@ -37,6 +39,11 @@ class AddPostBloc {
         _closeTimeController.sink.add(onValue);
       }
     });
+  }
+
+  Future<File> pickImageFromCamera() async {
+    File imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
+    return imageFile;
   }
 
   dispose() {
