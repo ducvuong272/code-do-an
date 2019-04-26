@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:do_an_tn/src/models/post.dart';
 import 'package:http/http.dart' as http;
 import 'package:do_an_tn/src/utils/export_model.dart';
 import 'package:do_an_tn/src/constants.dart';
@@ -44,6 +45,17 @@ class ApiHandler {
   Future<String> getAllUsers() async {
     final apiUrl = 'https://projectapi-khanhpham.herokuapp.com/tai-khoan';
     final response = await http.get(apiUrl, headers: kApiHeader);
+    return response.body;
+  }
+
+  Future<String> addPost(Post post) async {
+    final apiUrl = kAddPostUrl;
+    final response = await http.post(
+      apiUrl,
+      body: json.encode(
+        post.toAddPostJson(),
+      ),
+    );
     return response.body;
   }
 }

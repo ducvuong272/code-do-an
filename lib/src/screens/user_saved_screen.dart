@@ -1,5 +1,6 @@
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/widgets/login_notify_button.dart';
+import 'package:do_an_tn/src/widgets/post_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -12,14 +13,12 @@ class UserSavedScreen extends StatefulWidget {
   _UserSavedScreenState createState() => _UserSavedScreenState();
 }
 
-class _UserSavedScreenState extends State<UserSavedScreen>
-    with TickerProviderStateMixin {
+class _UserSavedScreenState extends State<UserSavedScreen> {
   @override
   Widget build(BuildContext context) {
     User _user = widget.user;
     SystemChrome.setEnabledSystemUIOverlays([]);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    TabController _tabController = TabController(length: 4, vsync: this);
 
     return Scaffold(
       appBar: PreferredSize(
@@ -35,7 +34,19 @@ class _UserSavedScreenState extends State<UserSavedScreen>
       body: Container(
         color: Color(0xffc0cde0),
         child: _user != null
-            ? Container()
+            ?
+            // Center(
+            //     child: Text(
+            //       'Chưa có địa điểm nào được lưu',
+            //       style: TextStyle(fontSize: 20),
+            //     ),
+            //   )
+            ListView.builder(
+                itemCount: 19,
+                itemBuilder: (context, index) {
+                  return PostList();
+                },
+              )
             : LoginNotifyWidget(
                 context: context,
               ),

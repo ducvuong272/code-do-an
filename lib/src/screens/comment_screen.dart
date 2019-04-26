@@ -12,6 +12,7 @@ class CommentScreenState extends State<CommentScreen> {
       _qualityRating = 5,
       _serviceRating = 5,
       _viewRating = 5;
+      ScrollController _scrollController = ScrollController();
   CommentBloc _commentBloc = CommentBloc();
 
   @override
@@ -40,6 +41,7 @@ class CommentScreenState extends State<CommentScreen> {
         ),
       ),
       body: ListView(
+        controller: _scrollController,
         children: <Widget>[
           Container(
             color: Color(0xffdce0e5),
@@ -97,10 +99,23 @@ class CommentScreenState extends State<CommentScreen> {
                   color: Colors.white,
                   child: GridView.count(
                     shrinkWrap: true,
-                    crossAxisSpacing: 10.0,
-                    mainAxisSpacing: 5.0,
+                    controller: _scrollController,
                     crossAxisCount: 2,
                     children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.all(5),
+                        child: Image.asset(
+                          'assets/images/1.png',
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.all(5),
+                        child: Image.asset(
+                          'assets/images/1.png',
+                          fit: BoxFit.fill,
+                        ),
+                      ),
                       Container(
                         margin: EdgeInsets.all(5),
                         child: Image.asset(

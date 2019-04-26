@@ -12,6 +12,7 @@ class RegisterRepository {
   Future<String> signUp() async {
     final response = await _apiHandler.checkSignUp(user);
     Map<String, dynamic> map = jsonDecode(response);
+    print(map);
     return map['success'];
   }
 }

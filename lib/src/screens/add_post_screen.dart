@@ -1,18 +1,17 @@
 import 'dart:io';
 import 'package:do_an_tn/src/blocs/add_post_bloc.dart';
-import 'package:do_an_tn/src/screens/image_selection_screen.dart';
 import 'package:flutter/material.dart';
 
-class AddPost extends StatefulWidget {
+class AddPostScreen extends StatefulWidget {
   @override
-  AddPostState createState() => AddPostState();
+  AddPostScreenState createState() => AddPostScreenState();
 }
 
-class AddPostState extends State<AddPost> {
-  TextEditingController _postTitleController = TextEditingController();
-  TextEditingController _addressController = TextEditingController();
-  TextEditingController _phoneController = TextEditingController();
-  TextEditingController _postDetailController = TextEditingController();
+class AddPostScreenState extends State<AddPostScreen> {
+  TextEditingController _postTitleController = TextEditingController(),
+      _addressController = TextEditingController(),
+      _phoneController = TextEditingController(),
+      _postDetailController = TextEditingController();
   TimeOfDay _time1 = TimeOfDay(hour: 9, minute: 0),
       _time2 = TimeOfDay(hour: 21, minute: 0);
   AddPostBloc _addPostBloc = AddPostBloc();
@@ -42,12 +41,17 @@ class AddPostState extends State<AddPost> {
         child: AppBar(
           actions: <Widget>[
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                print(_areaIndex.toString() + _areaIndex.toString());
+              },
               child: Center(
-                child: Text(
-                  'Xong',
-                  style: TextStyle(
-                    fontSize: 20,
+                child: Container(
+                  padding: EdgeInsets.only(right: 10),
+                  child: Text(
+                    'Xong',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
                   ),
                 ),
               ),
@@ -212,7 +216,7 @@ class AddPostState extends State<AddPost> {
                                       keyboardType: TextInputType.number,
                                       decoration: InputDecoration(
                                           contentPadding: EdgeInsets.all(0),
-                                          labelText: 'Giá cao nhất'),
+                                          labelText: 'Giá thấp nhất'),
                                     ),
                                   ),
                                   Container(
@@ -229,7 +233,7 @@ class AddPostState extends State<AddPost> {
                                       keyboardType: TextInputType.number,
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.all(0),
-                                        labelText: 'Giá thấp nhất',
+                                        labelText: 'Giá cao nhất',
                                       ),
                                     ),
                                   ),
@@ -291,15 +295,34 @@ class AddPostState extends State<AddPost> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _addPostBloc.pickImageFromCamera().then((onValue) {
-            setState(() {
-              _imageFile = onValue;
-            });
-          });
+          _addPostBloc.showOptionsToPickImage(
+            context: context,
+            pickImageFromAlbum: _pickImageFromAlbum,
+            pickImageFromCamera: _pickImageFromCamera,
+          );
+          print(_imageFile);
         },
         child: Icon(Icons.add_photo_alternate),
       ),
     );
+  }
+
+  _pickImageFromCamera() {
+    _addPostBloc.pickImageFromCamera().then((onValue) {
+      setState(() {
+        _imageFile = onValue;
+      });
+      Navigator.of(context).pop();
+    });
+  }
+
+  _pickImageFromAlbum() {
+    _addPostBloc.pickImageFromAlbum().then((onValue) {
+      setState(() {
+        _imageFile = onValue;
+      });
+      Navigator.of(context).pop();
+    });
   }
 
   Widget _timePickerSection(TimeOfDay time, BuildContext context) {
@@ -423,7 +446,6 @@ class AddPostState extends State<AddPost> {
     return Container(
       width: (MediaQuery.of(context).size.width - 50) / 3,
       margin: EdgeInsets.all(8),
-      // padding: EdgeInsets.only(top: 5, bottom: 5),
       decoration: BoxDecoration(
         color: Color(0xff5ad849),
         borderRadius: BorderRadius.circular(12),
@@ -454,7 +476,6 @@ class AddPostState extends State<AddPost> {
         builder: (context) {
           return ListView.builder(
             itemCount: map.length,
-            padding: EdgeInsets.only(left: 20),
             itemBuilder: (context, index) {
               return StatefulBuilder(
                 builder: (context, state) {
@@ -469,7 +490,8 @@ class AddPostState extends State<AddPost> {
                       });
                     },
                     child: Container(
-                      margin: EdgeInsets.only(top: 20),
+                      padding: EdgeInsets.only(top: 20, left: 20),
+                      color: Colors.red.withOpacity(0.0),
                       child: Row(
                         children: <Widget>[
                           Text(

@@ -43,7 +43,7 @@ class UserAccountScreen extends StatelessWidget {
                               user: user,
                             ),
                             Text(
-                              '${user.lastName}',
+                              '${user.lastName.trim()} ${user.firstName.trim()}',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,

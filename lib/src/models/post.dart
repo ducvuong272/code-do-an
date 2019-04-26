@@ -41,13 +41,15 @@ class Post {
     data["TenDiaDem"] = postTitle;
     data["DiaChi"] = address;
     data["MoTa"] = postDetail;
-    data["ThanhPho"] = city;
-    data["QuanHuyen"] = district;
+    // data["ThanhPho"] = city;
+    data["TenLoaiHinhDiaDiem"] = postCategories;
+    data["TenQuanHuyen"] = district;
     data["SoDienThoai"] = phoneNumber;
     data["GioMoCua"] = openTime;
     data["GioDongCua"] = closeTime;
     data["GiaCaoNhat"] = highestPrice;
     data["GiaThapNhat"] = lowestPrice;
+    data["Id_TaiKhoan"] = userId;
     return data;
   }
 }

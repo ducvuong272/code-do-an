@@ -3,4 +3,5 @@ String kApiUrl = 'https://projectapi-khanhpham.herokuapp.com';
 String kLoginUrl = '$kApiUrl/dang-nhap';
 String kAllPostsUrl = '$kApiUrl/dia-diem';
 String kSingUpUrl = '$kApiUrl/dang-ky';
+String kAddPostUrl = '$kApiUrl/them-dia-diem';
 Map<String, String> kApiHeader = {"Content-Type" : "application/json"};

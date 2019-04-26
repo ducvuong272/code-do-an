@@ -14,4 +14,11 @@ class PostRepository {
         .toList();
     return listPosts;
   }
+
+  Future<Map<String, dynamic>> addPost(Post post) async {
+    var response = await _apiHandler.addPost(post);
+    var map = json.decode(response);
+    print(map);
+    return map;
+  }
 }

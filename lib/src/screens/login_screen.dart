@@ -23,10 +23,11 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _passwordController = TextEditingController();
   bool _passwordInvisible = true;
   FocusNode _usernameFocusNode = FocusNode(), _passwordFocusNode = FocusNode();
+  LoginBloc _loginBloc = LoginBloc();
 
   @override
   void dispose() {
-    loginBloc.dispose();
+    _loginBloc.dispose();
     super.dispose();
   }
 
@@ -71,28 +72,35 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   Container(
                     padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    child: TextField(
-                      style: TextStyle(fontSize: 25),
-                      autocorrect: false,
-                      controller: _userNameController,
-                      focusNode: _usernameFocusNode,
-                      onEditingComplete: () {
-                        FocusScope.of(context).requestFocus(_passwordFocusNode);
-                        _passwordController.selection = TextSelection(
-                          baseOffset: 0,
-                          extentOffset: _passwordController.text.length,
-                        );
-                      },
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(0),
-                        suffix: GestureDetector(
-                          child: Icon(
-                            Icons.clear,
-                          ),
-                          onTap: () => _userNameController.clear(),
-                        ),
-                      ),
-                    ),
+                    child: StreamBuilder<Object>(
+                        stream: _loginBloc.usernameStream,
+                        builder: (context, snapshot) {
+                          return TextField(
+                            style: TextStyle(fontSize: 25),
+                            autocorrect: false,
+                            controller: _userNameController,
+                            focusNode: _usernameFocusNode,
+                            onEditingComplete: () {
+                              FocusScope.of(context)
+                                  .requestFocus(_passwordFocusNode);
+                              _passwordController.selection = TextSelection(
+                                baseOffset: 0,
+                                extentOffset: _passwordController.text.length,
+                              );
+                            },
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(0),
+                              errorText:
+                                  snapshot.hasError ? snapshot.error : null,
+                              suffix: GestureDetector(
+                                child: Icon(
+                                  Icons.clear,
+                                ),
+                                onTap: () => _userNameController.clear(),
+                              ),
+                            ),
+                          );
+                        }),
                   ),
                   Row(
                     children: <Widget>[
@@ -119,40 +127,47 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   Container(
                     padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
-                    child: TextField(
-                      style: TextStyle(fontSize: 25),
-                      obscureText: _passwordInvisible,
-                      autocorrect: false,
-                      controller: _passwordController,
-                      focusNode: _passwordFocusNode,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(0),
-                        suffix: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.only(right: 15),
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _passwordInvisible = !_passwordInvisible;
-                                  });
-                                },
-                                child: Icon(
-                                  Icons.remove_red_eye,
-                                ),
+                    child: StreamBuilder<Object>(
+                        stream: _loginBloc.passwordStream,
+                        builder: (context, snapshot) {
+                          return TextField(
+                            style: TextStyle(fontSize: 25),
+                            obscureText: _passwordInvisible,
+                            autocorrect: false,
+                            controller: _passwordController,
+                            focusNode: _passwordFocusNode,
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(0),
+                              errorText:
+                                  snapshot.hasError ? snapshot.error : null,
+                              suffix: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Container(
+                                    padding: EdgeInsets.only(right: 15),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          _passwordInvisible =
+                                              !_passwordInvisible;
+                                        });
+                                      },
+                                      child: Icon(
+                                        Icons.remove_red_eye,
+                                      ),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () => _passwordController.clear(),
+                                    child: Icon(
+                                      Icons.clear,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            GestureDetector(
-                              onTap: () => _passwordController.clear(),
-                              child: Icon(
-                                Icons.clear,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                          );
+                        }),
                   ),
                   Padding(
                     padding: EdgeInsets.only(bottom: 20, right: 25),
@@ -178,13 +193,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: Color(0xff50ce5f),
                     onPressed: () {
                       CustomDialog _dialog = CustomDialog();
-                      _dialog.showCustomDialog(
-                        context: context,
-                        msg: 'Đang tiến hành đăng nhập...',
-                        barrierDismissible: false,
-                        showprogressIndicator: true,
-                      );
-                      loginBloc.login(
+                      _loginBloc.login(
                         _userNameController.text.trim(),
                         _passwordController.text,
                         context,

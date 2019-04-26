@@ -18,20 +18,29 @@ class LoginBloc {
     BuildContext context,
     CustomDialog dialog,
   ) {
-    final checkUser = User(
-      username: username,
-      password: password,
-    );
-    LoginRepository _loginRepository = LoginRepository(checkUser);
-    Future<Map<String, dynamic>> future = _loginRepository.callLoginApi();
-    future.then((onValue) {
-      if (onValue['code'].toString() == '200') {
-        User userLoggedIn = User.fromJson(onValue['data']);
-        _onLoginSuccess(context, dialog, userLoggedIn);
-      } else {
-        _onLoginFail(context, dialog);
-      }
-    });
+    var isValidInfo = _checkValidInfo(username, password);
+    if (isValidInfo) {
+      dialog.showCustomDialog(
+        context: context,
+        msg: 'Đang tiến hành đăng nhập...',
+        barrierDismissible: false,
+        showprogressIndicator: true,
+      );
+      final user = User(
+        username: username,
+        password: password,
+      );
+      LoginRepository _loginRepository = LoginRepository(user);
+      Future<Map<String, dynamic>> future = _loginRepository.callLoginApi();
+      future.then((onValue) {
+        if (onValue['code'].toString() == '200') {
+          User userLoggedIn = User.fromJson(onValue['data']);
+          _onLoginSuccess(context, dialog, userLoggedIn);
+        } else {
+          _onLoginFail(context, dialog);
+        }
+      });
+    }
   }
 
   _onLoginSuccess(BuildContext context, CustomDialog dialog, User user) {
@@ -58,10 +67,32 @@ class LoginBloc {
     );
   }
 
+  bool _isValidUsername(String username) {
+    if (username.trim() == '') {
+      _usernameController.sink.addError('Tên đăng nhập không được để trống!');
+      return false;
+    }
+    _usernameController.sink.add('OK');
+    return true;
+  }
+
+  bool _isValidPassword(String password) {
+    if (password.trim() == '') {
+      _passwordController.sink.addError('Mật khẩu không được để trống!');
+      return false;
+    }
+    _passwordController.sink.add('OK');
+    return true;
+  }
+
+  bool _checkValidInfo(String username, String password) {
+    bool isValidUsername = _isValidUsername(username);
+    bool isValidPassword = _isValidPassword(password);
+    return isValidUsername && isValidPassword ? true : false;
+  }
+
   void dispose() {
     _usernameController.close();
     _passwordController.close();
   }
 }
-
-final loginBloc = LoginBloc();

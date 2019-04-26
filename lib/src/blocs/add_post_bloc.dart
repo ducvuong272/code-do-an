@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:do_an_tn/src/models/post.dart';
+import 'package:do_an_tn/src/repository/post_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -44,6 +46,45 @@ class AddPostBloc {
   Future<File> pickImageFromCamera() async {
     File imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
     return imageFile;
+  }
+
+  Future<File> pickImageFromAlbum() async {
+    File imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+    return imageFile;
+  }
+
+  showOptionsToPickImage({
+    Dialog dialog,
+    BuildContext context,
+    Function pickImageFromAlbum,
+    Function pickImageFromCamera,
+  }) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Bạn muốn thêm hình ảnh từ đâu?'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: pickImageFromAlbum,
+                child: Text('Album ảnh'),
+              ),
+              FlatButton(
+                onPressed: pickImageFromCamera,
+                child: Text('Máy ảnh'),
+              ),
+            ],
+          );
+        });
+  }
+
+  addPost(Post post){
+    PostRepository postRepository = PostRepository();
+
+    Future<Map<String,dynamic>> future = postRepository.addPost(post);
+    future.then((onValue){
+      print(onValue);
+    });
   }
 
   dispose() {

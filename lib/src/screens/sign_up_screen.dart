@@ -22,6 +22,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _lastNameController = TextEditingController();
   TextEditingController _passwordController1 = TextEditingController();
   TextEditingController _passwordController2 = TextEditingController();
+  FocusNode _userNameFocusnode = FocusNode(),
+      _emailFocusNode = FocusNode(),
+      _firstNameFocusNode = FocusNode(),
+      _lastNameFocusNode = FocusNode(),
+      _password1FocusNode = FocusNode(),
+      _password2FocusNode = FocusNode();
   bool _passwordInvisible1 = true, _passwordInvisible2 = true;
   RegisterBloc _registerBloc = RegisterBloc();
 
@@ -52,6 +58,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           textController: _userNameController,
                           iconData: Icons.person_outline,
                           error: snapshot.hasError ? '${snapshot.error}' : null,
+                          context: context,
+                          nextNode: _firstNameFocusNode,
+                          currentNode: _userNameFocusnode,
                         );
                       },
                     ),
@@ -66,6 +75,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             iconData: Icons.list,
                             error:
                                 snapshot.hasError ? '${snapshot.error}' : null,
+                            context: context,
+                            nextNode: _lastNameFocusNode,
+                            currentNode: _firstNameFocusNode,
                           );
                         },
                       ),
@@ -81,6 +93,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             iconData: Icons.list,
                             error:
                                 snapshot.hasError ? '${snapshot.error}' : null,
+                            context: context,
+                            nextNode: _emailFocusNode,
+                            currentNode: _lastNameFocusNode,
                           );
                         },
                       ),
@@ -93,6 +108,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           iconData: Icons.mail_outline,
                           textController: _emailController,
                           error: snapshot.hasError ? '${snapshot.error}' : null,
+                          context: context,
+                          nextNode: _password1FocusNode,
+                          currentNode: _emailFocusNode,
                         );
                       },
                     ),
@@ -107,6 +125,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               obscureText: _passwordInvisible1,
                               autocorrect: false,
                               controller: _passwordController1,
+                              focusNode: _password1FocusNode,
+                              onEditingComplete: () {
+                                FocusScope.of(context)
+                                    .requestFocus(_password2FocusNode);
+                              },
                               decoration: InputDecoration(
                                 errorText: snapshot.hasError
                                     ? '${snapshot.error}'
@@ -165,6 +188,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               obscureText: _passwordInvisible2,
                               autocorrect: false,
                               controller: _passwordController2,
+                              focusNode: _password2FocusNode,
                               decoration: InputDecoration(
                                 errorText: snapshot.hasError
                                     ? '${snapshot.error}'
@@ -226,7 +250,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         if (_isValidInfo) {
                           CustomDialog dialog = CustomDialog();
                           dialog.showCustomDialog(
-                            barrierDismissible: true,
+                            barrierDismissible: false,
                             showprogressIndicator: true,
                             msg: 'Đang tiến hành đăng ký...',
                             context: context,
@@ -234,7 +258,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           User user = User(
                             username: _userNameController.text,
                             password: _passwordController1.text,
-                            lastName: _firstNameController.text,
+                            firstName: _firstNameController.text,
+                            lastName: _lastNameController.text,
                             email: _emailController.text,
                           );
                           _registerBloc.signUp(user, context);
@@ -288,6 +313,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     TextEditingController textController,
     IconData iconData,
     String error,
+    BuildContext context,
+    FocusNode nextNode,
+    FocusNode currentNode,
   }) {
     return Container(
       margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -297,6 +325,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         autocorrect: false,
         controller: textController,
+        focusNode: currentNode,
+        onEditingComplete: () {
+          nextNode != null
+              ? FocusScope.of(context).requestFocus(nextNode)
+              : FocusScope.of(context).requestFocus(FocusNode());
+        },
         decoration: InputDecoration(
           errorText: error != null ? error : null,
           errorStyle: TextStyle(fontSize: 15),
