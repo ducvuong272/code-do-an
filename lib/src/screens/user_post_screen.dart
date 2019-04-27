@@ -49,7 +49,9 @@ class _PostsOfUserScreenState extends State<PostsOfUserScreen> {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => AddPostScreen(),
+                    builder: (context) => AddPostScreen(
+                          user: widget.user,
+                        ),
                   ),
                 );
               },

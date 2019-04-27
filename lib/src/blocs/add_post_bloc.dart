@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/repository/post_repository.dart';
+import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -78,12 +79,35 @@ class AddPostBloc {
         });
   }
 
-  addPost(Post post){
+  addPost(Post post, BuildContext context, CustomDialog dialog) {
     PostRepository postRepository = PostRepository();
+    dialog.showCustomDialog(
+      msg: 'Đang tiến hành thêm địa điểm',
+      barrierDismissible: false,
+      context: context,
+      showprogressIndicator: true,
+    );
 
-    Future<Map<String,dynamic>> future = postRepository.addPost(post);
-    future.then((onValue){
-      print(onValue);
+    Future future = postRepository.addPost(post);
+    future.then((onValue) {
+      print(onValue["success"]);
+      if (onValue['code'] == 200) {
+        dialog.hideCustomDialog(context);
+        dialog.showCustomDialog(
+          msg: onValue['success'],
+          barrierDismissible: true,
+          context: context,
+          showprogressIndicator: false,
+        );
+      } else {
+        dialog.hideCustomDialog(context);
+        dialog.showCustomDialog(
+          msg: onValue['success'],
+          barrierDismissible: true,
+          context: context,
+          showprogressIndicator: false,
+        );
+      }
     });
   }
 

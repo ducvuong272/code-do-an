@@ -52,6 +52,7 @@ class ApiHandler {
     final apiUrl = kAddPostUrl;
     final response = await http.post(
       apiUrl,
+      headers: kApiHeader,
       body: json.encode(
         post.toAddPostJson(),
       ),

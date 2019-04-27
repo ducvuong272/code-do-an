@@ -9,9 +9,8 @@ class Post {
       openTime,
       closeTime,
       highestPrice,
-      lowestPrice;
+      lowestPrice,postCategories;
   int postId, userId;
-  List<String> postCategories = [];
 
   Post({
     this.postId,
@@ -38,7 +37,7 @@ class Post {
 
   Map<String, dynamic> toAddPostJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data["TenDiaDem"] = postTitle;
+    data["TenDiaDiem"] = postTitle;
     data["DiaChi"] = address;
     data["MoTa"] = postDetail;
     // data["ThanhPho"] = city;
@@ -47,8 +46,8 @@ class Post {
     data["SoDienThoai"] = phoneNumber;
     data["GioMoCua"] = openTime;
     data["GioDongCua"] = closeTime;
-    data["GiaCaoNhat"] = highestPrice;
-    data["GiaThapNhat"] = lowestPrice;
+    data["GiaCaoNhat"] = int.parse(highestPrice);
+    data["GiaThapNhat"] = int.parse(lowestPrice);
     data["Id_TaiKhoan"] = userId;
     return data;
   }

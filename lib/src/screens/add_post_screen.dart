@@ -1,8 +1,16 @@
 import 'dart:io';
 import 'package:do_an_tn/src/blocs/add_post_bloc.dart';
+import 'package:do_an_tn/src/models/post.dart';
+import 'package:do_an_tn/src/models/user.dart';
+import 'package:do_an_tn/src/services/api_handler.dart';
+import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 
 class AddPostScreen extends StatefulWidget {
+  final User user;
+
+  const AddPostScreen({Key key, this.user}) : super(key: key);
+
   @override
   AddPostScreenState createState() => AddPostScreenState();
 }
@@ -11,7 +19,9 @@ class AddPostScreenState extends State<AddPostScreen> {
   TextEditingController _postTitleController = TextEditingController(),
       _addressController = TextEditingController(),
       _phoneController = TextEditingController(),
-      _postDetailController = TextEditingController();
+      _postDetailController = TextEditingController(),
+      _highestPriceController = TextEditingController(),
+      _lowestPriceController = TextEditingController();
   TimeOfDay _time1 = TimeOfDay(hour: 9, minute: 0),
       _time2 = TimeOfDay(hour: 21, minute: 0);
   AddPostBloc _addPostBloc = AddPostBloc();
@@ -23,7 +33,7 @@ class AddPostScreenState extends State<AddPostScreen> {
     5: 'Ngũ Hành Sơn'
   };
   Map<int, String> _postCategoryMap = {
-    1: 'Ăn uống',
+    1: 'Ẩm thực',
     2: 'Du lịch',
     3: 'Văn hóa',
     4: 'Dịch vụ',
@@ -42,7 +52,24 @@ class AddPostScreenState extends State<AddPostScreen> {
           actions: <Widget>[
             GestureDetector(
               onTap: () {
-                print(_areaIndex.toString() + _areaIndex.toString());
+                var timeOpen = _time1.format(context);
+                var timeClose = _time2.format(context);
+                Post post = Post(
+                  userId: widget.user.userId,
+                  postTitle: _postTitleController.text,
+                  address: _addressController.text,
+                  postDetail: _postDetailController.text,
+                  postCategories:
+                      _postCategoryMap.values.elementAt(_postCategoryIndex),
+                  district: 'Quận ' + _areaMap.values.elementAt(_areaIndex),
+                  phoneNumber: _phoneController.text,
+                  openTime: timeOpen,
+                  closeTime: timeClose,
+                  highestPrice: _highestPriceController.text,
+                  lowestPrice: _lowestPriceController.text,
+                );
+                CustomDialog dialog = CustomDialog();
+                _addPostBloc.addPost(post, context, dialog);
               },
               child: Center(
                 child: Container(
@@ -55,7 +82,7 @@ class AddPostScreenState extends State<AddPostScreen> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
           backgroundColor: Colors.red,
           title: Text('Thêm địa điểm'),
@@ -142,6 +169,7 @@ class AddPostScreenState extends State<AddPostScreen> {
                       textField: true,
                       texteditController: _phoneController,
                       numberKeyboard: true,
+                      phoneNumberKeyboard: true,
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 2),
@@ -214,9 +242,11 @@ class AddPostScreenState extends State<AddPostScreen> {
                                   Expanded(
                                     child: TextField(
                                       keyboardType: TextInputType.number,
+                                      controller: _lowestPriceController,
                                       decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.all(0),
-                                          labelText: 'Giá thấp nhất'),
+                                        contentPadding: EdgeInsets.all(0),
+                                        labelText: 'Giá thấp nhất',
+                                      ),
                                     ),
                                   ),
                                   Container(
@@ -231,6 +261,7 @@ class AddPostScreenState extends State<AddPostScreen> {
                                   Expanded(
                                     child: TextField(
                                       keyboardType: TextInputType.number,
+                                      controller: _highestPriceController,
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.all(0),
                                         labelText: 'Giá cao nhất',
@@ -350,6 +381,7 @@ class AddPostScreenState extends State<AddPostScreen> {
     bool textField,
     TextEditingController texteditController,
     bool numberKeyboard,
+    bool phoneNumberKeyboard,
   }) {
     return GestureDetector(
       onTap: function != null
@@ -385,6 +417,10 @@ class AddPostScreenState extends State<AddPostScreen> {
                                 numberKeyboard == null || !numberKeyboard
                                     ? TextInputType.text
                                     : TextInputType.number,
+                            maxLength: phoneNumberKeyboard != null &&
+                                    phoneNumberKeyboard
+                                ? 10
+                                : null,
                             controller: texteditController,
                             autocorrect: false,
                             decoration: InputDecoration(
