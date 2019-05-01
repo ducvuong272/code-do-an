@@ -1,5 +1,6 @@
 import 'package:do_an_tn/src/blocs/comment_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 class CommentScreen extends StatefulWidget {
   @override
@@ -12,7 +13,9 @@ class CommentScreenState extends State<CommentScreen> {
       _qualityRating = 5,
       _serviceRating = 5,
       _viewRating = 5;
-      ScrollController _scrollController = ScrollController();
+  double _averageRatingPoint = 5.0;
+  List<Asset> _images = List<Asset>();
+  ScrollController _scrollController = ScrollController();
   CommentBloc _commentBloc = CommentBloc();
 
   @override
@@ -25,14 +28,19 @@ class CommentScreenState extends State<CommentScreen> {
           backgroundColor: Colors.red,
           title: Text('Viết bình luận'),
           actions: <Widget>[
-            Container(
-              padding: EdgeInsets.only(right: 10),
-              child: Center(
-                child: Text(
-                  'Đăng',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
+            GestureDetector(
+              onTap: () {
+                print(_images.length);
+              },
+              child: Container(
+                padding: EdgeInsets.only(right: 10),
+                child: Center(
+                  child: Text(
+                    'Đăng',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
@@ -69,7 +77,7 @@ class CommentScreenState extends State<CommentScreen> {
                           backgroundColor: Colors.green,
                           radius: 20.0,
                           child: Text(
-                            '6.0',
+                            '$_averageRatingPoint',
                             style: TextStyle(
                               fontSize: 20,
                               color: Colors.white,
@@ -97,41 +105,23 @@ class CommentScreenState extends State<CommentScreen> {
                 ),
                 Container(
                   color: Colors.white,
-                  child: GridView.count(
-                    shrinkWrap: true,
-                    controller: _scrollController,
-                    crossAxisCount: 2,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.all(5),
-                        child: Image.asset(
-                          'assets/images/1.png',
-                          fit: BoxFit.fill,
+                  child: _images.length == 0
+                      ? Container()
+                      : GridView.count(
+                          shrinkWrap: true,
+                          controller: _scrollController,
+                          crossAxisSpacing: 5.0,
+                          mainAxisSpacing: 5.0,
+                          crossAxisCount: 2,
+                          children: List.generate(_images.length, (index) {
+                            Asset asset = _images[index];
+                            return AssetThumb(
+                              asset: asset,
+                              width: 300,
+                              height: 300,
+                            );
+                          }),
                         ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(5),
-                        child: Image.asset(
-                          'assets/images/1.png',
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.all(5),
-                        child: Image.asset(
-                          'assets/images/1.png',
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        child: Image.asset(
-                          'assets/images/1.png',
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
                 Container(
                   color: Colors.white,
@@ -153,7 +143,16 @@ class CommentScreenState extends State<CommentScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Future future = _commentBloc.multiImagePick();
+          future.then((onValue) {
+            if (onValue != null) {
+              setState(() {
+                _images = onValue;
+              });
+            }
+          });
+        },
         child: Icon(Icons.add_photo_alternate),
       ),
     );
@@ -162,71 +161,101 @@ class CommentScreenState extends State<CommentScreen> {
   Widget _buildRatingSection() {
     return Column(
       children: <Widget>[
-        StreamBuilder<Object>(
-            stream: _commentBloc.locationRatingStream,
-            builder: (context, snapshot) {
-              return Container(
-                color: Colors.white,
-                child: _ratingComponents(
-                  snapshot.hasData ? snapshot.data : _locationRating,
-                  'Vị trí',
-                  _commentBloc.locationRatingStream,
-                ),
-              );
-            }),
-        StreamBuilder<Object>(
-            stream: _commentBloc.priceRatingStream,
-            builder: (context, snapshot) {
-              return Container(
-                color: Colors.white,
-                child: _ratingComponents(
-                  _priceRating,
-                  'Giá cả',
-                  _commentBloc.priceRatingStream,
-                ),
-              );
-            }),
-        StreamBuilder<Object>(
-            stream: _commentBloc.qualityRatingStream,
-            builder: (context, snapshot) {
-              return Container(
-                color: Colors.white,
-                child: _ratingComponents(
-                  _qualityRating,
-                  'Chất lượng',
-                  _commentBloc.qualityRatingStream,
-                ),
-              );
-            }),
-        StreamBuilder<Object>(
-            stream: _commentBloc.serviceRatingStream,
-            builder: (context, snapshot) {
-              return Container(
-                color: Colors.white,
-                child: _ratingComponents(
-                  _serviceRating,
-                  'Dịch vụ',
-                  _commentBloc.serviceRatingStream,
-                ),
-              );
-            }),
-        StreamBuilder<Object>(
-            stream: _commentBloc.viewRatingStream,
-            builder: (context, snapshot) {
-              return Container(
-                color: Colors.white,
-                child: _ratingComponents(
-                  _viewRating,
-                  'Không gian',
-                  _commentBloc.viewRatingStream,
-                ),
-              );
-            }),
+        Container(
+          color: Colors.white,
+          child: _ratingComponents(
+            _locationRating,
+            'Vị trí',
+            Slider(
+              onChanged: (value) {
+                setState(() {
+                  _locationRating = value.toInt();
+                });
+                _onRatingValuesChanged();
+              },
+              value: _locationRating.toDouble(),
+              min: 0.0,
+              max: 10.0,
+            ),
+          ),
+        ),
+        Container(
+          color: Colors.white,
+          child: _ratingComponents(
+            _priceRating,
+            'Giá cả',
+            Slider(
+              onChanged: (value) {
+                setState(() {
+                  _priceRating = value.toInt();
+                });
+                _onRatingValuesChanged();
+              },
+              value: _priceRating.toDouble(),
+              min: 0.0,
+              max: 10.0,
+            ),
+          ),
+        ),
+        Container(
+          color: Colors.white,
+          child: _ratingComponents(
+            _qualityRating,
+            'Chất lượng',
+            Slider(
+              onChanged: (value) {
+                setState(() {
+                  _qualityRating = value.toInt();
+                });
+                _onRatingValuesChanged();
+              },
+              value: _qualityRating.toDouble(),
+              min: 0.0,
+              max: 10.0,
+            ),
+          ),
+        ),
+        Container(
+          color: Colors.white,
+          child: _ratingComponents(
+            _serviceRating,
+            'Dịch vụ',
+            Slider(
+              onChanged: (value) {
+                setState(() {
+                  _serviceRating = value.toInt();
+                });
+                _onRatingValuesChanged();
+              },
+              value: _serviceRating.toDouble(),
+              min: 0.0,
+              max: 10.0,
+            ),
+          ),
+        ),
+        Container(
+          color: Colors.white,
+          child: _ratingComponents(
+            _viewRating,
+            'Không gian',
+            Slider(
+              onChanged: (value) {
+                setState(() {
+                  _viewRating = value.toInt();
+                });
+                _onRatingValuesChanged();
+              },
+              value: _viewRating.toDouble(),
+              min: 0.0,
+              max: 10.0,
+            ),
+          ),
+        ),
       ],
     );
   }
 
-  Widget _ratingComponents(int ratingPoint, String text, Stream stream) {
+  Widget _ratingComponents(int ratingPoint, String text, Slider slider) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
@@ -238,14 +267,7 @@ class CommentScreenState extends State<CommentScreen> {
           ),
         ),
         Expanded(
-          child: Slider(
-            value: ratingPoint.toDouble(),
-            onChanged: (value) {
-              _commentBloc.onSliderChange(stream, value.toInt());
-            },
-            min: 0.0,
-            max: 10.0,
-          ),
+          child: slider,
         ),
         Container(
           padding: EdgeInsets.only(right: 10),
@@ -260,5 +282,16 @@ class CommentScreenState extends State<CommentScreen> {
         ),
       ],
     );
+  }
+
+  _onRatingValuesChanged() {
+    setState(() {
+      _averageRatingPoint = (_locationRating +
+              _priceRating +
+              _qualityRating +
+              _serviceRating +
+              _viewRating) /
+          5.toDouble();
+    });
   }
 }

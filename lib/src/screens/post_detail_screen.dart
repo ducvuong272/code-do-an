@@ -1,17 +1,21 @@
 import 'package:do_an_tn/src/blocs/post_bloc.dart';
 import 'package:do_an_tn/src/models/post.dart';
+import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/comment_screen.dart';
 import 'package:do_an_tn/src/widgets/comment_section.dart';
+import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 
 class PostDetailScreen extends StatefulWidget {
   final String title;
   final String imageUrl;
+  final User user;
 
   const PostDetailScreen({
     Key key,
     this.title,
     this.imageUrl,
+    this.user,
   }) : super(key: key);
 
   @override
@@ -340,7 +344,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
               ),
             ),
           ),
-          _constantSection(),
+          _constantSection(context),
         ],
       ),
     );
@@ -434,7 +438,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     );
   }
 
-  Widget _constantSection() {
+  Widget _constantSection(BuildContext context) {
     return Container(
       color: Color(0xff484b4f).withOpacity(0.85),
       height: 50,
@@ -450,17 +454,35 @@ class PostDetailScreenState extends State<PostDetailScreen> {
             Icons.chat_bubble_outline,
             'Bình luận',
             () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => CommentScreen(),
-                ),
-              );
+              if (widget.user == null) {
+                CustomDialog dialog = CustomDialog();
+                dialog.showCustomDialog(
+                    context: context,
+                    msg: 'Vui lòng đăng nhập',
+                    barrierDismissible: true,
+                    showprogressIndicator: false);
+              } else {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CommentScreen(),
+                  ),
+                );
+              }
             },
           ),
           _constantElements(
             Icons.done_outline,
             'Lưu lại',
-            () {},
+            () {
+              if (widget.user == null) {
+                CustomDialog dialog = CustomDialog();
+                dialog.showCustomDialog(
+                    context: context,
+                    msg: 'Vui lòng đăng nhập',
+                    barrierDismissible: true,
+                    showprogressIndicator: false);
+              }
+            },
           ),
         ],
       ),

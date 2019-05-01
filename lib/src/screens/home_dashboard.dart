@@ -30,7 +30,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetList = [
-      HomeScreen(),
+      HomeScreen(
+        user: widget.user,
+      ),
       UserSavedScreen(
         user: widget.user,
       ),

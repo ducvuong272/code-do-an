@@ -2,6 +2,7 @@ import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/repository/login_repository.dart';
 import 'package:do_an_tn/src/screens/add_post_screen.dart';
+import 'package:do_an_tn/src/screens/comment_screen.dart';
 import 'package:do_an_tn/src/screens/home_dashboard.dart';
 import 'package:do_an_tn/src/screens/post_detail_screen.dart';
 import 'package:do_an_tn/src/services/api_handler.dart';

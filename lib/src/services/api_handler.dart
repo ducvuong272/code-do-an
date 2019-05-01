@@ -36,18 +36,6 @@ class ApiHandler {
     return response.statusCode == 200 ? response.body : 'Lỗi';
   }
 
-  Future<String> getUser() async {
-    final apiUrl = 'https://projectapi-khanhpham.herokuapp.com/tai-khoan/4';
-    final response = await http.get(apiUrl, headers: kApiHeader);
-    return response.body;
-  }
-
-  Future<String> getAllUsers() async {
-    final apiUrl = 'https://projectapi-khanhpham.herokuapp.com/tai-khoan';
-    final response = await http.get(apiUrl, headers: kApiHeader);
-    return response.body;
-  }
-
   Future<String> addPost(Post post) async {
     final apiUrl = kAddPostUrl;
     final response = await http.post(

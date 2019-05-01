@@ -1,5 +1,6 @@
 import 'package:do_an_tn/src/blocs/post_bloc.dart';
 import 'package:do_an_tn/src/models/post.dart';
+import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/post_detail_screen.dart';
 import 'package:do_an_tn/src/widgets/home_screen_post.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,9 @@ import 'package:flutter/services.dart';
 
 class HomeScreen extends StatefulWidget {
   final String title;
+  final User user;
 
-  HomeScreen({this.title, Key key}) : super(key: key);
+  HomeScreen({this.title, Key key, this.user}) : super(key: key);
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -147,6 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     '${_listPost[index].postTitle}',
                                                 imageUrl:
                                                     '${_listPost[index].imageUrl}',
+                                                user: widget.user,
                                               ),
                                         ),
                                       );

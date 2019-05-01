@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 class CommentBloc {
   StreamController<int> _locationRatingController = StreamController<int>();
@@ -12,10 +13,15 @@ class CommentBloc {
   StreamController<int> _viewRatingController = StreamController<int>();
   Stream<int> get viewRatingStream => _viewRatingController.stream;
 
-  onSliderChange(Stream stream, int value) {
-    if(stream == locationRatingStream){
-      _locationRatingController.sink.add(value);
-    }
+  Future<List<Asset>> multiImagePick() async {
+    List<Asset> resultList = List<Asset>();
+    resultList = await MultiImagePicker.pickImages(
+      maxImages: 50,
+      enableCamera: true,
+      cupertinoOptions: CupertinoOptions(takePhotoIcon: 'pick'),
+      materialOptions: MaterialOptions(),
+    );
+    return resultList;
   }
 
   dispose() {
