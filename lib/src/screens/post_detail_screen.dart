@@ -2,20 +2,19 @@ import 'package:do_an_tn/src/blocs/post_bloc.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/comment_screen.dart';
+import 'package:do_an_tn/src/screens/login_dashboard.dart';
 import 'package:do_an_tn/src/widgets/comment_section.dart';
 import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 
 class PostDetailScreen extends StatefulWidget {
-  final String title;
-  final String imageUrl;
   final User user;
+  final Post post;
 
   const PostDetailScreen({
     Key key,
-    this.title,
-    this.imageUrl,
     this.user,
+    this.post,
   }) : super(key: key);
 
   @override
@@ -33,7 +32,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
           elevation: 0.0,
           backgroundColor: Colors.red,
           title: Text(
-            widget.title != null ? widget.title : '',
+            widget.post != null ? widget.post.postTitle : '',
             style: TextStyle(
               fontSize: 23,
               fontWeight: FontWeight.w400,
@@ -56,7 +55,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                       Container(
                         margin: EdgeInsets.only(top: 50),
                         child: Image.network(
-                          widget.imageUrl,
+                          widget.post.imageUrl,
                           fit: BoxFit.fill,
                         ),
                         height: 250,
@@ -67,7 +66,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                         width: MediaQuery.of(context).size.width,
                         padding: EdgeInsets.fromLTRB(5, 10, 0, 10),
                         child: Text(
-                          widget.title,
+                          widget.post.postTitle,
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w900,
@@ -335,7 +334,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                         ),
                       ),
                       CommentSection(
-                        postTitle: widget.title,
+                        postTitle: widget.post.postTitle,
                         scrollController: _scrollController,
                       ),
                     ],
@@ -448,23 +447,24 @@ class PostDetailScreenState extends State<PostDetailScreen> {
           _constantElements(
             Icons.photo_size_select_large,
             'Hình ảnh',
-            () {},
+            () {
+              print(DateTime.now());
+            },
           ),
           _constantElements(
             Icons.chat_bubble_outline,
             'Bình luận',
             () {
               if (widget.user == null) {
-                CustomDialog dialog = CustomDialog();
-                dialog.showCustomDialog(
-                    context: context,
-                    msg: 'Vui lòng đăng nhập',
-                    barrierDismissible: true,
-                    showprogressIndicator: false);
+                _askForLogin();
               } else {
+                print(widget.user.userId);
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => CommentScreen(),
+                    builder: (context) => CommentScreen(
+                          post: widget.post,
+                          user: widget.user,
+                        ),
                   ),
                 );
               }
@@ -474,19 +474,34 @@ class PostDetailScreenState extends State<PostDetailScreen> {
             Icons.done_outline,
             'Lưu lại',
             () {
-              if (widget.user == null) {
-                CustomDialog dialog = CustomDialog();
-                dialog.showCustomDialog(
-                    context: context,
-                    msg: 'Vui lòng đăng nhập',
-                    barrierDismissible: true,
-                    showprogressIndicator: false);
-              }
+              _askForLogin();
             },
           ),
         ],
       ),
     );
+  }
+
+  _askForLogin() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              content: Text('Vui lòng đăng nhập để tiếp tục'),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => LoginDashboard()));
+                  },
+                  child: Text('Đăng nhập'),
+                ),
+                FlatButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Bỏ qua'),
+                ),
+              ],
+            ));
   }
 
   Widget _constantElements(IconData iconData, String text, Function function) {

@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:do_an_tn/src/blocs/add_post_bloc.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
-import 'package:do_an_tn/src/services/api_handler.dart';
 import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -505,7 +504,10 @@ class AddPostScreenState extends State<AddPostScreen> {
   }
 
   _buildBottomSheet(
-      BuildContext context, Map<int, String> map, bool isAreaIndex) {
+    BuildContext context,
+    Map<int, String> map,
+    bool isAreaIndex,
+  ) {
     String result;
     showModalBottomSheet(
         context: context,
@@ -534,7 +536,7 @@ class AddPostScreenState extends State<AddPostScreen> {
                             map.values.elementAt(index),
                             style: TextStyle(fontSize: 20),
                           ),
-                          _postCategoryIndex == index
+                          !isAreaIndex && _postCategoryIndex == index
                               ? Container(
                                   padding: EdgeInsets.only(left: 20),
                                   child: Icon(
@@ -542,7 +544,15 @@ class AddPostScreenState extends State<AddPostScreen> {
                                     color: Colors.red,
                                   ),
                                 )
-                              : Container(),
+                              : isAreaIndex&& _areaIndex == index
+                                  ? Container(
+                                      padding: EdgeInsets.only(left: 20),
+                                      child: Icon(
+                                        Icons.check,
+                                        color: Colors.red,
+                                      ),
+                                    )
+                                  : Container(),
                         ],
                       ),
                     ),

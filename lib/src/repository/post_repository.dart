@@ -8,9 +8,7 @@ class PostRepository {
   Future<List<Post>> getAllPosts() async {
     var response = await _apiHandler.getAllPosts();
     var listPosts = (json.decode(response) as List)
-        .map(
-          (json) => new Post.fromJson(json),
-        )
+        .map((json) => new Post.fromJson(json))
         .toList();
     return listPosts;
   }

@@ -1,4 +1,4 @@
-import 'package:do_an_tn/src/screens/forgot_password.dart';
+import 'package:do_an_tn/src/screens/forgot_password_screen.dart';
 import 'package:do_an_tn/src/screens/login_screen.dart';
 import 'package:do_an_tn/src/screens/sign_up_screen.dart';
 import 'package:flutter/material.dart';

@@ -1,5 +1,9 @@
 import 'dart:async';
+import 'package:do_an_tn/src/widgets/dialog.dart';
+import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:do_an_tn/src/models/comment.dart';
+import 'package:do_an_tn/src/repository/comment_repository.dart';
 
 class CommentBloc {
   StreamController<int> _locationRatingController = StreamController<int>();
@@ -13,7 +17,7 @@ class CommentBloc {
   StreamController<int> _viewRatingController = StreamController<int>();
   Stream<int> get viewRatingStream => _viewRatingController.stream;
 
-  Future<List<Asset>> multiImagePick() async {
+  Future<List<Asset>> pickImages() async {
     List<Asset> resultList = List<Asset>();
     resultList = await MultiImagePicker.pickImages(
       maxImages: 50,
@@ -22,6 +26,37 @@ class CommentBloc {
       materialOptions: MaterialOptions(),
     );
     return resultList;
+  }
+
+  postComment(BuildContext context, Comment comment) {
+    CustomDialog dialog = CustomDialog();
+    dialog.showCustomDialog(
+      context: context,
+      barrierDismissible: false,
+      msg: 'Đang xử lý...',
+      showprogressIndicator: true,
+    );
+    CommentRepository commentRepository = CommentRepository(comment: comment);
+    Future future = commentRepository.postComment();
+    future.then((onValue) {
+      if (onValue == "200") {
+        dialog.hideCustomDialog(context);
+        dialog.showCustomDialog(
+          context: context,
+          barrierDismissible: true,
+          msg: 'Đăng bình luận thành công!',
+          showprogressIndicator: false,
+        );
+      } else {
+        dialog.hideCustomDialog(context);
+        dialog.showCustomDialog(
+          context: context,
+          barrierDismissible: true,
+          msg: 'Đăng bình luận thất bại!',
+          showprogressIndicator: false,
+        );
+      }
+    });
   }
 
   dispose() {

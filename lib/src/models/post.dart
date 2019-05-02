@@ -30,6 +30,7 @@ class Post {
   });
 
   Post.fromJson(Map<String, dynamic> json) {
+    postId = json["Id_DiaDiem"];
     postTitle = json["TenDiaDiem"];
     address = json["DiaChi"];
     imageUrl = json["TapTinDaiDien"];

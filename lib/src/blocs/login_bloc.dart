@@ -4,7 +4,6 @@ import 'package:do_an_tn/src/repository/login_repository.dart';
 import 'package:do_an_tn/src/screens/home_dashboard.dart';
 import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 
 class LoginBloc {
   StreamController<String> _usernameController = StreamController<String>();
@@ -63,7 +62,6 @@ class LoginBloc {
       context: context,
       msg: 'Đăng nhập không thành công!',
       showprogressIndicator: false,
-      action: 'OK',
     );
   }
 

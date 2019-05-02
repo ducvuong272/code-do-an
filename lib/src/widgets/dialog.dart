@@ -6,7 +6,6 @@ class CustomDialog {
     String msg,
     bool barrierDismissible,
     bool showprogressIndicator,
-    String action,
   }) {
     showDialog(
       context: context,

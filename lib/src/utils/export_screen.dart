@@ -1,4 +1,3 @@
-export 'package:do_an_tn/src/screens/forgot_password.dart';
 export 'package:do_an_tn/src/screens/home_dashboard.dart';
 export 'package:do_an_tn/src/screens/home_screen.dart';
 export 'package:do_an_tn/src/screens/login_dashboard.dart';

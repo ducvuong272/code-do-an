@@ -13,6 +13,7 @@ class HomeScreen extends StatefulWidget {
   final User user;
 
   HomeScreen({this.title, Key key, this.user}) : super(key: key);
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -41,8 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
     //         _scrollController.position.maxScrollExtent);
     //   });
     _postBLoc = PostBloc();
-    _postBLoc.getAllPost();
-    // print('asd');
+    Future.delayed(Duration(seconds: 1), () => _postBLoc.getAllPost());
     super.initState();
   }
 
@@ -121,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         stream: _postBLoc.getAllPostStream,
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            List<Post> _listPost = snapshot.data;
+                            List<Post> listPost = snapshot.data;
                             return GridView.count(
                               shrinkWrap: true,
                               crossAxisCount: 2,
@@ -130,25 +130,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               scrollDirection: Axis.vertical,
                               // childAspectRatio: 0.9,
                               children: List.generate(
-                                _listPost.length,
+                                listPost.length,
                                 (index) {
                                   return GestureDetector(
                                     child: HomeScreenPost(
-                                      postTitle:
-                                          '${_listPost[index].postTitle}',
-                                      address: '${_listPost[index].address}',
-                                      postImage: '${_listPost[index].imageUrl}',
+                                      postTitle: '${listPost[index].postTitle}',
+                                      address: '${listPost[index].address}',
+                                      postImage: '${listPost[index].imageUrl}',
                                     ),
                                     onTap: () {
+                                      print(listPost[index].postId);
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               PostDetailScreen(
-                                                title:
-                                                    '${_listPost[index].postTitle}',
-                                                imageUrl:
-                                                    '${_listPost[index].imageUrl}',
+                                                post: listPost[index],
                                                 user: widget.user,
                                               ),
                                         ),

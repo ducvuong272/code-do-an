@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:do_an_tn/src/models/comment.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:http/http.dart' as http;
 import 'package:do_an_tn/src/utils/export_model.dart';
@@ -41,9 +42,17 @@ class ApiHandler {
     final response = await http.post(
       apiUrl,
       headers: kApiHeader,
-      body: json.encode(
-        post.toAddPostJson(),
-      ),
+      body: json.encode(post.toAddPostJson()),
+    );
+    return response.body;
+  }
+
+  Future<String> postComment(Comment comment) async {
+    final apiUrl = kPostCommentUrl;
+    final response = await http.post(
+      apiUrl,
+      headers: kApiHeader,
+      body: json.encode(comment.toPostCommentJson()),
     );
     return response.body;
   }
