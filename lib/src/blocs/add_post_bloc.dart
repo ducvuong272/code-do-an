@@ -81,13 +81,13 @@ class AddPostBloc {
 
   addPost(Post post, BuildContext context, CustomDialog dialog) {
     PostRepository postRepository = PostRepository();
+    
     dialog.showCustomDialog(
       msg: 'Đang tiến hành thêm địa điểm',
       barrierDismissible: false,
       context: context,
       showprogressIndicator: true,
     );
-
     Future future = postRepository.addPost(post);
     future.then((onValue) {
       print(onValue["success"]);

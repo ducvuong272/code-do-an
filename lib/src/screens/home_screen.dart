@@ -3,6 +3,7 @@ import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/post_detail_screen.dart';
 import 'package:do_an_tn/src/screens/search_post_screen.dart';
+import 'package:do_an_tn/src/services/check_network_connectivity.dart';
 import 'package:do_an_tn/src/widgets/home_screen_post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -32,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ScrollController _scrollController;
   double androidBottomBarHeigh = 72.0;
   PostBloc _postBLoc;
+  bool _hasInternetConnection = false;
 
   @override
   void initState() {
@@ -43,7 +45,16 @@ class _HomeScreenState extends State<HomeScreen> {
     //         _scrollController.position.maxScrollExtent);
     //   });
     _postBLoc = PostBloc();
-    Future.delayed(Duration(seconds: 1), () => _postBLoc.getAllPost());
+    var _isNetworkConnected =
+        NetworkConnection().checkNetworkConnectivity(context);
+    _isNetworkConnected.then((onValue) {
+      if (onValue == true) {
+        setState(() {
+          _hasInternetConnection = true;
+        });
+        Future.delayed(Duration(seconds: 1), () => _postBLoc.getAllPost());
+      }
+    });
     super.initState();
   }
 
@@ -118,51 +129,56 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 220),
-                      child: StreamBuilder<Object>(
-                        stream: _postBLoc.getAllPostStream,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            List<Post> listPost = snapshot.data;
-                            return GridView.count(
-                              shrinkWrap: true,
-                              crossAxisCount: 2,
-                              controller: _scrollController,
-                              physics: NeverScrollableScrollPhysics(),
-                              scrollDirection: Axis.vertical,
-                              // childAspectRatio: 0.9,
-                              children: List.generate(
-                                listPost.length,
-                                (index) {
-                                  return GestureDetector(
-                                    child: HomeScreenPost(
-                                      postTitle: '${listPost[index].postTitle}',
-                                      address: '${listPost[index].address}',
-                                      postImage: '${listPost[index].imageUrl}',
-                                    ),
-                                    onTap: () {
-                                      print(listPost[index].postId);
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              PostDetailScreen(
-                                                post: listPost[index],
-                                                user: widget.user,
+                      child: _hasInternetConnection == false
+                          ? Container()
+                          : StreamBuilder<Object>(
+                              stream: _postBLoc.getAllPostStream,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  List<Post> listPost = snapshot.data;
+                                  return GridView.count(
+                                    shrinkWrap: true,
+                                    crossAxisCount: 2,
+                                    controller: _scrollController,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    scrollDirection: Axis.vertical,
+                                    // childAspectRatio: 0.9,
+                                    children: List.generate(
+                                      listPost.length,
+                                      (index) {
+                                        return GestureDetector(
+                                          child: HomeScreenPost(
+                                            postTitle:
+                                                '${listPost[index].postTitle}',
+                                            address:
+                                                '${listPost[index].address}',
+                                            postImage:
+                                                '${listPost[index].imageUrl}',
+                                          ),
+                                          onTap: () {
+                                            print(listPost[index].postId);
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PostDetailScreen(
+                                                      post: listPost[index],
+                                                      user: widget.user,
+                                                    ),
                                               ),
-                                        ),
-                                      );
-                                    },
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
                                   );
-                                },
-                              ),
-                            );
-                          } else {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                        },
-                      ),
+                                } else {
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                              },
+                            ),
                     ),
                   ],
                 ),

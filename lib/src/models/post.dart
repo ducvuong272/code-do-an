@@ -9,7 +9,9 @@ class Post {
       openTime,
       closeTime,
       highestPrice,
-      lowestPrice,postCategories;
+      lowestPrice,
+      postCategories,
+      country;
   int postId, userId;
 
   Post({
@@ -26,6 +28,7 @@ class Post {
     this.address,
     this.city,
     this.userId,
+    this.country,
     this.postCategories,
   });
 
@@ -41,14 +44,16 @@ class Post {
     data["TenDiaDiem"] = postTitle;
     data["DiaChi"] = address;
     data["MoTa"] = postDetail;
-    // data["ThanhPho"] = city;
+    data["ThanhPho"] = city;
+    data["TenQuocGia"] = country;
+    data["TenTinhThanhPho"] = city;
     data["TenLoaiHinhDiaDiem"] = postCategories;
     data["TenQuanHuyen"] = district;
     data["SoDienThoai"] = phoneNumber;
     data["GioMoCua"] = openTime;
     data["GioDongCua"] = closeTime;
-    data["GiaCaoNhat"] = int.parse(highestPrice);
-    data["GiaThapNhat"] = int.parse(lowestPrice);
+    data["GiaCaoNhat"] = highestPrice;
+    data["GiaThapNhat"] = lowestPrice;
     data["Id_TaiKhoan"] = userId;
     return data;
   }

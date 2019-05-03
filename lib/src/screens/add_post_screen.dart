@@ -51,24 +51,42 @@ class AddPostScreenState extends State<AddPostScreen> {
           actions: <Widget>[
             GestureDetector(
               onTap: () {
-                var timeOpen = _time1.format(context);
-                var timeClose = _time2.format(context);
-                Post post = Post(
-                  userId: widget.user.userId,
-                  postTitle: _postTitleController.text,
-                  address: _addressController.text,
-                  postDetail: _postDetailController.text,
-                  postCategories:
-                      _postCategoryMap.values.elementAt(_postCategoryIndex),
-                  district: 'Quận ' + _areaMap.values.elementAt(_areaIndex),
-                  phoneNumber: _phoneController.text,
-                  openTime: timeOpen,
-                  closeTime: timeClose,
-                  highestPrice: _highestPriceController.text,
-                  lowestPrice: _lowestPriceController.text,
-                );
                 CustomDialog dialog = CustomDialog();
-                _addPostBloc.addPost(post, context, dialog);
+                if (_areaIndex == null) {
+                  dialog.showCustomDialog(
+                    context: context,
+                    msg: 'Vui lòng chọn quận/huyện',
+                    showprogressIndicator: false,
+                    barrierDismissible: true,
+                  );
+                } else if (_postCategoryIndex == null) {
+                  dialog.showCustomDialog(
+                    context: context,
+                    msg: 'Vui lòng chọn loại hình địa điểm',
+                    showprogressIndicator: false,
+                    barrierDismissible: true,
+                  );
+                } else {
+                  var timeOpen = _time1.format(context);
+                  var timeClose = _time2.format(context);
+                  Post post = Post(
+                    userId: widget.user.userId,
+                    postTitle: _postTitleController.text,
+                    address: _addressController.text,
+                    postDetail: _postDetailController.text,
+                    postCategories:
+                        _postCategoryMap.values.elementAt(_postCategoryIndex),
+                    district: 'Quận ' + _areaMap.values.elementAt(_areaIndex),
+                    phoneNumber: _phoneController.text,
+                    openTime: timeOpen,
+                    closeTime: timeClose,
+                    highestPrice: _highestPriceController.text,
+                    lowestPrice: _lowestPriceController.text,
+                    city: 'Đà Nẵng',
+                    country: 'Vietnam',
+                  );
+                  _addPostBloc.addPost(post, context, dialog);
+                }
               },
               child: Center(
                 child: Container(
@@ -544,7 +562,7 @@ class AddPostScreenState extends State<AddPostScreen> {
                                     color: Colors.red,
                                   ),
                                 )
-                              : isAreaIndex&& _areaIndex == index
+                              : isAreaIndex && _areaIndex == index
                                   ? Container(
                                       padding: EdgeInsets.only(left: 20),
                                       child: Icon(

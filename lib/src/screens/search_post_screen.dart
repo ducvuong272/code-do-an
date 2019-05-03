@@ -13,6 +13,15 @@ class SearchPostScreenState extends State<SearchPostScreen> {
   PostBloc _postBloc = PostBloc();
   List<Post> _listPostData = [];
   List<Post> _listPostValue = [];
+  List<String> _areaMap = [
+    "Đà Nẵng",
+    "TP Hồ Chí Minh",
+    "Hà Nội",
+    "Huế",
+  ];
+  int _areaIndex = 0;
+  bool _showAreaPicker = false;
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -36,11 +45,9 @@ class SearchPostScreenState extends State<SearchPostScreen> {
                 stream: _postBloc.getPostSearchResultStream,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    // setState(() {
-                    //   _isLoadingData = false;
-                    // });
                     _listPostValue = snapshot.data;
                     return ListView.builder(
+                      controller: _scrollController,
                       itemCount: _listPostValue.length,
                       itemBuilder: (context, index) {
                         return PostList(
@@ -70,57 +77,112 @@ class SearchPostScreenState extends State<SearchPostScreen> {
                   }
                 }),
           ),
-          Container(
-            color: Colors.red,
-            height: 50,
-            child: Row(
-              children: <Widget>[
-                GestureDetector(
-                  child: Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.white,
-                  ),
-                  onTap: () => Navigator.of(context).pop(),
-                ),
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.all(7),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(7),
+          _buildSearchSection(),
+          Positioned(
+            top: 42,
+            right: 5,
+            child: !_showAreaPicker
+                ? Container()
+                : Container(
+                    width: 150,
+                    height: 150,
+                    child: Card(
+                      elevation: 6.0,
+                      child: ListView.builder(
+                        itemCount: _areaMap.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              setState(() {
+                                _areaIndex = index;
+                              });
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(top: 10),
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Text(
+                                      _areaMap[index],
+                                      style: TextStyle(fontSize: 17),
+                                    ),
+                                  ),
+                                  _areaIndex == index
+                                      ? Icon(
+                                          Icons.check,
+                                          color: Colors.red,
+                                        )
+                                      : Container(),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearchSection() {
+    return Container(
+      color: Colors.red,
+      height: 50,
+      child: Row(
+        children: <Widget>[
+          GestureDetector(
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+            ),
+            onTap: () => Navigator.of(context).pop(),
+          ),
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(7),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(7),
+              ),
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.search),
+                  Expanded(
+                    child: TextField(
+                      onChanged: (value) {
+                        _postBloc.getPostSearchResult(
+                          _listPostData,
+                          value,
+                        );
+                      },
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Tìm kiếm địa điểm',
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _showAreaPicker = !_showAreaPicker;
+                      });
+                    },
                     child: Row(
                       children: <Widget>[
-                        Icon(Icons.search),
-                        Expanded(
-                          child: TextField(
-                            onChanged: (value) {
-                              _postBloc.getPostSearchResult(
-                                _listPostData,
-                                value,
-                              );
-                            },
-                            controller: _searchController,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Tìm kiếm địa điểm',
-                            ),
-                          ),
+                        Text(
+                          '${_areaMap[_areaIndex]}',
+                          style: TextStyle(fontSize: 18),
                         ),
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              'Đà Nẵng',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            Icon(Icons.arrow_drop_down),
-                          ],
-                        ),
+                        Icon(Icons.arrow_drop_down),
                       ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
