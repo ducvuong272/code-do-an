@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class PostList extends StatelessWidget {
-  final String postTitle, address;
+  final String postTitle, address, imageUrl;
 
   const PostList({
     Key key,
     this.postTitle,
     this.address,
+    this.imageUrl,
   }) : super(key: key);
 
   @override
@@ -21,24 +22,29 @@ class PostList extends StatelessWidget {
             padding: EdgeInsets.all(5),
             height: imageWidth,
             width: imageWidth,
-            child: Image.asset(
-              'assets/images/1.png',
-              fit: BoxFit.fill,
-            ),
+            child: imageUrl == null
+                ? Image.asset(
+                    'assets/images/1.png',
+                    fit: BoxFit.fill,
+                  )
+                : Image.network(
+                    imageUrl,
+                    fit: BoxFit.fill,
+                  ),
           ),
           Flexible(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'Post title  ',
+                  postTitle == null ? 'Post title  ' : postTitle,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 Text(
-                  'Địa chỉ Địa chỉ Địa chỉ ',
+                  address == null ? 'Địa chỉ Địa chỉ Địa chỉ ' : address,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,

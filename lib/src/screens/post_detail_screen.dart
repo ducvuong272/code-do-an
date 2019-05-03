@@ -448,7 +448,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
             Icons.photo_size_select_large,
             'Hình ảnh',
             () {
-              print(DateTime.now());
+              print(DateTime.now().toLocal());
             },
           ),
           _constantElements(

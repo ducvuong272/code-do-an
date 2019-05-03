@@ -2,6 +2,7 @@ import 'package:do_an_tn/src/blocs/post_bloc.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/post_detail_screen.dart';
+import 'package:do_an_tn/src/screens/search_post_screen.dart';
 import 'package:do_an_tn/src/widgets/home_screen_post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -174,38 +175,45 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.red,
             ),
             height: 50.0,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(7.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => SearchPostScreen()),
+                );
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(7.0),
+                  ),
                 ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.search,
-                        color: Colors.black54,
-                      ),
-                      Text(
-                        'Tìm kiếm món ăn, địa điểm...',
-                        style: TextStyle(fontSize: 16, color: Colors.black45),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        'Đà Nẵng',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                      Icon(Icons.arrow_drop_down),
-                    ],
-                  ),
-                ],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.search,
+                          color: Colors.black54,
+                        ),
+                        Text(
+                          'Tìm kiếm món ăn, địa điểm...',
+                          style: TextStyle(fontSize: 16, color: Colors.black45),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          'Đà Nẵng',
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                        Icon(Icons.arrow_drop_down),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
