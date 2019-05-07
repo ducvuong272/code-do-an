@@ -5,4 +5,5 @@ String kAllPostsUrl = '$kApiUrl/dia-diem';
 String kSingUpUrl = '$kApiUrl/dang-ky';
 String kAddPostUrl = '$kApiUrl/them-dia-diem';
 String kPostCommentUrl = '$kApiUrl/binh-luan';
+String kPromotionImagesUrl = '$kApiUrl/lay-khuyen-mai';
 Map<String, String> kApiHeader = {"Content-Type" : "application/json"};

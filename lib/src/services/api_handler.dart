@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:do_an_tn/src/models/comment.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:http/http.dart' as http;
@@ -30,9 +29,10 @@ class ApiHandler {
     return response.body;
   }
 
-  Future<String> getAllPosts() async {
+  Future<String> getAllPosts(int postId) async {
+    final apiUrl = '$kAllPostsUrl/$postId';
     final response = await http.get(
-      kAllPostsUrl,
+      apiUrl,
       headers: kApiHeader,
     );
     return response.statusCode == 200 ? response.body : 'Lỗi';
@@ -59,21 +59,12 @@ class ApiHandler {
     return response.body;
   }
 
-  Future<String> postImage(File a) async {
-    var apiurl = "$kApiUrl/tai-hinh";
-    Map<String, dynamic> map = Map<String, dynamic>();
-    var image = base64Encode(a.readAsBytesSync());
-    print("base64: " + image);
-    map["Id_DiaDiem"] = 1;
-    map["image"] = a;
-    print(apiurl);
-    print(map);
-    var response =await http.post(
-      apiurl,
+  Future<http.Response> getPromotionImages() async {
+    final apiUrl = kPromotionImagesUrl;
+    final response = await http.get(
+      apiUrl,
       headers: kApiHeader,
-      body: json.encode(a),
     );
-    print('response: '+response.body);
-    return response.body;
+    return response;
   }
 }

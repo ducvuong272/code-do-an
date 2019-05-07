@@ -1,6 +1,6 @@
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/home_dashboard.dart';
-import 'package:do_an_tn/src/screens/user_avatar.dart';
+import 'package:do_an_tn/src/screens/user_avatar_screen.dart';
 import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:do_an_tn/src/widgets/login_notify_button.dart';
 import 'package:do_an_tn/src/widgets/user_avatar.dart';
@@ -132,9 +132,13 @@ class UserAccountScreen extends StatelessWidget {
                           splashColor: Color(0xff8df4a0),
                           padding: EdgeInsets.only(left: 10),
                           onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context)=> UserAvatarScreen()
-                            ));
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => UserAvatarScreen(
+                                      user: user,
+                                    ),
+                              ),
+                            );
                           },
                           child: Row(
                             mainAxisSize: MainAxisSize.max,

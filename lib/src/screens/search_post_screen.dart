@@ -8,7 +8,10 @@ class SearchPostScreen extends StatefulWidget {
   SearchPostScreenState createState() => SearchPostScreenState();
 }
 
-class SearchPostScreenState extends State<SearchPostScreen> {
+class SearchPostScreenState extends State<SearchPostScreen>
+    with SingleTickerProviderStateMixin {
+  AnimationController _animationController;
+  Animation<double> _animation;
   TextEditingController _searchController = TextEditingController();
   PostBloc _postBloc = PostBloc();
   List<Post> _listPostData = [];
@@ -25,12 +28,23 @@ class SearchPostScreenState extends State<SearchPostScreen> {
 
   @override
   void initState() {
-    _postBloc.getAllPost();
+    _postBloc.getAllPost(1);
     _postBloc.getAllPostStream.listen((onData) {
       setState(() {
         _listPostData = onData;
       });
     });
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+    _animation = Tween<double>(begin: 0, end: 150).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ))
+      ..addListener(() {
+        setState(() {});
+      });
     super.initState();
   }
 
@@ -50,10 +64,13 @@ class SearchPostScreenState extends State<SearchPostScreen> {
                       controller: _scrollController,
                       itemCount: _listPostValue.length,
                       itemBuilder: (context, index) {
-                        return PostList(
-                          address: _listPostValue[index].address,
-                          postTitle: _listPostValue[index].postTitle,
-                          imageUrl: _listPostValue[index].imageUrl,
+                        return InkWell(
+                          onTap: () {},
+                          child: PostList(
+                            address: _listPostValue[index].address,
+                            postTitle: _listPostValue[index].postTitle,
+                            imageUrl: _listPostValue[index].imageUrl,
+                          ),
                         );
                       },
                     );
@@ -81,46 +98,46 @@ class SearchPostScreenState extends State<SearchPostScreen> {
           Positioned(
             top: 42,
             right: 5,
-            child: !_showAreaPicker
-                ? Container()
-                : Container(
-                    width: 150,
-                    height: 150,
-                    child: Card(
-                      elevation: 6.0,
-                      child: ListView.builder(
-                        itemCount: _areaMap.length,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              setState(() {
-                                _areaIndex = index;
-                              });
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(top: 10),
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Text(
-                                      _areaMap[index],
-                                      style: TextStyle(fontSize: 17),
-                                    ),
-                                  ),
-                                  _areaIndex == index
-                                      ? Icon(
-                                          Icons.check,
-                                          color: Colors.red,
-                                        )
-                                      : Container(),
-                                ],
+            child: Container(
+              width: 150,
+              height: _animation.value,
+              child: Card(
+                elevation: 6.0,
+                child: ListView.builder(
+                  itemCount: _areaMap.length,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        setState(() {
+                          _areaIndex = index;
+                        });
+                        _animationController.reverse();
+                        _showAreaPicker = false;
+                      },
+                      child: Container(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                _areaMap[index],
+                                style: TextStyle(fontSize: 17),
                               ),
                             ),
-                          );
-                        },
+                            _areaIndex == index
+                                ? Icon(
+                                    Icons.check,
+                                    color: Colors.red,
+                                  )
+                                : Container(),
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -153,7 +170,7 @@ class SearchPostScreenState extends State<SearchPostScreen> {
                   Expanded(
                     child: TextField(
                       onChanged: (value) {
-                        _postBloc.getPostSearchResult(
+                        _postBloc.instantSearchPost(
                           _listPostData,
                           value,
                         );
@@ -167,9 +184,10 @@ class SearchPostScreenState extends State<SearchPostScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      setState(() {
-                        _showAreaPicker = !_showAreaPicker;
-                      });
+                      _showAreaPicker
+                          ? _animationController.reverse()
+                          : _animationController.forward();
+                      _showAreaPicker = !_showAreaPicker;
                     },
                     child: Row(
                       children: <Widget>[

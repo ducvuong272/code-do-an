@@ -47,7 +47,7 @@ class LoginNotifyWidget extends StatelessWidget {
               padding: EdgeInsets.only(left: 10),
             ),
             Text(
-              'Vui lòng đăng nhập để tiếp tục',
+              'Đăng nhập để tiếp tục',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,

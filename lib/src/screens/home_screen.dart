@@ -1,6 +1,7 @@
 import 'package:do_an_tn/src/blocs/post_bloc.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
+import 'package:do_an_tn/src/repository/post_repository.dart';
 import 'package:do_an_tn/src/screens/post_detail_screen.dart';
 import 'package:do_an_tn/src/screens/search_post_screen.dart';
 import 'package:do_an_tn/src/services/check_network_connectivity.dart';
@@ -31,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   int _pageIndex = 0;
   ScrollController _scrollController;
+  List<String> _imageUrls = [];
   double androidBottomBarHeigh = 72.0;
   PostBloc _postBLoc;
   bool _hasInternetConnection = false;
@@ -52,7 +54,10 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           _hasInternetConnection = true;
         });
-        Future.delayed(Duration(seconds: 1), () => _postBLoc.getAllPost());
+        Future.delayed(Duration(seconds: 1), () async {
+          await _postBLoc.getPromotionImages();
+          await _postBLoc.getAllPost(1);
+        });
       }
     });
     super.initState();
@@ -88,26 +93,39 @@ class _HomeScreenState extends State<HomeScreen> {
                               left: 10.0,
                               right: 10.0,
                             ),
-                            child: Swiper(
-                              autoplay: true,
-                              itemCount: _imagePaths.length,
-                              controller: SwiperController(),
-                              index: _pageIndex,
-                              itemBuilder: (context, index) {
-                                return ClipRRect(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  child: Image.asset(
-                                    _imagePaths[index],
-                                    fit: BoxFit.fill,
-                                  ),
-                                );
-                              },
-                              onIndexChanged: (index) {
-                                setState(() {
-                                  _pageIndex = index;
-                                });
-                              },
-                            ),
+                            child: StreamBuilder<Object>(
+                                stream: _postBLoc.promotionImageStream,
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    _imageUrls = snapshot.data;
+                                    return Swiper(
+                                      autoplay: true,
+                                      itemCount: _imageUrls.length,
+                                      controller: SwiperController(),
+                                      index: _pageIndex,
+                                      itemBuilder: (context, index) {
+                                        return ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          child: Image.network(
+                                            _imageUrls[index],
+                                            fit: BoxFit.fill,
+                                          ),
+                                        );
+                                      },
+                                      onIndexChanged: (index) {
+                                        setState(() {
+                                          _pageIndex = index;
+                                        });
+                                      },
+                                    );
+                                  } else {
+                                    print('no data');
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                }),
                           ),
                           Container(
                             height: 20,
@@ -146,14 +164,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: List.generate(
                                       listPost.length,
                                       (index) {
-                                        return GestureDetector(
-                                          child: HomeScreenPost(
-                                            postTitle:
-                                                '${listPost[index].postTitle}',
-                                            address:
-                                                '${listPost[index].address}',
-                                            postImage:
-                                                '${listPost[index].imageUrl}',
+                                        return InkWell(
+                                          child: Container(
+                                            child: HomeScreenPost(
+                                              postTitle:
+                                                  '${listPost[index].postTitle}',
+                                              address:
+                                                  '${listPost[index].address}',
+                                              postImage:
+                                                  '${listPost[index].imageUrl}',
+                                            ),
                                           ),
                                           onTap: () {
                                             print(listPost[index].postId);
