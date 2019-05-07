@@ -3,7 +3,7 @@ import 'package:do_an_tn/src/models/comment.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:flutter/material.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
+// import 'package:multi_image_picker/multi_image_picker.dart';
 
 class CommentScreen extends StatefulWidget {
   final User user;
@@ -23,7 +23,7 @@ class CommentScreenState extends State<CommentScreen> {
       _viewRating = 5;
   double _averageRatingPoint = 5.0;
   TextEditingController _commentContentController = TextEditingController();
-  List<Asset> _images = List<Asset>();
+  // List<Asset> _images = List<Asset>();
   ScrollController _scrollController = ScrollController();
   CommentBloc _commentBloc = CommentBloc();
 
@@ -122,26 +122,26 @@ class CommentScreenState extends State<CommentScreen> {
                       ),
                     ),
                   ),
-                  Container(
-                    color: Colors.white,
-                    child: _images.length == 0
-                        ? Container()
-                        : GridView.count(
-                            shrinkWrap: true,
-                            controller: _scrollController,
-                            crossAxisSpacing: 5.0,
-                            mainAxisSpacing: 5.0,
-                            crossAxisCount: 2,
-                            children: List.generate(_images.length, (index) {
-                              Asset asset = _images[index];
-                              return AssetThumb(
-                                asset: asset,
-                                width: 300,
-                                height: 300,
-                              );
-                            }),
-                          ),
-                  ),
+                  // Container(
+                  //   color: Colors.white,
+                  //   child: _images.length == 0
+                  //       ? Container()
+                  //       : GridView.count(
+                  //           shrinkWrap: true,
+                  //           controller: _scrollController,
+                  //           crossAxisSpacing: 5.0,
+                  //           mainAxisSpacing: 5.0,
+                  //           crossAxisCount: 2,
+                  //           children: List.generate(_images.length, (index) {
+                  //             Asset asset = _images[index];
+                  //             return AssetThumb(
+                  //               asset: asset,
+                  //               width: 300,
+                  //               height: 300,
+                  //             );
+                  //           }),
+                  //         ),
+                  // ),
                   Container(
                     color: Colors.white,
                     child: TextField(
@@ -165,14 +165,14 @@ class CommentScreenState extends State<CommentScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Future future = _commentBloc.pickImages();
-          future.then((onValue) {
-            if (onValue != null) {
-              setState(() {
-                _images = onValue;
-              });
-            }
-          });
+          // Future future = _commentBloc.pickImages();
+          // future.then((onValue) {
+          //   if (onValue != null) {
+          //     setState(() {
+          //       _images = onValue;
+          //     });
+          //   }
+          // });
         },
         child: Icon(Icons.add_photo_alternate),
       ),

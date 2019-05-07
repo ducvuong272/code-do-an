@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:do_an_tn/src/models/comment.dart';
 import 'package:do_an_tn/src/repository/comment_repository.dart';
 
@@ -17,16 +16,16 @@ class CommentBloc {
   StreamController<int> _viewRatingController = StreamController<int>();
   Stream<int> get viewRatingStream => _viewRatingController.stream;
 
-  Future<List<Asset>> pickImages() async {
-    List<Asset> resultList = List<Asset>();
-    resultList = await MultiImagePicker.pickImages(
-      maxImages: 50,
-      enableCamera: true,
-      cupertinoOptions: CupertinoOptions(takePhotoIcon: 'pick'),
-      materialOptions: MaterialOptions(),
-    );
-    return resultList;
-  }
+  // Future<List<Asset>> pickImages() async {
+  //   List<Asset> resultList = List<Asset>();
+  //   resultList = await MultiImagePicker.pickImages(
+  //     maxImages: 50,
+  //     enableCamera: true,
+  //     cupertinoOptions: CupertinoOptions(takePhotoIcon: 'pick'),
+  //     materialOptions: MaterialOptions(),
+  //   );
+  //   return resultList;
+  // }
 
   postComment(BuildContext context, Comment comment) {
     CustomDialog dialog = CustomDialog();
