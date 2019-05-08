@@ -1,4 +1,5 @@
 import 'package:do_an_tn/src/blocs/post_bloc.dart';
+import 'package:do_an_tn/src/blocs/save_post_bloc.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/comment_screen.dart';
@@ -474,7 +475,18 @@ class PostDetailScreenState extends State<PostDetailScreen> {
             Icons.done_outline,
             'Lưu lại',
             () {
-              _askForLogin();
+              if (widget.user == null) {
+                _askForLogin();
+              } else {
+                SavePostBloc savePostBloc = SavePostBloc();
+                print('user id: ${widget.user.userId}');
+                print('post id: ${widget.post.postId}');
+                savePostBloc.savePost(
+                  context: context,
+                  postId: widget.post.postId,
+                  userId: widget.user.userId,
+                );
+              }
             },
           ),
         ],

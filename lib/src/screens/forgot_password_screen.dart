@@ -1,3 +1,4 @@
+import 'package:do_an_tn/src/blocs/send_email_bloc.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -7,6 +8,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   TextEditingController _emailController = TextEditingController();
+  EmailBloc _emailBloc = EmailBloc();
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -46,31 +48,40 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ),
                   ],
                 ),
-                TextField(
-                  controller: _emailController,
-                  autocorrect: false,
-                  style: TextStyle(fontSize: 23),
-                  decoration: InputDecoration(
-                    labelText: 'Nhập email',
-                    suffix: GestureDetector(
-                      onTap: (){
-                        _emailController.clear();
-                      },
-                      child: Icon(
-                        Icons.clear,
-                        size: 25,
-                        color: Colors.black,
-                      ),
-                    ),
-                    contentPadding: EdgeInsets.all(0),
-                  ),
-                ),
+                StreamBuilder<Object>(
+                    stream: _emailBloc.emailStream,
+                    builder: (context, snapshot) {
+                      return TextField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        autocorrect: false,
+                        style: TextStyle(fontSize: 23),
+                        decoration: InputDecoration(
+                          labelText: 'Nhập email',
+                          errorText: snapshot.hasError ? snapshot.error : null,
+                          suffix: GestureDetector(
+                            onTap: () {
+                              _emailController.clear();
+                            },
+                            child: Icon(
+                              Icons.clear,
+                              size: 25,
+                              color: Colors.black,
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.all(0),
+                        ),
+                      );
+                    }),
                 Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: RaisedButton(
                     elevation: 0.0,
                     color: Colors.blue,
-                    onPressed: () {},
+                    onPressed: () {
+                      _emailBloc.recoverPassword(
+                          context, _emailController.text);
+                    },
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),

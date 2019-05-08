@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/repository/post_repository.dart';
+import 'package:do_an_tn/src/widgets/dialog.dart';
+import 'package:flutter/material.dart';
 
 class PostBloc {
   StreamController<List<Post>> _getAllPostsController =
@@ -14,15 +16,30 @@ class PostBloc {
       StreamController<List<String>>();
   Stream<List<String>> get promotionImageStream =>
       _promotionImagesController.stream;
+  StreamController<List<Post>> _getSavedPostListController =
+      StreamController<List<Post>>();
+  Stream<List<Post>> get getSavedPostListStream =>
+      _getSavedPostListController.stream;
 
-  Future<Null> getAllPost(int filterId) async {
+  Future<Null> getAllPostByCityId(
+    BuildContext context,
+    int cityId,
+    bool showDialog,
+  ) async {
+    CustomDialog customDialog = CustomDialog();
+    if (showDialog) {
+      customDialog.showCustomDialog(
+        context: context,
+        barrierDismissible: false,
+        msg: 'Đang load địa điểm...',
+        showprogressIndicator: true,
+      );
+    }
     PostRepository postRepository = PostRepository();
-    Future<List<Post>> future = postRepository.getAllPosts(filterId);
-    future.then(
-      (value) {
-        _getAllPostsController.sink.add(value);
-      },
-    );
+    await postRepository.getAllPostsByCityId(cityId).then((onValue) {
+      _getAllPostsController.sink.add(onValue);
+      if (showDialog) customDialog.hideCustomDialog(context);
+    });
   }
 
   instantSearchPost(List<Post> listPostData, String value) {
@@ -45,9 +62,17 @@ class PostBloc {
     _promotionImagesController.sink.add(imageList);
   }
 
+  Future<Null> getSavedPostList(int userId) async{
+    PostRepository postRepository = PostRepository();
+    List<Post> postList = await postRepository.getSavedPost(userId);
+    print(postList.length);
+    _getSavedPostListController.sink.add(postList);
+  }
+
   dispose() {
     _promotionImagesController.close();
     _postSearchResultController.close();
     _getAllPostsController.close();
+    _getSavedPostListController.close();
   }
 }

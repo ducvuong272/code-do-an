@@ -11,6 +11,7 @@ class Post {
       highestPrice,
       lowestPrice,
       postCategories,
+      ratingPoint,
       country;
   int postId, userId;
 
@@ -37,6 +38,16 @@ class Post {
     postTitle = json["TenDiaDiem"];
     address = json["DiaChi"];
     imageUrl = json["TapTinDaiDien"];
+    userId = json["Id_TaiKhoan"];
+  }
+
+  Post.fromSavedPostJson(Map<String, dynamic> json){
+    postId = json["Id_DiaDiem"];
+    postTitle = json["TenDiaDiem"];
+    imageUrl = json["TapTinDaiDien"];
+    userId = int.parse(json["Id_TaiKhoan"]);
+    ratingPoint = json["DanhGiaDiaDiem"].toString();
+    address = json["DiaChi"];
   }
 
   Map<String, dynamic> toAddPostJson() {

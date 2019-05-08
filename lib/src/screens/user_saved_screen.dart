@@ -1,3 +1,6 @@
+import 'package:do_an_tn/src/blocs/post_bloc.dart';
+import 'package:do_an_tn/src/blocs/save_post_bloc.dart';
+import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/widgets/login_notify_button.dart';
 import 'package:do_an_tn/src/widgets/post_list.dart';
@@ -14,9 +17,19 @@ class UserSavedScreen extends StatefulWidget {
 }
 
 class _UserSavedScreenState extends State<UserSavedScreen> {
+  PostBloc _postBloc = PostBloc();
+
+  @override
+  void initState() {
+    if (widget.user != null) {
+      print(widget.user.userId);
+      _postBloc.getSavedPostList(widget.user.userId);
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    User _user = widget.user;
     SystemChrome.setEnabledSystemUIOverlays([]);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
@@ -33,23 +46,42 @@ class _UserSavedScreenState extends State<UserSavedScreen> {
       ),
       body: Container(
         color: Color(0xffc0cde0),
-        child: _user != null
-            ?
-            // Center(
-            //     child: Text(
-            //       'Chưa có địa điểm nào được lưu',
-            //       style: TextStyle(fontSize: 20),
-            //     ),
-            //   )
-            ListView.builder(
-                itemCount: 19,
-                itemBuilder: (context, index) {
-                  return PostList();
-                },
-              )
-            : LoginNotifyWidget(
-                context: context,
-              ),
+        child: widget.user == null
+            ? LoginNotifyWidget(context: context)
+            : StreamBuilder<Object>(
+                stream: _postBloc.getSavedPostListStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<Post> postList = snapshot.data;
+                    print('lenght: ' + postList.length.toString());
+                    return
+                        // Center(
+                        //     child: Text(
+                        //       'Chưa có địa điểm nào được lưu',
+                        //       style: TextStyle(fontSize: 20),
+                        //     ),
+                        //   )
+                        ListView.builder(
+                      itemCount: postList.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {},
+                          child: postList.length > 0
+                              ? PostList(
+                                  post: postList[index],
+                                )
+                              : Center(
+                                  child: Text('Bạn chưa lưu địa điểm nào'),
+                                ),
+                        );
+                      },
+                    );
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }),
       ),
     );
   }

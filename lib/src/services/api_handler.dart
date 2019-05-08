@@ -29,8 +29,8 @@ class ApiHandler {
     return response.body;
   }
 
-  Future<String> getAllPosts(int postId) async {
-    final apiUrl = '$kAllPostsUrl/$postId';
+  Future<String> getAllPostsByCityId(int cityId) async {
+    final apiUrl = '$kAllPostsUrl/$cityId';
     final response = await http.get(
       apiUrl,
       headers: kApiHeader,
@@ -45,7 +45,6 @@ class ApiHandler {
       headers: kApiHeader,
       body: json.encode(post.toAddPostJson()),
     );
-    print(json.encode(post.toAddPostJson()));
     return response.body;
   }
 
@@ -61,6 +60,46 @@ class ApiHandler {
 
   Future<http.Response> getPromotionImages() async {
     final apiUrl = kPromotionImagesUrl;
+    final response = await http.get(
+      apiUrl,
+      headers: kApiHeader,
+    );
+    return response;
+  }
+
+  Future<http.Response> savePost(Map<String, int> savePostMap) async {
+    final apiUrl = kSavePostUrl;
+    final response = await http.post(
+      apiUrl,
+      headers: kApiHeader,
+      body: json.encode(savePostMap),
+    );
+    return response;
+  }
+
+  Future<http.Response> sendEmailToGetPassword(String email) async {
+    final apiUrl = kForgetPasswordUrl;
+    Map<String, String> emailMap = {"Email": "$email"};
+    final response = await http.post(
+      apiUrl,
+      headers: kApiHeader,
+      body: json.encode(emailMap),
+    );
+    return response;
+  }
+
+  Future<http.Response> getSavedPost(int userId) async {
+    final apiUrl = '$kGetSavedPostUrl/$userId';
+    final response = await http.get(
+      apiUrl,
+      headers: kApiHeader,
+    );
+    print(response.body);
+    return response;
+  }
+
+  Future<http.Response> fetchCityByWithId() async {
+    final apiUrl = kGetCityWithIdUrl;
     final response = await http.get(
       apiUrl,
       headers: kApiHeader,

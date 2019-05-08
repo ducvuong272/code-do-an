@@ -6,9 +6,9 @@ import 'dart:convert';
 class PostRepository {
   ApiHandler _apiHandler = ApiHandler();
 
-  Future<List<Post>> getAllPosts(int postId) async {
-    final response = await _apiHandler.getAllPosts(postId);
-    var listPosts = (json.decode(response) as List)
+  Future<List<Post>> getAllPostsByCityId(int cityId) async {
+    final response = await _apiHandler.getAllPostsByCityId(cityId);
+    var listPosts = (json.decode(response)['data'] as List)
         .map((json) => new Post.fromJson(json))
         .toList();
     return listPosts;
@@ -30,5 +30,22 @@ class PostRepository {
     final response = await _apiHandler.addPost(post);
     var map = json.decode(response);
     return map;
+  }
+
+  Future<List<Post>> getSavedPost(int userId) async {
+    final response = await _apiHandler.getSavedPost(userId);
+    List<Post> postList = [];
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(response.body);
+      print(map);
+      if (map['code'] == 200) {
+        var mapToList = (map['data'] as List)
+            .map((f) => Post.fromSavedPostJson(f))
+            .toList();
+        print(mapToList.length);
+        postList = mapToList;
+      }
+    }
+    return postList;
   }
 }

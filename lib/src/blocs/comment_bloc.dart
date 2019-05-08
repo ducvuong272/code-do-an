@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:do_an_tn/src/models/comment.dart';
@@ -15,6 +17,9 @@ class CommentBloc {
   Stream<int> get serviceRatingStream => _serviceRatingController.stream;
   StreamController<int> _viewRatingController = StreamController<int>();
   Stream<int> get viewRatingStream => _viewRatingController.stream;
+  StreamController<List<File>> _listImageController =
+      StreamController<List<File>>();
+  Stream<List<File>> get imageFilesStream => _listImageController.stream;
 
   // Future<List<Asset>> pickImages() async {
   //   List<Asset> resultList = List<Asset>();
@@ -27,35 +32,63 @@ class CommentBloc {
   //   return resultList;
   // }
 
-  postComment(BuildContext context, Comment comment) {
-    CustomDialog dialog = CustomDialog();
-    dialog.showCustomDialog(
-      context: context,
-      barrierDismissible: false,
-      msg: 'Đang xử lý...',
-      showprogressIndicator: true,
-    );
-    CommentRepository commentRepository = CommentRepository(comment: comment);
-    Future future = commentRepository.postComment();
-    future.then((onValue) {
-      if (onValue == "200") {
-        dialog.hideCustomDialog(context);
-        dialog.showCustomDialog(
-          context: context,
-          barrierDismissible: true,
-          msg: 'Đăng bình luận thành công!',
-          showprogressIndicator: false,
-        );
-      } else {
-        dialog.hideCustomDialog(context);
-        dialog.showCustomDialog(
-          context: context,
-          barrierDismissible: true,
-          msg: 'Đăng bình luận thất bại!',
-          showprogressIndicator: false,
-        );
+  Future<File> _pickImage() async {
+    File imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+    return imageFile;
+  }
+
+  addImageToList(List<File> listImage) {
+    _pickImage().then((onValue) {
+      if (onValue != null) {
+        listImage.add(onValue);
+        _listImageController.sink.add(listImage);
       }
     });
+  }
+
+  removeImage(List<File> listImage, int index) {
+    listImage.removeAt(index);
+    _listImageController.sink.add(listImage);
+  }
+
+  postComment(BuildContext context, Comment comment) {
+    CustomDialog dialog = CustomDialog();
+    if (comment.commentContent.trim() == '') {
+      dialog.showCustomDialog(
+        barrierDismissible: true,
+        context: context,
+        msg: 'Bình luận không được để trống',
+        showprogressIndicator: false,
+      );
+    } else {
+      dialog.showCustomDialog(
+        context: context,
+        barrierDismissible: false,
+        msg: 'Đang xử lý...',
+        showprogressIndicator: true,
+      );
+      CommentRepository commentRepository = CommentRepository(comment: comment);
+      Future future = commentRepository.postComment();
+      future.then((onValue) {
+        if (onValue == "200") {
+          dialog.hideCustomDialog(context);
+          dialog.showCustomDialog(
+            context: context,
+            barrierDismissible: true,
+            msg: 'Đăng bình luận thành công!',
+            showprogressIndicator: false,
+          );
+        } else {
+          dialog.hideCustomDialog(context);
+          dialog.showCustomDialog(
+            context: context,
+            barrierDismissible: true,
+            msg: 'Đăng bình luận thất bại!',
+            showprogressIndicator: false,
+          );
+        }
+      });
+    }
   }
 
   dispose() {
@@ -64,5 +97,6 @@ class CommentBloc {
     _qualityRatingController.close();
     _serviceRatingController.close();
     _viewRatingController.close();
+    _listImageController.close();
   }
 }

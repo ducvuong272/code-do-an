@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:do_an_tn/src/blocs/comment_bloc.dart';
 import 'package:do_an_tn/src/models/comment.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
+import 'package:do_an_tn/src/widgets/image_edit_widget.dart';
 import 'package:flutter/material.dart';
 // import 'package:multi_image_picker/multi_image_picker.dart';
 
@@ -24,6 +26,7 @@ class CommentScreenState extends State<CommentScreen> {
   double _averageRatingPoint = 5.0;
   TextEditingController _commentContentController = TextEditingController();
   // List<Asset> _images = List<Asset>();
+  List<File> _listImage = [];
   ScrollController _scrollController = ScrollController();
   CommentBloc _commentBloc = CommentBloc();
 
@@ -122,26 +125,51 @@ class CommentScreenState extends State<CommentScreen> {
                       ),
                     ),
                   ),
-                  // Container(
-                  //   color: Colors.white,
-                  //   child: _images.length == 0
-                  //       ? Container()
-                  //       : GridView.count(
-                  //           shrinkWrap: true,
-                  //           controller: _scrollController,
-                  //           crossAxisSpacing: 5.0,
-                  //           mainAxisSpacing: 5.0,
-                  //           crossAxisCount: 2,
-                  //           children: List.generate(_images.length, (index) {
-                  //             Asset asset = _images[index];
-                  //             return AssetThumb(
-                  //               asset: asset,
-                  //               width: 300,
-                  //               height: 300,
-                  //             );
-                  //           }),
-                  //         ),
-                  // ),
+                  Container(
+                    color: Colors.white,
+                    padding: EdgeInsets.all(5),
+                    child: StreamBuilder<Object>(
+                        stream: _commentBloc.imageFilesStream,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData && _listImage.length > 0) {
+                            _listImage = snapshot.data;
+                            print(_listImage.length);
+                            return GridView.count(
+                              shrinkWrap: true,
+                              controller: _scrollController,
+                              crossAxisSpacing: 5.0,
+                              mainAxisSpacing: 5.0,
+                              crossAxisCount: 2,
+                              children:
+                                  List.generate(_listImage.length, (index) {
+                                return Stack(
+                                  children: <Widget>[
+                                    ImageEditWidget(
+                                      imageFile: _listImage[index],
+                                    ),
+                                    Positioned(
+                                      top: 2,
+                                      right: 2,
+                                      child: GestureDetector(
+                                        onTap: () => _removeImage(index),
+                                        child: CircleAvatar(
+                                          maxRadius: 15,
+                                          backgroundColor: Colors.white24,
+                                          child: Icon(
+                                            Icons.clear,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                );
+                              }),
+                            );
+                          }
+                          return Container();
+                        }),
+                  ),
                   Container(
                     color: Colors.white,
                     child: TextField(
@@ -165,18 +193,17 @@ class CommentScreenState extends State<CommentScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Future future = _commentBloc.pickImages();
-          // future.then((onValue) {
-          //   if (onValue != null) {
-          //     setState(() {
-          //       _images = onValue;
-          //     });
-          //   }
-          // });
+          _commentBloc.addImageToList(_listImage);
         },
         child: Icon(Icons.add_photo_alternate),
       ),
     );
+  }
+
+  void _removeImage(int index) {
+    print(_listImage.length);
+    print(index);
+    _commentBloc.removeImage(_listImage, index);
   }
 
   Widget _buildRatingSection() {
