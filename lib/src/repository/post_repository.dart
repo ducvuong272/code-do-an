@@ -48,4 +48,77 @@ class PostRepository {
     }
     return postList;
   }
+
+  Future<List<Post>> getAllPostOfUser(int userId) async {
+    final response = await _apiHandler.getAllPostOfUser(userId);
+    List<Post> postList = [];
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(response.body);
+      if (map['code'] == 200) {
+        var mapToList = (map['data'] as List)
+            .map((f) => Post.fromSavedPostJson(f))
+            .toList();
+        print(mapToList.length);
+        postList = mapToList;
+      }
+    }
+    return postList;
+  }
+
+  Future<List<Map<String, dynamic>>> getAllPostCategory() async {
+    List<Map<String, dynamic>> categoryListMap = [];
+    final response = await _apiHandler.getAllPostCategory();
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(response.body);
+      if (map['code'] == 200) {
+        List<dynamic> listCategory = map['data'];
+        for (int i = 0; i < listCategory.length; i++) {
+          print(listCategory[i]['TenLoaiHinhDiaDiem']);
+          Map<String, dynamic> mapFromDataList = {};
+          mapFromDataList.putIfAbsent('Id', () => listCategory[i]['Id_Cha']);
+          mapFromDataList.putIfAbsent('TenLoaiHinhDiaDiem',
+              () => listCategory[i]['TenLoaiHinhDiaDiem']);
+          categoryListMap.add(mapFromDataList);
+        }
+      }
+    }
+    print(categoryListMap);
+    return categoryListMap;
+  }
+
+  Future<List<Map<String, dynamic>>> getAllCity() async {
+    List<Map<String, dynamic>> cityListMap = [];
+    final response = await _apiHandler.getAllCity();
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(response.body);
+      if (map['code'] == 200) {
+        List<dynamic> listCity = map['data'];
+        for (int i = 0; i < listCity.length; i++) {
+          Map<String, dynamic> mapFromDataList = {};
+          mapFromDataList.putIfAbsent(
+              'Id', () => listCity[i]['Id_TinhThanhPho']);
+          mapFromDataList.putIfAbsent(
+              'TenTinhThanhPho', () => listCity[i]['TenTinhThanhPho']);
+          cityListMap.add(mapFromDataList);
+        }
+      }
+    }
+    return cityListMap;
+  }
+
+  Future<List<String>> getDistrictByCityId(int cityId) async{
+    List<String> listDistrict = [];
+    ApiHandler apiHandler = ApiHandler();
+    final response = await apiHandler.getDistrictByCityId(cityId);
+    if(response.statusCode == 200){
+      Map<String, dynamic> map = json.decode(response.body);
+      if(map['code'] == 200){
+        List<dynamic> listDisctrictFromMap = map['data'];
+        for(int i = 0; i<listDisctrictFromMap.length;i++){
+          listDistrict.add(listDisctrictFromMap.elementAt(i)['TenQuanHuyen']);
+        }
+      }
+    }
+    return listDistrict;
+  }
 }

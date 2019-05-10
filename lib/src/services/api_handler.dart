@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:do_an_tn/src/models/comment.dart';
 import 'package:do_an_tn/src/models/post.dart';
+import 'package:do_an_tn/src/models/user.dart';
 import 'package:http/http.dart' as http;
-import 'package:do_an_tn/src/utils/export_model.dart';
 import 'package:do_an_tn/src/constants.dart';
 
 class ApiHandler {
@@ -98,8 +98,46 @@ class ApiHandler {
     return response;
   }
 
-  Future<http.Response> fetchCityByWithId() async {
-    final apiUrl = kGetCityWithIdUrl;
+  // Future<http.Response> fetchCityByWithId() async {
+  //   final apiUrl = kGetCityWithIdUrl;
+  //   final response = await http.get(
+  //     apiUrl,
+  //     headers: kApiHeader,
+  //   );
+  //   return response;
+  // }
+
+  Future<http.Response> getAllPostOfUser(int userId) async {
+    final apiUrl = '$kGetAllPostOfUser/$userId';
+    final response = await http.get(
+      apiUrl,
+      headers: kApiHeader,
+    );
+    print(response.body);
+    return response;
+  }
+
+  Future<http.Response> getAllPostCategory() async {
+    final apiUrl = '$kgetAllPostCategory';
+    final response = await http.get(
+      apiUrl,
+      headers: kApiHeader,
+    );
+    print(response.body);
+    return response;
+  }
+
+  Future<http.Response> getAllCity() async{
+    final apiUrl = '$kgetAllCity';
+    final response = await http.get(
+      apiUrl,
+      headers: kApiHeader,
+    );
+    return response;
+  }
+
+  Future<http.Response> getDistrictByCityId(int cityId) async{
+    final apiUrl = '$kgetDistrictByCity/$cityId';
     final response = await http.get(
       apiUrl,
       headers: kApiHeader,

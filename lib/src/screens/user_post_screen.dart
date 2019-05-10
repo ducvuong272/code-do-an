@@ -1,6 +1,9 @@
+import 'package:do_an_tn/src/blocs/post_bloc.dart';
+import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/add_post_screen.dart';
 import 'package:do_an_tn/src/widgets/login_notify_button.dart';
+import 'package:do_an_tn/src/widgets/post_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,11 +17,33 @@ class PostsOfUserScreen extends StatefulWidget {
 }
 
 class _PostsOfUserScreenState extends State<PostsOfUserScreen> {
+  PostBloc _postBloc;
+  bool _hasData = false;
+
+  @override
+  void initState() {
+    _postBloc = PostBloc();
+    if (widget.user != null) {
+      print('user: ' + widget.user.userId.toString());
+      _postBloc.getAllPostOfUser(widget.user.userId).whenComplete(() {
+        setState(() {
+          _hasData = true;
+        });
+      });
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _postBloc.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
@@ -37,10 +62,30 @@ class _PostsOfUserScreenState extends State<PostsOfUserScreen> {
               ? LoginNotifyWidget(
                   context: context,
                 )
-              : Text(
-                  'Bạn hiện chưa có địa điểm nào',
-                  style: TextStyle(fontSize: 20),
-                ),
+              : _hasData == false
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : StreamBuilder<Object>(
+                      stream: _postBloc.getAllPostOfUserStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          List<Post> listPost = snapshot.data;
+                          print('length: ' + listPost.length.toString());
+                          return ListView.builder(
+                            itemCount: listPost.length,
+                            itemBuilder: (context, index) {
+                              return PostList(
+                                post: listPost[index],
+                              );
+                            },
+                          );
+                        }
+                        return Center(
+                          child: Text('Không có địa điểm'),
+                        );
+                      },
+                    ),
         ),
       ),
       floatingActionButton: widget.user != null

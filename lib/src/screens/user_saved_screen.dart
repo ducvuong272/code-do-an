@@ -29,6 +29,13 @@ class _UserSavedScreenState extends State<UserSavedScreen> {
   }
 
   @override
+  void dispose() {
+    print('dispose');
+    _postBloc.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);

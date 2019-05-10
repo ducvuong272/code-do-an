@@ -17,7 +17,7 @@ class User {
     username = json['TenTaiKhoan'];
     password = json['MatKhau'];
     email = json['Email'];
-    imageUrl = json['TapTinTaiKhoan'];
+    imageUrl = json['TapTinDaiDien'];
     roleId = json['Id_VaiTro'];
     userId = json['Id_TaiKhoan'];
     firstName = json['Ho'];

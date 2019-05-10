@@ -39,13 +39,14 @@ class UserAvatarScreenState extends State<UserAvatarScreen> {
           children: <Widget>[
             Align(
               alignment: FractionalOffset(0.5, 0.3),
-              child: CircleAvatar(
-                radius: 150,
-                backgroundColor: Colors.blue,
-                backgroundImage: widget.user.imageUrl ??
-                    NetworkImage(
-                        'https://www.codeproject.com/KB/GDI-plus/ImageProcessing2/img.jpg'),
-              ),
+              child: widget.user.imageUrl.trim() == ''
+                  ? Container()
+                  : CircleAvatar(
+                      radius: 150,
+                      backgroundColor: Colors.blue,
+                      backgroundImage: NetworkImage(
+                          widget.user.imageUrl),
+                    ),
             ),
             Align(
               alignment: FractionalOffset(0.5, 0.7),

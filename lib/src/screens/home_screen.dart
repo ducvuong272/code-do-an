@@ -1,4 +1,4 @@
-import 'package:do_an_tn/src/blocs/city_bloc.dart';
+import 'package:do_an_tn/src/blocs/add_post_bloc.dart';
 import 'package:do_an_tn/src/blocs/post_bloc.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
@@ -23,13 +23,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
-  Map<String, dynamic> _cityMap = {};
+  List<Map<String, dynamic>> _cityMap = [];
   int _pageIndex = 0, _cityMapIndex = 0;
   ScrollController _scrollController;
   List<String> _imageUrls = [];
   double androidBottomBarHeigh = 72.0;
   PostBloc _postBLoc;
-  CityBloc _cityBloc = CityBloc();
+  AddPostBloc _addPostBloc;
   bool _hasInternetConnection = false,
       _finishLoading = false,
       _showAreaPicker = false;
@@ -46,6 +46,7 @@ class _HomeScreenState extends State<HomeScreen>
     //         _scrollController.position.maxScrollExtent);
     //   });
     _postBLoc = PostBloc();
+    _addPostBloc = AddPostBloc();
     var _isNetworkConnected =
         NetworkConnection().checkNetworkConnectivity(context);
     _isNetworkConnected.then((onValue) {
@@ -53,15 +54,9 @@ class _HomeScreenState extends State<HomeScreen>
         setState(() {
           _hasInternetConnection = true;
         });
-        _cityBloc.getCityWithId();
-        _cityBloc.cityStream.listen((onData) async {
-          // setState(() {
-          //   _finishLoading = true;
-          // });
-          for (int i = 0; i < onData.length; i++) {
-            Map<String, dynamic> map = {onData[i].cityName: onData[i].cityId};
-            _cityMap.addAll(map);
-          }
+        _addPostBloc.getAllCity();
+        _addPostBloc.getAllCityStream.listen((onData) async {
+          _cityMap = onData;
           await _postBLoc.getPromotionImages().whenComplete(() {
             setState(() {
               _finishLoading = true;
@@ -69,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen>
           });
           await _postBLoc.getAllPostByCityId(
             context,
-            _cityMap.values.elementAt(_cityMapIndex),
+            _cityMap.elementAt(_cityMapIndex)['Id'],
             false,
           );
         });
@@ -257,24 +252,30 @@ class _HomeScreenState extends State<HomeScreen>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        GestureDetector(
-                          onTap: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => SearchPostScreen(),
+                        Expanded(
+                                                  child: GestureDetector(
+                            onTap: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => SearchPostScreen(
+                                      cityMap: _cityMap,
+                                    ),
+                                  ),
                                 ),
+                            child: Container(color: Colors.white,
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.search,
+                                    color: Colors.black54,
+                                  ),
+                                  Text(
+                                    'Tìm kiếm địa điểm...',
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.black45),
+                                  ),
+                                ],
                               ),
-                          child: Row(
-                            children: <Widget>[
-                              Icon(
-                                Icons.search,
-                                color: Colors.black54,
-                              ),
-                              Text(
-                                'Tìm kiếm món ăn, địa điểm...',
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.black45),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                         GestureDetector(
@@ -287,7 +288,7 @@ class _HomeScreenState extends State<HomeScreen>
                           child: Row(
                             children: <Widget>[
                               Text(
-                                '${_cityMap.keys.elementAt(_cityMapIndex)}',
+                                _cityMap.elementAt(_cityMapIndex)['TenTinhThanhPho'],
                                 style: TextStyle(fontSize: 16.0),
                               ),
                               Icon(Icons.arrow_drop_down),
@@ -319,7 +320,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 });
                                 _postBLoc.getAllPostByCityId(
                                   context,
-                                  _cityMap.values.elementAt(_cityMapIndex),
+                                  _cityMap.elementAt(_cityMapIndex)['Id'],
                                   true,
                                 );
                               }
@@ -330,7 +331,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 children: <Widget>[
                                   Expanded(
                                     child: Text(
-                                      _cityMap.keys.elementAt(index),
+                                      _cityMap.elementAt(index)['TenTinhThanhPho'],
                                       style: TextStyle(fontSize: 17),
                                     ),
                                   ),
@@ -357,13 +358,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void dispose() {
     _postBLoc.dispose();
-    _cityBloc.dispose();
+    _addPostBloc.dispose();
     super.dispose();
-  }
-
-  @override
-  void deactivate() {
-    _postBLoc.dispose();
-    super.deactivate();
   }
 }

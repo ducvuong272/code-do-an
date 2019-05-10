@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:do_an_tn/src/blocs/add_post_bloc.dart';
+import 'package:do_an_tn/src/models/enum.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
+import 'package:do_an_tn/src/repository/post_repository.dart';
 import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -24,22 +26,38 @@ class AddPostScreenState extends State<AddPostScreen> {
   TimeOfDay _time1 = TimeOfDay(hour: 9, minute: 0),
       _time2 = TimeOfDay(hour: 21, minute: 0);
   AddPostBloc _addPostBloc = AddPostBloc();
-  Map<int, String> _areaMap = {
-    1: 'Hải Châu',
-    2: 'Sơn Trà',
-    3: 'Liên Chiểu',
-    4: 'Thanh Khê',
-    5: 'Ngũ Hành Sơn'
-  };
-  Map<int, String> _postCategoryMap = {
-    1: 'Ẩm thực',
-    2: 'Du lịch',
-    3: 'Văn hóa',
-    4: 'Dịch vụ',
-    5: 'Giải trí'
-  };
-  int _areaIndex, _postCategoryIndex;
+  List<Map<String, dynamic>> _postCategoryList = [], _cityListMap = [];
+  List<String> _districtList = [];
+  int _districtIndex, _postCategoryIndex, _cityIndex;
   File _imageFile;
+  bool _hasCategoryListData = false,
+      _hasCityListData = false,
+      _hasDistrictData = false;
+
+  @override
+  void initState() {
+    PostRepository postRepository = PostRepository();
+    postRepository.getDistrictByCityId(1);
+    _initializeData();
+    super.initState();
+  }
+
+  _initializeData() async {
+    _addPostBloc.getAllPostCategory();
+    _addPostBloc.getAllCity();
+    _addPostBloc.getAllPostCategoryStream.listen((onData) {
+      setState(() {
+        _postCategoryList = onData;
+        _hasCategoryListData = true;
+      });
+    });
+    _addPostBloc.getAllCityStream.listen((onData) {
+      setState(() {
+        _cityListMap = onData;
+        _hasCityListData = true;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +70,7 @@ class AddPostScreenState extends State<AddPostScreen> {
             GestureDetector(
               onTap: () {
                 CustomDialog dialog = CustomDialog();
-                if (_areaIndex == null) {
+                if (_districtIndex == null) {
                   dialog.showCustomDialog(
                     context: context,
                     msg: 'Vui lòng chọn quận/huyện',
@@ -66,6 +84,13 @@ class AddPostScreenState extends State<AddPostScreen> {
                     showprogressIndicator: false,
                     barrierDismissible: true,
                   );
+                } else if (_cityIndex == null) {
+                  dialog.showCustomDialog(
+                    context: context,
+                    msg: 'Vui lòng chọn thành phố',
+                    showprogressIndicator: false,
+                    barrierDismissible: true,
+                  );
                 } else {
                   var timeOpen = _time1.format(context);
                   var timeClose = _time2.format(context);
@@ -74,15 +99,15 @@ class AddPostScreenState extends State<AddPostScreen> {
                     postTitle: _postTitleController.text,
                     address: _addressController.text,
                     postDetail: _postDetailController.text,
-                    postCategories:
-                        _postCategoryMap.values.elementAt(_postCategoryIndex),
-                    district: 'Quận ' + _areaMap.values.elementAt(_areaIndex),
+                    postCategories: _postCategoryList
+                        .elementAt(_postCategoryIndex)['TenLoaiHinhDiaDiem'],
+                    district: _districtList.elementAt(_districtIndex),
                     phoneNumber: _phoneController.text,
                     openTime: timeOpen,
                     closeTime: timeClose,
                     highestPrice: _highestPriceController.text,
                     lowestPrice: _lowestPriceController.text,
-                    city: 'Đà Nẵng',
+                    city: _cityListMap.elementAt(_cityIndex)['TenTinhThanhPho'],
                     country: 'Vietnam',
                   );
                   _addPostBloc.addPost(post, context, dialog);
@@ -107,240 +132,271 @@ class AddPostScreenState extends State<AddPostScreen> {
           centerTitle: true,
         ),
       ),
-      body: Container(
-        color: Colors.red,
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
-          child: ListView(
-            children: <Widget>[
-              Container(
-                color: Color(0xffe4e8e3),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: _hasCategoryListData == false || _hasCityListData == false
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : Container(
+              color: Colors.red,
+              child: GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                },
+                child: ListView(
                   children: <Widget>[
-                    _buildImageSection(_screenSize.height / 3),
-                    _headerSection('Chọn Tỉnh/Thành phố'),
                     Container(
-                      height: 45,
-                      color: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          _locationPickingSection(
-                              text: 'Việt Nam', context: context),
-                          _locationPickingSection(
-                              text: 'Đà Nẵng', context: context),
-                          _locationPickingSection(
-                              text: _areaIndex == null
-                                  ? 'Chọn quận'
-                                  : _areaMap.values.elementAt(_areaIndex),
-                              context: context,
-                              function: () {
-                                _buildBottomSheet(context, _areaMap, true);
-                              }),
-                        ],
-                      ),
-                    ),
-                    _headerSection('Thông tin chính'),
-                    _infoSection(
-                      iconData: Icons.account_balance,
-                      textField: true,
-                      text: 'Tên địa điểm',
-                      texteditController: _postTitleController,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 2, bottom: 2),
-                      child: _infoSection(
-                        iconData: Icons.add_to_photos,
-                        textField: false,
-                        text: _postCategoryIndex == null
-                            ? 'Chọn loại hình địa điểm'
-                            : 'Loại hình địa điểm: ' +
-                                _postCategoryMap.values
-                                    .elementAt(_postCategoryIndex),
-                        widget: Icon(
-                          Icons.arrow_drop_down,
-                          color: Colors.black,
-                        ),
-                        function: () {
-                          _buildBottomSheet(
-                            context,
-                            _postCategoryMap,
-                            false,
-                          );
-                        },
-                      ),
-                    ),
-                    _infoSection(
-                      iconData: Icons.add_location,
-                      textField: true,
-                      text: 'Địa chỉ',
-                      texteditController: _addressController,
-                    ),
-                    _headerSection('Thông tin khác'),
-                    _infoSection(
-                      iconData: Icons.phone_iphone,
-                      text: 'Số điện thoại',
-                      textField: true,
-                      texteditController: _phoneController,
-                      numberKeyboard: true,
-                      phoneNumberKeyboard: true,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 2),
-                      child: _infoSection(
-                        iconData: Icons.access_time,
-                        text: 'Giờ mở cửa',
-                        textField: false,
-                        widget: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: () {
-                                _addPostBloc.setOpenTimePicked(
-                                  context,
-                                  _time1,
-                                );
-                              },
-                              child: StreamBuilder<Object>(
-                                stream: _addPostBloc.openTimeStream,
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    _time1 = snapshot.data;
-                                  }
-                                  return _timePickerSection(_time1, context);
-                                },
-                              ),
-                            ),
-                            Text(
-                              'Đến',
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                _addPostBloc.setCloseTimePicked(
-                                  context,
-                                  _time2,
-                                );
-                              },
-                              child: StreamBuilder<Object>(
-                                stream: _addPostBloc.closeTimeStream,
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    _time2 = snapshot.data;
-                                  }
-                                  return _timePickerSection(_time2, context);
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 2, bottom: 2),
+                      color: Color(0xffe4e8e3),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
+                          _buildImageSection(_screenSize.height / 3),
+                          _headerSection('Chọn Tỉnh/Thành phố'),
+                          Container(
+                            height: 45,
+                            color: Colors.white,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                _locationPickingSection(
+                                    text: 'Việt Nam', context: context),
+                                _locationPickingSection(
+                                  text: _cityIndex == null
+                                      ? 'Chọn thành phố'
+                                      : _cityListMap.elementAt(
+                                          _cityIndex)['TenTinhThanhPho'],
+                                  context: context,
+                                  function: () => _buildBottomSheet(
+                                        context,
+                                        _cityListMap,
+                                        'TenTinhThanhPho',
+                                        [],
+                                        TypeOfList.cityList,
+                                      ),
+                                ),
+                                _locationPickingSection(
+                                    text: _districtIndex == null
+                                        ? 'Chọn quận'
+                                        : _districtList
+                                            .elementAt(_districtIndex),
+                                    context: context,
+                                    function: () {
+                                      if (_hasDistrictData) {
+                                        _buildBottomSheet(
+                                          context,
+                                          [],
+                                          '',
+                                          _districtList,
+                                          TypeOfList.districtList,
+                                        );
+                                      }
+                                    }),
+                              ],
+                            ),
+                          ),
+                          _headerSection('Thông tin chính'),
                           _infoSection(
-                            iconData: Icons.monetization_on,
-                            textField: false,
-                            text: 'Mức giá (VND)',
+                            iconData: Icons.account_balance,
+                            textField: true,
+                            text: 'Tên địa điểm',
+                            texteditController: _postTitleController,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 2, bottom: 2),
+                            child: _infoSection(
+                              iconData: Icons.add_to_photos,
+                              textField: false,
+                              text: _postCategoryIndex == null
+                                  ? 'Chọn loại hình địa điểm'
+                                  : 'Loại hình địa điểm: ' +
+                                      _postCategoryList
+                                              .elementAt(_postCategoryIndex)[
+                                          'TenLoaiHinhDiaDiem'],
+                              widget: Icon(
+                                Icons.arrow_drop_down,
+                                color: Colors.black,
+                              ),
+                              function: () {
+                                _buildBottomSheet(
+                                  context,
+                                  _postCategoryList,
+                                  'TenLoaiHinhDiaDiem',
+                                  [],
+                                  TypeOfList.postCategoryList,
+                                );
+                              },
+                            ),
+                          ),
+                          _infoSection(
+                            iconData: Icons.add_location,
+                            textField: true,
+                            text: 'Địa chỉ',
+                            texteditController: _addressController,
+                          ),
+                          _headerSection('Thông tin khác'),
+                          _infoSection(
+                            iconData: Icons.phone_iphone,
+                            text: 'Số điện thoại',
+                            textField: true,
+                            texteditController: _phoneController,
+                            numberKeyboard: true,
+                            phoneNumberKeyboard: true,
                           ),
                           Padding(
                             padding: EdgeInsets.only(top: 2),
-                            child: Container(
-                              height: 45,
-                              padding: EdgeInsets.only(left: 15),
-                              color: Colors.white,
-                              child: Row(
+                            child: _infoSection(
+                              iconData: Icons.access_time,
+                              text: 'Giờ mở cửa',
+                              textField: false,
+                              widget: Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  Expanded(
-                                    child: TextField(
-                                      keyboardType: TextInputType.number,
-                                      controller: _lowestPriceController,
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.all(0),
-                                        labelText: 'Giá thấp nhất',
-                                      ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      _addPostBloc.setOpenTimePicked(
+                                        context,
+                                        _time1,
+                                      );
+                                    },
+                                    child: StreamBuilder<Object>(
+                                      stream: _addPostBloc.openTimeStream,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          _time1 = snapshot.data;
+                                        }
+                                        return _timePickerSection(
+                                            _time1, context);
+                                      },
                                     ),
                                   ),
-                                  Container(
-                                    padding: EdgeInsets.only(left: 5, right: 5),
-                                    child: Text(
-                                      'Đến',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    ),
+                                  Text(
+                                    'Đến',
+                                    style: TextStyle(fontSize: 15),
                                   ),
-                                  Expanded(
-                                    child: TextField(
-                                      keyboardType: TextInputType.number,
-                                      controller: _highestPriceController,
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.all(0),
-                                        labelText: 'Giá cao nhất',
-                                      ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      _addPostBloc.setCloseTimePicked(
+                                        context,
+                                        _time2,
+                                      );
+                                    },
+                                    child: StreamBuilder<Object>(
+                                      stream: _addPostBloc.closeTimeStream,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          _time2 = snapshot.data;
+                                        }
+                                        return _timePickerSection(
+                                            _time2, context);
+                                      },
                                     ),
                                   ),
                                 ],
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        Container(
-                          color: Colors.white,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Padding(
+                            padding: EdgeInsets.only(top: 2, bottom: 2),
+                            child: Column(
+                              children: <Widget>[
+                                _infoSection(
+                                  iconData: Icons.monetization_on,
+                                  textField: false,
+                                  text: 'Mức giá (VND)',
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 2),
+                                  child: Container(
+                                    height: 45,
+                                    padding: EdgeInsets.only(left: 15),
+                                    color: Colors.white,
+                                    child: Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: TextField(
+                                            keyboardType: TextInputType.number,
+                                            controller: _lowestPriceController,
+                                            decoration: InputDecoration(
+                                              contentPadding: EdgeInsets.all(0),
+                                              labelText: 'Giá thấp nhất',
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.only(
+                                              left: 5, right: 5),
+                                          child: Text(
+                                            'Đến',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: TextField(
+                                            keyboardType: TextInputType.number,
+                                            controller: _highestPriceController,
+                                            decoration: InputDecoration(
+                                              contentPadding: EdgeInsets.all(0),
+                                              labelText: 'Giá cao nhất',
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Column(
+                            mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               Container(
-                                margin: EdgeInsets.only(
-                                  right: 10,
-                                  left: 10,
-                                  top: 15,
-                                ),
-                                child: Icon(
-                                  Icons.library_books,
-                                  size: 25,
-                                  color: Color(0xff797c79),
-                                ),
-                              ),
-                              Expanded(
-                                child: TextField(
-                                  keyboardType: TextInputType.multiline,
-                                  controller: _postDetailController,
-                                  maxLines: 20,
-                                  maxLengthEnforced: false,
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.all(0),
-                                    labelText: 'Nhập mô tả',
-                                    labelStyle: TextStyle(
-                                      fontSize: 19,
-                                      fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                        right: 10,
+                                        left: 10,
+                                        top: 15,
+                                      ),
+                                      child: Icon(
+                                        Icons.library_books,
+                                        size: 25,
+                                        color: Color(0xff797c79),
+                                      ),
                                     ),
-                                    alignLabelWithHint: true,
-                                  ),
+                                    Expanded(
+                                      child: TextField(
+                                        keyboardType: TextInputType.multiline,
+                                        controller: _postDetailController,
+                                        maxLines: 20,
+                                        maxLengthEnforced: false,
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.all(0),
+                                          labelText: 'Nhập mô tả',
+                                          labelStyle: TextStyle(
+                                            fontSize: 19,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          alignLabelWithHint: true,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _addPostBloc.showOptionsToPickImage(
@@ -523,26 +579,45 @@ class AddPostScreenState extends State<AddPostScreen> {
 
   _buildBottomSheet(
     BuildContext context,
-    Map<int, String> map,
-    bool isAreaIndex,
+    List<Map<String, dynamic>> listMap,
+    String key,
+    List<String> listString,
+    TypeOfList typeOfList,
   ) {
-    String result;
     showModalBottomSheet(
         context: context,
         builder: (context) {
           return ListView.builder(
-            itemCount: map.length,
+            itemCount: typeOfList == TypeOfList.districtList
+                ? listString.length
+                : listMap.length,
             itemBuilder: (context, index) {
               return StatefulBuilder(
                 builder: (context, state) {
                   return GestureDetector(
                     onTap: () {
                       setState(() {
-                        isAreaIndex
-                            ? _areaIndex = index
-                            : _postCategoryIndex = index;
-                        result = map.values.elementAt(index);
+                        typeOfList == TypeOfList.districtList
+                            ? _districtIndex = index
+                            : typeOfList == TypeOfList.postCategoryList
+                                ? _postCategoryIndex = index
+                                : _cityIndex = index;
                         Navigator.of(context).pop();
+                        if (typeOfList == TypeOfList.cityList) {
+                          _districtIndex = null;
+                          _hasDistrictData = false;
+                          _addPostBloc
+                              .getDistrictByCityId(
+                            context,
+                            _cityListMap[index]['Id'],
+                          )
+                              .then((onValue) {
+                            setState(() {
+                              _districtList = onValue;
+                              _hasDistrictData = true;
+                            });
+                          });
+                        }
                       });
                     },
                     child: Container(
@@ -551,10 +626,13 @@ class AddPostScreenState extends State<AddPostScreen> {
                       child: Row(
                         children: <Widget>[
                           Text(
-                            map.values.elementAt(index),
+                            typeOfList == TypeOfList.districtList
+                                ? listString[index]
+                                : listMap.elementAt(index)['$key'],
                             style: TextStyle(fontSize: 20),
                           ),
-                          !isAreaIndex && _postCategoryIndex == index
+                          typeOfList == TypeOfList.postCategoryList &&
+                                  _postCategoryIndex == index
                               ? Container(
                                   padding: EdgeInsets.only(left: 20),
                                   child: Icon(
@@ -562,7 +640,8 @@ class AddPostScreenState extends State<AddPostScreen> {
                                     color: Colors.red,
                                   ),
                                 )
-                              : isAreaIndex && _areaIndex == index
+                              : typeOfList == TypeOfList.districtList &&
+                                      _districtIndex == index
                                   ? Container(
                                       padding: EdgeInsets.only(left: 20),
                                       child: Icon(
@@ -570,7 +649,16 @@ class AddPostScreenState extends State<AddPostScreen> {
                                         color: Colors.red,
                                       ),
                                     )
-                                  : Container(),
+                                  : typeOfList == TypeOfList.cityList &&
+                                          _cityIndex == index
+                                      ? Container(
+                                          padding: EdgeInsets.only(left: 20),
+                                          child: Icon(
+                                            Icons.check,
+                                            color: Colors.red,
+                                          ),
+                                        )
+                                      : Container(),
                         ],
                       ),
                     ),
@@ -580,7 +668,6 @@ class AddPostScreenState extends State<AddPostScreen> {
             },
           );
         });
-    return result;
   }
 
   Widget _buildImageSection(double height) {

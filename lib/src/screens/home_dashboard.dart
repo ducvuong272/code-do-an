@@ -1,7 +1,11 @@
 import 'package:do_an_tn/src/models/user.dart';
+import 'package:do_an_tn/src/screens/user_account_screen.dart';
+import 'package:do_an_tn/src/screens/user_post_screen.dart';
+import 'package:do_an_tn/src/screens/user_saved_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:do_an_tn/src/utils/export_screen.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+
+import 'home_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   final User user;

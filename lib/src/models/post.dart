@@ -45,7 +45,7 @@ class Post {
     postId = json["Id_DiaDiem"];
     postTitle = json["TenDiaDiem"];
     imageUrl = json["TapTinDaiDien"];
-    userId = int.parse(json["Id_TaiKhoan"]);
+    userId = json["Id_TaiKhoan"];
     ratingPoint = json["DanhGiaDiaDiem"].toString();
     address = json["DiaChi"];
   }

@@ -21,17 +21,17 @@ class HomeScreenPostState extends State<HomeScreenPost> {
 
   @override
   void initState() {
-    _image = Image.network(
-      widget.postImage,
-      fit: BoxFit.fill,
-    );
-    _image.image.resolve(ImageConfiguration()).addListener((_, __) {
-      if (mounted) {
-        setState(() {
-          _imageLoading = false;
-        });
-      }
-    });
+    // _image = Image.network(
+    //   widget.postImage,
+    //   fit: BoxFit.fill,
+    // );
+    // _image.image.resolve(ImageConfiguration()).addListener((_, __) {
+    //   if (mounted) {
+    //     setState(() {
+    //       _imageLoading = false;
+    //     });
+    //   }
+    // });
     super.initState();
   }
 
@@ -50,24 +50,20 @@ class HomeScreenPostState extends State<HomeScreenPost> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               ClipRRect(
-                child: Container(
-                  height:
-                      (MediaQuery.of(context).size.height - 205 - 72.0) / 2 -
-                          100 *
-                              731.4285714285714 /
-                              MediaQuery.of(context).size.height,
-                  width: 400,
-                  child: _imageLoading
-                      ? Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : _image,
+                  child: Container(
+                    height:
+                        (MediaQuery.of(context).size.height - 205 - 72.0) / 2 -
+                            100 *
+                                731.4285714285714 /
+                                MediaQuery.of(context).size.height,
+                    width: 400,
+                    child: Image.network(widget.postImage, fit: BoxFit.fill),
+                  ),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12),
+                  ),
                 ),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
-                ),
-              ),
               Container(
                 margin: EdgeInsets.only(left: 5),
                 child: Text(

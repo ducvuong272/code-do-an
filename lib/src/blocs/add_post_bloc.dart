@@ -13,6 +13,18 @@ class AddPostBloc {
   StreamController<TimeOfDay> _closeTimeController =
       StreamController<TimeOfDay>();
   Stream<TimeOfDay> get closeTimeStream => _closeTimeController.stream;
+  StreamController<List<Map<String, dynamic>>> _getAllPostCategoryController =
+      StreamController<List<Map<String, dynamic>>>();
+  Stream<List<Map<String, dynamic>>> get getAllPostCategoryStream =>
+      _getAllPostCategoryController.stream;
+  StreamController<List<Map<String, dynamic>>> _getAllCityController =
+      StreamController<List<Map<String, dynamic>>>();
+  Stream<List<Map<String, dynamic>>> get getAllCityStream =>
+      _getAllCityController.stream;
+  // StreamController<List<String>> _getDistrictListController =
+  //     StreamController<List<String>>();
+  // Stream<List<String>> get getDistrictListStream =>
+  //     _getDistrictListController.stream;
 
   setOpenTimePicked(
     BuildContext context,
@@ -81,7 +93,7 @@ class AddPostBloc {
 
   addPost(Post post, BuildContext context, CustomDialog dialog) {
     PostRepository postRepository = PostRepository();
-    
+
     dialog.showCustomDialog(
       msg: 'Đang tiến hành thêm địa điểm',
       barrierDismissible: false,
@@ -111,8 +123,41 @@ class AddPostBloc {
     });
   }
 
+  Future<Null> getAllPostCategory() async {
+    PostRepository postRepository = PostRepository();
+    List<Map<String, dynamic>> listCateGoryMap =
+        await postRepository.getAllPostCategory();
+    _getAllPostCategoryController.sink.add(listCateGoryMap);
+  }
+
+  Future<Null> getAllCity() async {
+    PostRepository postRepository = PostRepository();
+    List<Map<String, dynamic>> listCityMap = await postRepository.getAllCity();
+    _getAllCityController.sink.add(listCityMap);
+  }
+
+  Future<List<String>> getDistrictByCityId(
+      BuildContext context, int cityId) async {
+    // CustomDialog dialog = CustomDialog();
+    // dialog.showCustomDialog(
+    //   barrierDismissible: false,
+    //   context: context,
+    //   msg: '',
+    //   showprogressIndicator: true,
+    // );
+    PostRepository postRepository = PostRepository();
+    List<String> districtList = [];
+    await postRepository.getDistrictByCityId(cityId).then((onValue) {
+      // dialog.hideCustomDialog(context);
+      districtList = onValue;
+    });
+    return districtList;
+  }
+
   dispose() {
     _openTimeController.close();
     _closeTimeController.close();
+    _getAllPostCategoryController.close();
+    _getAllCityController.close();
   }
 }

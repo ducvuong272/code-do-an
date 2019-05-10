@@ -40,9 +40,18 @@ class UserAccountScreen extends StatelessWidget {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            UserAvatar(
-                              user: user,
-                            ),
+                            user.imageUrl.trim() == ''
+                                ? UserAvatar(
+                                    user: user,
+                                  )
+                                : Container(
+                                  margin: EdgeInsets.only(right: 10),
+                                    child: CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(user.imageUrl),
+                                          radius: 23,
+                                    ),
+                                  ),
                             Text(
                               '${user.lastName.trim()} ${user.firstName.trim()}',
                               style: TextStyle(

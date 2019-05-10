@@ -7,6 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class SearchPostScreen extends StatefulWidget {
+  final List<Map<String, dynamic>> cityMap;
+
+  const SearchPostScreen({Key key, this.cityMap}) : super(key: key);
+
   @override
   SearchPostScreenState createState() => SearchPostScreenState();
 }
@@ -17,35 +21,23 @@ class SearchPostScreenState extends State<SearchPostScreen>
   Animation<double> _animation;
   TextEditingController _searchController = TextEditingController();
   PostBloc _postBloc = PostBloc();
-  CityBloc _cityBloc = CityBloc();
   List<Post> _listPostData = []; //Tất cả địa điểm theo thành phố
   List<Post> _listPostValue = []; //Tất cả điểm theo kết quả tìm kiếm
-  Map<String, dynamic> _cityMap = {};
+  // Map<String, dynamic> widget.cityMap = {};
   int _cityIndex = 0;
-  bool _showAreaPicker = false, _hasCityData = false;
+  bool _showAreaPicker = false;
   ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
-    _cityBloc.getCityWithId();
-    _cityBloc.cityStream.listen((onData) {
-      List<City> cityList = onData;
+    _postBloc.getAllPostByCityId(
+      context,
+      widget.cityMap.elementAt(_cityIndex)['Id'],
+      false,
+    );
+    _postBloc.getAllPostStream.listen((onData) {
       setState(() {
-        _hasCityData = true;
-        for (int i = 0; i < cityList.length; i++) {
-          Map<String, dynamic> map = {cityList[i].cityName: cityList[i].cityId};
-          _cityMap.addAll(map);
-        }
-        _postBloc.getAllPostByCityId(
-          context,
-          _cityMap.values.elementAt(_cityIndex),
-          false,
-        );
-        _postBloc.getAllPostStream.listen((onData) {
-          setState(() {
-            _listPostData = onData;
-          });
-        });
+        _listPostData = onData;
       });
     });
 
@@ -67,111 +59,106 @@ class SearchPostScreenState extends State<SearchPostScreen>
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
     return Scaffold(
-      body: !_hasCityData
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : Stack(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 50),
-                  child: StreamBuilder<Object>(
-                      stream: _postBloc.getPostSearchResultStream,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) //Check nếu có sự kiện search
-                        {
-                          _listPostValue = snapshot.data;
-                          return ListView.builder(
-                            controller: _scrollController,
-                            itemCount: _listPostValue.length,
-                            itemBuilder: (context, index) {
-                              return InkWell(
-                                onTap: () {},
-                                child: PostList(
-                                  // address: _listPostValue[index].address,
-                                  // postTitle: _listPostValue[index].postTitle,
-                                  // imageUrl: _listPostValue[index].imageUrl,
-                                  post: _listPostValue[index],
-                                ),
-                              );
-                            },
-                          );
-                        } else {
-                          //Nếu không có sự kiện search, show tất cả địa điểm theo thành phố
-                          if (_listPostData.length > 0) {
-                            return ListView.builder(
-                              itemCount: _listPostData.length,
-                              itemBuilder: (context, index) {
-                                return PostList(
-                                  // address: _listPostData[index].address,
-                                  // postTitle: _listPostData[index].postTitle,
-                                  // imageUrl: _listPostData[index].imageUrl,
-                                  post: _listPostData[index],
-                                );
-                              },
-                            );
-                          } else {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                        }
-                      }),
-                ),
-                _buildSearchSection(),
-                Positioned(
-                  top: 42,
-                  right: 5,
-                  child: Container(
-                    width: 150,
-                    height: _animation.value,
-                    child: Card(
-                      elevation: 6.0,
-                      child: ListView.builder(
-                        itemCount: _cityMap.length,
+      body: Stack(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 50),
+            child: StreamBuilder<Object>(
+                stream: _postBloc.getPostSearchResultStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData &&
+                      _searchController.text.trim() !=
+                          '') //Check nếu có sự kiện search
+                  {
+                    _listPostValue = snapshot.data;
+                    return ListView.builder(
+                      controller: _scrollController,
+                      itemCount: _listPostValue.length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {},
+                          child: PostList(
+                            post: _listPostValue[index],
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    //Nếu không có sự kiện search, show tất cả địa điểm theo thành phố
+                    if (_listPostData.length > 0) {
+                      return ListView.builder(
+                        itemCount: _listPostData.length,
                         itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              _animationController.reverse();
-                              _showAreaPicker = false;
-                              if (index != _cityIndex) {
-                                setState(() {
-                                  _cityIndex = index;
-                                });
-                                _postBloc.getAllPostByCityId(
-                                  context,
-                                  _cityMap.values.elementAt(_cityIndex),
-                                  true,
-                                );
-                              }
-                            },
-                            child: Container(
-                              padding: EdgeInsets.only(top: 10),
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Text(
-                                      _cityMap.keys.elementAt(index),
-                                      style: TextStyle(fontSize: 17),
-                                    ),
-                                  ),
-                                  _cityIndex == index
-                                      ? Icon(
-                                          Icons.check,
-                                          color: Colors.red,
-                                        )
-                                      : Container(),
-                                ],
-                              ),
-                            ),
+                          return PostList(
+                            post: _listPostData[index],
                           );
                         },
+                      );
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  }
+                }),
+          ),
+          _buildSearchSection(),
+          Positioned(
+            top: 42,
+            right: 5,
+            child: Container(
+              width: 150,
+              height: _animation.value,
+              child: Card(
+                elevation: 6.0,
+                child: ListView.builder(
+                  itemCount: widget.cityMap.length,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        _animationController.reverse();
+                        _showAreaPicker = false;
+                        if (index != _cityIndex) {
+                          setState(() {
+                            _cityIndex = index;
+                          });
+                          _postBloc
+                              .getAllPostByCityId(
+                                context,
+                                widget.cityMap.elementAt(_cityIndex)['Id'],
+                                true,
+                              )
+                              .then((onValue) => _searchController.clear());
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                widget.cityMap
+                                    .elementAt(index)['TenTinhThanhPho'],
+                                style: TextStyle(fontSize: 17),
+                              ),
+                            ),
+                            _cityIndex == index
+                                ? Icon(
+                                    Icons.check,
+                                    color: Colors.red,
+                                  )
+                                : Container(),
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
-              ],
+              ),
             ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -209,7 +196,7 @@ class SearchPostScreenState extends State<SearchPostScreen>
                       controller: _searchController,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Tìm kiếm địa điểm',
+                        hintText: 'Tìm kiếm tên địa điểm',
                       ),
                     ),
                   ),
@@ -223,7 +210,9 @@ class SearchPostScreenState extends State<SearchPostScreen>
                     child: Row(
                       children: <Widget>[
                         Text(
-                          'Tại ${_cityMap.keys.elementAt(_cityIndex)}',
+                          'Tại ' +
+                              widget.cityMap
+                                  .elementAt(_cityIndex)['TenTinhThanhPho'],
                           style: TextStyle(
                             fontSize: 18,
                             decoration: TextDecoration.underline,
