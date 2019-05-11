@@ -14,4 +14,6 @@ String kGetAllPostOfUser = '$kApiUrl/dia-diem-cua-toi';
 String kgetAllPostCategory = '$kApiUrl/lay-loai-dia-diem';
 String kgetAllCity = '$kApiUrl/lay-tinh-thanh-pho';
 String kgetDistrictByCity = '$kApiUrl/lay-quan-huyen';
+String kGetPostDetailByPostId = '$kApiUrl/chi-tiet-dia-diem';
+String kUpLoadPostImage = '$kApiUrl/tai-nhieu-hinh/hinh-anh-dia-diem';
 Map<String, String> kApiHeader = {"Content-Type" : "application/json"};

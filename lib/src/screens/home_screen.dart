@@ -212,9 +212,13 @@ class _HomeScreenState extends State<HomeScreen>
                                                     MaterialPageRoute(
                                                       builder: (context) =>
                                                           PostDetailScreen(
-                                                            post:
-                                                                listPost[index],
+                                                            postId:
+                                                                listPost[index]
+                                                                    .postId,
                                                             user: widget.user,
+                                                            postTitle:
+                                                                listPost[index]
+                                                                    .postTitle,
                                                           ),
                                                     ),
                                                   );
@@ -253,15 +257,16 @@ class _HomeScreenState extends State<HomeScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Expanded(
-                                                  child: GestureDetector(
+                          child: GestureDetector(
                             onTap: () => Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => SearchPostScreen(
-                                      cityMap: _cityMap,
-                                    ),
+                                          cityMap: _cityMap,
+                                        ),
                                   ),
                                 ),
-                            child: Container(color: Colors.white,
+                            child: Container(
+                              color: Colors.white,
                               child: Row(
                                 children: <Widget>[
                                   Icon(
@@ -288,7 +293,8 @@ class _HomeScreenState extends State<HomeScreen>
                           child: Row(
                             children: <Widget>[
                               Text(
-                                _cityMap.elementAt(_cityMapIndex)['TenTinhThanhPho'],
+                                _cityMap.elementAt(
+                                    _cityMapIndex)['TenTinhThanhPho'],
                                 style: TextStyle(fontSize: 16.0),
                               ),
                               Icon(Icons.arrow_drop_down),
@@ -331,7 +337,8 @@ class _HomeScreenState extends State<HomeScreen>
                                 children: <Widget>[
                                   Expanded(
                                     child: Text(
-                                      _cityMap.elementAt(index)['TenTinhThanhPho'],
+                                      _cityMap
+                                          .elementAt(index)['TenTinhThanhPho'],
                                       style: TextStyle(fontSize: 17),
                                     ),
                                   ),

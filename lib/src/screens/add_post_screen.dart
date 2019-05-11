@@ -99,7 +99,7 @@ class AddPostScreenState extends State<AddPostScreen> {
                     postTitle: _postTitleController.text,
                     address: _addressController.text,
                     postDetail: _postDetailController.text,
-                    postCategories: _postCategoryList
+                    postCategory: _postCategoryList
                         .elementAt(_postCategoryIndex)['TenLoaiHinhDiaDiem'],
                     district: _districtList.elementAt(_districtIndex),
                     phoneNumber: _phoneController.text,

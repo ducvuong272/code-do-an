@@ -1,7 +1,7 @@
+import 'package:do_an_tn/src/blocs/add_post_bloc.dart';
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/home_dashboard.dart';
 import 'package:do_an_tn/src/screens/user_avatar_screen.dart';
-import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:do_an_tn/src/widgets/login_notify_button.dart';
 import 'package:do_an_tn/src/widgets/user_avatar.dart';
 import 'package:flutter/material.dart';
@@ -40,18 +40,10 @@ class UserAccountScreen extends StatelessWidget {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            user.imageUrl.trim() == ''
-                                ? UserAvatar(
-                                    user: user,
-                                  )
-                                : Container(
-                                  margin: EdgeInsets.only(right: 10),
-                                    child: CircleAvatar(
-                                      backgroundImage:
-                                          NetworkImage(user.imageUrl),
-                                          radius: 23,
-                                    ),
-                                  ),
+                            UserAvatar(
+                              lastName: user.lastName,
+                              userAvatarImageUrl: user.imageUrl,
+                            ),
                             Text(
                               '${user.lastName.trim()} ${user.firstName.trim()}',
                               style: TextStyle(
@@ -184,7 +176,11 @@ class UserAccountScreen extends StatelessWidget {
                         height: 50,
                         color: Colors.white,
                         child: FlatButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            print('object');
+                            AddPostBloc addPostBloc = AddPostBloc();
+                            addPostBloc.uploadImage();
+                          },
                           splashColor: Color(0xff8df4a0),
                           padding: EdgeInsets.only(left: 10),
                           child: Row(

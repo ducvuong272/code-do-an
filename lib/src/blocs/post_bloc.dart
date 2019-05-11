@@ -24,6 +24,8 @@ class PostBloc {
       StreamController<List<Post>>();
   Stream<List<Post>> get getAllPostOfUserStream =>
       _getAllPostOfUserController.stream;
+  StreamController<Post> _getPostDetailController = StreamController<Post>();
+  Stream<Post> get getPostDetailStream => _getPostDetailController.stream;
 
   Future<Null> getAllPostByCityId(
     BuildContext context,
@@ -80,11 +82,18 @@ class PostBloc {
     _getAllPostOfUserController.sink.add(postList);
   }
 
+  Future<Null> getPostDetailByPostId(int postId) async {
+    PostRepository postRepository = PostRepository();
+    Post post = await postRepository.getPostDetailByPostId(postId);
+    _getPostDetailController.sink.add(post);
+  }
+
   dispose() {
     _promotionImagesController.close();
     _postSearchResultController.close();
     _getAllPostsController.close();
     _getSavedPostListController.close();
     _getAllPostOfUserController.close();
+    _getPostDetailController.close();
   }
 }

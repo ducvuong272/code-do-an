@@ -106,19 +106,33 @@ class PostRepository {
     return cityListMap;
   }
 
-  Future<List<String>> getDistrictByCityId(int cityId) async{
+  Future<List<String>> getDistrictByCityId(int cityId) async {
     List<String> listDistrict = [];
     ApiHandler apiHandler = ApiHandler();
     final response = await apiHandler.getDistrictByCityId(cityId);
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       Map<String, dynamic> map = json.decode(response.body);
-      if(map['code'] == 200){
+      if (map['code'] == 200) {
         List<dynamic> listDisctrictFromMap = map['data'];
-        for(int i = 0; i<listDisctrictFromMap.length;i++){
+        for (int i = 0; i < listDisctrictFromMap.length; i++) {
           listDistrict.add(listDisctrictFromMap.elementAt(i)['TenQuanHuyen']);
         }
       }
     }
     return listDistrict;
+  }
+
+  Future<Post> getPostDetailByPostId(int postId) async {
+    Post post = Post();
+    ApiHandler apiHandler = ApiHandler();
+    final response = await apiHandler.getPostDetailByPostId(postId);
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(response.body);
+      if (map['code'] == 200) {
+        print(map['data']);
+        post = Post.fromPostDetailJson(map['data']);
+      }
+    }
+    return post;
   }
 }

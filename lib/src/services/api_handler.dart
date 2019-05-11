@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'package:async/async.dart';
 import 'package:do_an_tn/src/models/comment.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:do_an_tn/src/constants.dart';
+import 'package:path/path.dart';
 
 class ApiHandler {
   Future<String> checkLogin(User user) async {
@@ -127,7 +130,7 @@ class ApiHandler {
     return response;
   }
 
-  Future<http.Response> getAllCity() async{
+  Future<http.Response> getAllCity() async {
     final apiUrl = '$kgetAllCity';
     final response = await http.get(
       apiUrl,
@@ -136,12 +139,35 @@ class ApiHandler {
     return response;
   }
 
-  Future<http.Response> getDistrictByCityId(int cityId) async{
+  Future<http.Response> getDistrictByCityId(int cityId) async {
     final apiUrl = '$kgetDistrictByCity/$cityId';
     final response = await http.get(
       apiUrl,
       headers: kApiHeader,
     );
+    return response;
+  }
+
+  Future<http.Response> getPostDetailByPostId(int postId) async {
+    final apiUrl = '$kGetPostDetailByPostId/$postId';
+    final response = await http.get(
+      apiUrl,
+      headers: kApiHeader,
+    );
+    return response;
+  }
+
+  Future<http.StreamedResponse> uploadPostImage(File imageFile) async {
+    final apiUrl = '$kUpLoadPostImage';
+    var uri = Uri.parse(apiUrl);
+    var stream = http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+    var length = await imageFile.length();
+    var request = http.MultipartRequest("POST", uri);
+    var multipartFile = http.MultipartFile("image", stream, length,
+        filename: basename(imageFile.path));
+    request.files.add(multipartFile);
+    var response = await request.send();
+    await http.Response.fromStream(response).then((onValue) => onValue.body);
     return response;
   }
 }

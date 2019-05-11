@@ -50,6 +50,7 @@ class LoginBloc {
           builder: (context) => DashboardScreen(user: user),
         ),
         (Route<dynamic> route) => false);
+        print(user.lastName);
   }
 
   _onLoginFail(

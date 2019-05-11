@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/repository/post_repository.dart';
+import 'package:do_an_tn/src/services/api_handler.dart';
 import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -152,6 +153,12 @@ class AddPostBloc {
       districtList = onValue;
     });
     return districtList;
+  }
+
+  Future<Null> uploadImage() async{
+   File imageFile = await pickImageFromAlbum();
+   ApiHandler apiHandler = ApiHandler();
+   await apiHandler.uploadPostImage(imageFile);
   }
 
   dispose() {

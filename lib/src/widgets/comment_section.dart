@@ -1,38 +1,49 @@
+import 'package:do_an_tn/src/models/comment.dart';
 import 'package:do_an_tn/src/widgets/user_avatar.dart';
 import 'package:flutter/material.dart';
 
 class CommentSection extends StatelessWidget {
   final String postTitle;
   final ScrollController scrollController;
+  final List<Comment> commentList;
 
   const CommentSection({
     Key key,
-    this.postTitle,
+    this.commentList,
     this.scrollController,
+    this.postTitle,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      shrinkWrap: true,
-      controller: scrollController,
-      itemCount: 20,
-      itemBuilder: (context, index) => Container(
+        shrinkWrap: true,
+        controller: scrollController,
+        itemCount: commentList.length,
+        itemBuilder: (context, index) {
+          return Container(
             margin: EdgeInsets.only(top: 1, bottom: 5),
             child: Column(
               children: <Widget>[
-                _avatarSection(),
+                _avatarSection(
+                  commentList[index].imageUrl,
+                  commentList[index].firstName,
+                  commentList[index].lastName,
+                  commentList[index].ratingPoint.toString(),
+                  commentList[index].commentTime,
+                ),
                 Padding(
                   padding: EdgeInsets.only(top: 1),
-                  child: _commentSection(),
+                  child: _commentSection(commentList[index].commentContent),
                 ),
               ],
             ),
-          ),
-    );
+          );
+        });
   }
 
-  Widget _avatarSection() {
+  Widget _avatarSection(String imageUrl, String firstname, String lastName,
+      String ratingPoint, String commentTime) {
     return Container(
       padding: EdgeInsets.only(left: 5, right: 5),
       color: Colors.white,
@@ -41,9 +52,12 @@ class CommentSection extends StatelessWidget {
         children: <Widget>[
           Row(
             children: <Widget>[
-              UserAvatar(),
+              UserAvatar(
+                userAvatarImageUrl: imageUrl,
+                lastName: lastName,
+              ),
               Text(
-                'Vuong Do',
+                '$firstname $lastName',
                 style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w500,
@@ -55,7 +69,7 @@ class CommentSection extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               Text(
-                '3.9',
+                '$ratingPoint',
                 style: TextStyle(
                   color: Colors.red,
                   fontSize: 17,
@@ -63,7 +77,7 @@ class CommentSection extends StatelessWidget {
                 ),
               ),
               Text(
-                '13/4/2019',
+                '$commentTime',
                 style: TextStyle(
                   color: Color(0xff6b6f75),
                 ),
@@ -75,7 +89,7 @@ class CommentSection extends StatelessWidget {
     );
   }
 
-  Widget _commentSection() {
+  Widget _commentSection(String commentContent) {
     return Container(
       color: Colors.white,
       child: Container(
@@ -95,7 +109,7 @@ class CommentSection extends StatelessWidget {
                 top: 5,
               ),
               child: Text(
-                'Đồ ăn ngon, quán sạch sẽ, rộng rãi, vị trí đẹp. Nhân viên nhiệt tình ',
+                '$commentContent',
                 style: TextStyle(fontSize: 16),
               ),
             ),

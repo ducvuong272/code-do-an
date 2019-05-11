@@ -1,6 +1,4 @@
-import 'package:do_an_tn/src/blocs/city_bloc.dart';
 import 'package:do_an_tn/src/blocs/post_bloc.dart';
-import 'package:do_an_tn/src/models/city.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/widgets/post_list.dart';
 import 'package:flutter/material.dart';

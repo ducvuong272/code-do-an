@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "188542705892",
+    "firebase_url": "https://do-an-tn-ducvuong.firebaseio.com",
+    "project_id": "do-an-tn-ducvuong",
+    "storage_bucket": "do-an-tn-ducvuong.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:188542705892:android:9c2430202a7349ed",
+        "android_client_info": {
+          "package_name": "com.example.doantn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "188542705892-n1tb3pdeegab3f7f0pbju506qq1ajnha.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApQHbeF-mn0b4MW-ciK_GxFR7-mFMDfZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "188542705892-n1tb3pdeegab3f7f0pbju506qq1ajnha.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:do_an_tn/src/blocs/comment_bloc.dart';
+import 'package:do_an_tn/src/blocs/post_bloc.dart';
 import 'package:do_an_tn/src/models/comment.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
@@ -49,6 +50,8 @@ class CommentScreenState extends State<CommentScreen> {
                   ratingPoint: _averageRatingPoint,
                 );
                 _commentBloc.postComment(context, comment);
+                PostBloc postBloc = PostBloc();
+                postBloc.getPostDetailByPostId(widget.post.postId);
               },
               child: Container(
                 padding: EdgeInsets.only(right: 10),
