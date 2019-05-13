@@ -583,6 +583,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                     builder: (context) => CommentScreen(
                           post: post,
                           user: widget.user,
+                          postBloc: _postBloc,
                         ),
                   ),
                 );

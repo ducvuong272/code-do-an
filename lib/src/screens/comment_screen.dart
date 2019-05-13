@@ -11,8 +11,10 @@ import 'package:flutter/material.dart';
 class CommentScreen extends StatefulWidget {
   final User user;
   final Post post;
+  final PostBloc postBloc;
 
-  const CommentScreen({Key key, this.user, this.post}) : super(key: key);
+  const CommentScreen({Key key, this.user, this.post, this.postBloc})
+      : super(key: key);
 
   @override
   CommentScreenState createState() => CommentScreenState();
@@ -43,15 +45,21 @@ class CommentScreenState extends State<CommentScreen> {
           actions: <Widget>[
             GestureDetector(
               onTap: () {
+                // _listImage.forEach((f) =>
+                //     Future.delayed(Duration(seconds: 2), () => print(f.path)));
+                //     print(_listImage);
                 Comment comment = Comment(
                   commentContent: _commentContentController.text,
                   postID: widget.post.postId,
                   userID: widget.user.userId,
                   ratingPoint: _averageRatingPoint,
                 );
-                _commentBloc.postComment(context, comment);
-                PostBloc postBloc = PostBloc();
-                postBloc.getPostDetailByPostId(widget.post.postId);
+                _commentBloc.postComment(
+                  context,
+                  comment,
+                  widget.postBloc, 
+                  widget.post.postId,
+                );
               },
               child: Container(
                 padding: EdgeInsets.only(right: 10),

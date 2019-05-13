@@ -117,6 +117,7 @@ class Post {
     data["GiaCaoNhat"] = highestPrice;
     data["GiaThapNhat"] = lowestPrice;
     data["Id_TaiKhoan"] = userId;
+    data["TapTinDaiDien"] = imageUrl;
     return data;
   }
 }

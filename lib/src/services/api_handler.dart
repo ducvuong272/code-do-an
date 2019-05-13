@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-import 'package:async/async.dart';
 import 'package:do_an_tn/src/models/comment.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:do_an_tn/src/constants.dart';
-import 'package:path/path.dart';
 
 class ApiHandler {
   Future<String> checkLogin(User user) async {
@@ -48,6 +45,7 @@ class ApiHandler {
       headers: kApiHeader,
       body: json.encode(post.toAddPostJson()),
     );
+    print(json.encode(post.toAddPostJson()));
     return response.body;
   }
 
@@ -101,15 +99,6 @@ class ApiHandler {
     return response;
   }
 
-  // Future<http.Response> fetchCityByWithId() async {
-  //   final apiUrl = kGetCityWithIdUrl;
-  //   final response = await http.get(
-  //     apiUrl,
-  //     headers: kApiHeader,
-  //   );
-  //   return response;
-  // }
-
   Future<http.Response> getAllPostOfUser(int userId) async {
     final apiUrl = '$kGetAllPostOfUser/$userId';
     final response = await http.get(
@@ -157,17 +146,13 @@ class ApiHandler {
     return response;
   }
 
-  Future<http.StreamedResponse> uploadPostImage(File imageFile) async {
-    final apiUrl = '$kUpLoadPostImage';
-    var uri = Uri.parse(apiUrl);
-    var stream = http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
-    var length = await imageFile.length();
-    var request = http.MultipartRequest("POST", uri);
-    var multipartFile = http.MultipartFile("image", stream, length,
-        filename: basename(imageFile.path));
-    request.files.add(multipartFile);
-    var response = await request.send();
-    await http.Response.fromStream(response).then((onValue) => onValue.body);
-    return response;
+  Future<http.Response> deleteSavedPostByPostId(int postId, int userId) async {
+    final apiUrl = '$kDeleteSavedPostByPostId/$postId';
+    final client = http.Client();
+    final response = await client.send(http.Request('DELETE', Uri.parse(apiUrl))
+      ..headers["Content-Type"] = "application/json"
+      ..body = json.encode({"Id_TaiKhoan": userId}));
+    http.Response result = await http.Response.fromStream(response);
+    return result;
   }
 }

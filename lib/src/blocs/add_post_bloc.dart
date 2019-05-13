@@ -2,10 +2,13 @@ import 'dart:async';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/repository/post_repository.dart';
 import 'package:do_an_tn/src/services/api_handler.dart';
+import 'package:do_an_tn/src/services/firebase_services.dart';
 import 'package:do_an_tn/src/widgets/dialog.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:path/path.dart';
 
 class AddPostBloc {
   StreamController<TimeOfDay> _openTimeController =
@@ -22,6 +25,8 @@ class AddPostBloc {
       StreamController<List<Map<String, dynamic>>>();
   Stream<List<Map<String, dynamic>>> get getAllCityStream =>
       _getAllCityController.stream;
+  StreamController<File> _getImageFileController = StreamController<File>();
+  Stream<File> get getImageFileStream => _getImageFileController.stream;
   // StreamController<List<String>> _getDistrictListController =
   //     StreamController<List<String>>();
   // Stream<List<String>> get getDistrictListStream =>
@@ -57,21 +62,23 @@ class AddPostBloc {
     });
   }
 
-  Future<File> pickImageFromCamera() async {
+  Future<File> _pickImageFromCamera() async {
     File imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
     return imageFile;
   }
 
-  Future<File> pickImageFromAlbum() async {
-    File imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
-    return imageFile;
+  Future<Null> _pickImageFromAlbum(BuildContext context) async {
+    Navigator.pop(context);
+    await ImagePicker.pickImage(source: ImageSource.gallery).then((onValue) {
+      if (onValue != null) {
+        _getImageFileController.sink.add(onValue);
+      }
+    });
   }
 
   showOptionsToPickImage({
     Dialog dialog,
     BuildContext context,
-    Function pickImageFromAlbum,
-    Function pickImageFromCamera,
   }) {
     showDialog(
         context: context,
@@ -80,11 +87,11 @@ class AddPostBloc {
             title: Text('Bạn muốn thêm hình ảnh từ đâu?'),
             actions: <Widget>[
               FlatButton(
-                onPressed: pickImageFromAlbum,
+                onPressed: () => _pickImageFromAlbum(context),
                 child: Text('Album ảnh'),
               ),
               FlatButton(
-                onPressed: pickImageFromCamera,
+                onPressed: () => _pickImageFromCamera(),
                 child: Text('Máy ảnh'),
               ),
             ],
@@ -92,15 +99,20 @@ class AddPostBloc {
         });
   }
 
-  addPost(Post post, BuildContext context, CustomDialog dialog) {
-    PostRepository postRepository = PostRepository();
-
+  addPost(Post post, BuildContext context, CustomDialog dialog,
+      File imageFile) async {
     dialog.showCustomDialog(
       msg: 'Đang tiến hành thêm địa điểm',
       barrierDismissible: false,
       context: context,
       showprogressIndicator: true,
     );
+    PostRepository postRepository = PostRepository();
+    FirebaseServices firebaseServices = FirebaseServices();
+    String imageUri =
+        await firebaseServices.uploadImageToFireBaseStorage(imageFile);
+    post.imageUrl = imageUri;
+    print(imageUri);
     Future future = postRepository.addPost(post);
     future.then((onValue) {
       print(onValue["success"]);
@@ -155,16 +167,11 @@ class AddPostBloc {
     return districtList;
   }
 
-  Future<Null> uploadImage() async{
-   File imageFile = await pickImageFromAlbum();
-   ApiHandler apiHandler = ApiHandler();
-   await apiHandler.uploadPostImage(imageFile);
-  }
-
   dispose() {
     _openTimeController.close();
     _closeTimeController.close();
     _getAllPostCategoryController.close();
     _getAllCityController.close();
+    _getImageFileController.close();
   }
 }

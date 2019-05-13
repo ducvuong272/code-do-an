@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:do_an_tn/src/blocs/post_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,12 @@ class CommentBloc {
     _listImageController.sink.add(listImage);
   }
 
-  postComment(BuildContext context, Comment comment) {
+  postComment(
+    BuildContext context,
+    Comment comment,
+    PostBloc postBloc,
+    int postId,
+  ) {
     CustomDialog dialog = CustomDialog();
     if (comment.commentContent.trim() == '') {
       dialog.showCustomDialog(
@@ -69,8 +75,9 @@ class CommentBloc {
       );
       CommentRepository commentRepository = CommentRepository(comment: comment);
       Future future = commentRepository.postComment();
-      future.then((onValue) {
+      future.then((onValue) async {
         if (onValue == "200") {
+          await postBloc.getPostDetailByPostId(postId);
           dialog.hideCustomDialog(context);
           dialog.showCustomDialog(
             context: context,

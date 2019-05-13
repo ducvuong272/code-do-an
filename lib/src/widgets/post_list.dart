@@ -1,10 +1,15 @@
 import 'package:do_an_tn/src/models/post.dart';
+import 'package:do_an_tn/src/models/user.dart';
+import 'package:do_an_tn/src/screens/post_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class PostList extends StatelessWidget {
   final Post post;
+  final User user;
+  final Function function;
 
-  const PostList({Key key, this.post}) : super(key: key);
+  const PostList({Key key, this.post, this.user, this.function})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +20,15 @@ class PostList extends StatelessWidget {
       color: Colors.white,
       child: FlatButton(
         materialTapTargetSize: MaterialTapTargetSize.padded,
-        onPressed: () {},
+        onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => PostDetailScreen(
+                      postId: post.postId,
+                      postTitle: post.postTitle,
+                      user: user,
+                    ),
+              ),
+            ),
         child: Container(
           child: Row(
             children: <Widget>[
@@ -67,6 +80,20 @@ class PostList extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+              Column(
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                    onPressed: () {
+                     function();
+                    },
+                  ),
+                  Text('Xóa')
+                ],
               ),
             ],
           ),

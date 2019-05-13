@@ -2,6 +2,7 @@ import 'package:do_an_tn/src/blocs/add_post_bloc.dart';
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/home_dashboard.dart';
 import 'package:do_an_tn/src/screens/user_avatar_screen.dart';
+import 'package:do_an_tn/src/services/firebase_services.dart';
 import 'package:do_an_tn/src/widgets/login_notify_button.dart';
 import 'package:do_an_tn/src/widgets/user_avatar.dart';
 import 'package:flutter/material.dart';
@@ -177,9 +178,9 @@ class UserAccountScreen extends StatelessWidget {
                         color: Colors.white,
                         child: FlatButton(
                           onPressed: () {
-                            print('object');
-                            AddPostBloc addPostBloc = AddPostBloc();
-                            addPostBloc.uploadImage();
+                            FirebaseServices fbsv = FirebaseServices();
+                            fbsv.deleteImageFromFirebaseStorage(
+                                'https://firebasestorage.googleapis.com/v0/b/do-an-tn-ducvuong.appspot.com/o/39541.jpg?alt=media&token=30a68b57-ae0f-4a33-bd21-abbfb7f143b7');
                           },
                           splashColor: Color(0xff8df4a0),
                           padding: EdgeInsets.only(left: 10),

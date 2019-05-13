@@ -68,7 +68,7 @@ class AddPostScreenState extends State<AddPostScreen> {
         child: AppBar(
           actions: <Widget>[
             GestureDetector(
-              onTap: () {
+              onTap: () async {
                 CustomDialog dialog = CustomDialog();
                 if (_districtIndex == null) {
                   dialog.showCustomDialog(
@@ -91,6 +91,13 @@ class AddPostScreenState extends State<AddPostScreen> {
                     showprogressIndicator: false,
                     barrierDismissible: true,
                   );
+                } else if (_imageFile == null) {
+                  dialog.showCustomDialog(
+                    context: context,
+                    msg: 'Bạn chưa chọn hình ảnh cho địa điểm',
+                    showprogressIndicator: false,
+                    barrierDismissible: true,
+                  );
                 } else {
                   var timeOpen = _time1.format(context);
                   var timeClose = _time2.format(context);
@@ -110,7 +117,7 @@ class AddPostScreenState extends State<AddPostScreen> {
                     city: _cityListMap.elementAt(_cityIndex)['TenTinhThanhPho'],
                     country: 'Vietnam',
                   );
-                  _addPostBloc.addPost(post, context, dialog);
+                  await _addPostBloc.addPost(post, context, dialog, _imageFile);
                 }
               },
               child: Center(
@@ -149,7 +156,20 @@ class AddPostScreenState extends State<AddPostScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
-                          _buildImageSection(_screenSize.height / 3),
+                          StreamBuilder<Object>(
+                              stream: _addPostBloc.getImageFileStream,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  _imageFile = snapshot.data;
+                                  return Container(
+                                    height: _screenSize.height / 3,
+                                    child: Image.file(
+                                      _imageFile,
+                                    ),
+                                  );
+                                }
+                                return Container();
+                              }),
                           _headerSection('Chọn Tỉnh/Thành phố'),
                           Container(
                             height: 45,
@@ -401,8 +421,6 @@ class AddPostScreenState extends State<AddPostScreen> {
         onPressed: () {
           _addPostBloc.showOptionsToPickImage(
             context: context,
-            pickImageFromAlbum: _pickImageFromAlbum,
-            pickImageFromCamera: _pickImageFromCamera,
           );
           print(_imageFile);
         },
@@ -411,23 +429,23 @@ class AddPostScreenState extends State<AddPostScreen> {
     );
   }
 
-  _pickImageFromCamera() {
-    _addPostBloc.pickImageFromCamera().then((onValue) {
-      setState(() {
-        _imageFile = onValue;
-      });
-      Navigator.of(context).pop();
-    });
-  }
+  // _pickImageFromCamera() {
+  //   _addPostBloc.pickImageFromCamera().then((onValue) {
+  //     setState(() {
+  //       _imageFile = onValue;
+  //     });
+  //     Navigator.of(context).pop();
+  //   });
+  // }
 
-  _pickImageFromAlbum() {
-    _addPostBloc.pickImageFromAlbum().then((onValue) {
-      setState(() {
-        _imageFile = onValue;
-      });
-      Navigator.of(context).pop();
-    });
-  }
+  // _pickImageFromAlbum() {
+  //   _addPostBloc.pickImageFromAlbum().then((onValue) {
+  //     setState(() {
+  //       _imageFile = onValue;
+  //     });
+  //     Navigator.of(context).pop();
+  //   });
+  // }
 
   Widget _timePickerSection(TimeOfDay time, BuildContext context) {
     return Container(
@@ -497,6 +515,7 @@ class AddPostScreenState extends State<AddPostScreen> {
                             controller: texteditController,
                             autocorrect: false,
                             decoration: InputDecoration(
+                              counterText: '',
                               border: InputBorder.none,
                               labelText: text,
                               labelStyle: TextStyle(

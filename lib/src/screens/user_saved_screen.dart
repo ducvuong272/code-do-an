@@ -61,28 +61,32 @@ class _UserSavedScreenState extends State<UserSavedScreen> {
                   if (snapshot.hasData) {
                     List<Post> postList = snapshot.data;
                     print('lenght: ' + postList.length.toString());
-                    return
-                        // Center(
-                        //     child: Text(
-                        //       'Chưa có địa điểm nào được lưu',
-                        //       style: TextStyle(fontSize: 20),
-                        //     ),
-                        //   )
-                        ListView.builder(
-                      itemCount: postList.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {},
-                          child: postList.length > 0
-                              ? PostList(
-                                  post: postList[index],
-                                )
-                              : Center(
-                                  child: Text('Bạn chưa lưu địa điểm nào'),
-                                ),
-                        );
-                      },
-                    );
+                    return postList.length > 0 == false
+                        ? Center(
+                            child: Text(
+                              'Chưa có địa điểm nào được lưu',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: postList.length,
+                            itemBuilder: (context, index) {
+                              return postList.length > 0
+                                  ? PostList(
+                                      post: postList[index],
+                                      user: widget.user,
+                                      function: () {
+                                        _postBloc.deleteSavedPostByPostId(
+                                          postId: postList[index].postId,
+                                          userId: widget.user.userId,
+                                          context: context,
+                                        );
+                                      })
+                                  : Center(
+                                      child: Text('Bạn chưa lưu địa điểm nào'),
+                                    );
+                            },
+                          );
                   } else {
                     return Center(
                       child: CircularProgressIndicator(),

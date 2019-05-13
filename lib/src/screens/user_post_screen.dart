@@ -76,6 +76,7 @@ class _PostsOfUserScreenState extends State<PostsOfUserScreen> {
                             itemCount: listPost.length,
                             itemBuilder: (context, index) {
                               return PostList(
+                                user: widget.user,
                                 post: listPost[index],
                               );
                             },

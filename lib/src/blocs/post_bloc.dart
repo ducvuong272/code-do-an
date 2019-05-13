@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/repository/post_repository.dart';
+import 'package:do_an_tn/src/services/api_handler.dart';
 import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -68,11 +70,11 @@ class PostBloc {
     _promotionImagesController.sink.add(imageList);
   }
 
-  Future<Null> getSavedPostList(int userId) async {
+  Future<String> getSavedPostList(int userId) async {
     PostRepository postRepository = PostRepository();
     List<Post> postList = await postRepository.getSavedPost(userId);
-    print(postList.length);
     _getSavedPostListController.sink.add(postList);
+    return 'ok';
   }
 
   Future<Null> getAllPostOfUser(int userId) async {
@@ -86,6 +88,50 @@ class PostBloc {
     PostRepository postRepository = PostRepository();
     Post post = await postRepository.getPostDetailByPostId(postId);
     _getPostDetailController.sink.add(post);
+  }
+
+  Future<Null> deleteSavedPostByPostId({
+    BuildContext context,
+    int postId,
+    int userId,
+  }) async {
+    showDialog<AlertDialog>(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: Text('Xác nhận xóa địa điểm'),
+            content: Text('Bạn muốn xóa địa điểm này ?'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                  CustomDialog dialog = CustomDialog();
+                  dialog.showCustomDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    msg: 'Đang tiến hành xóa địa điểm ...',
+                    showprogressIndicator: true,
+                  );
+                  ApiHandler apiHandler = ApiHandler();
+                  final response =
+                      await apiHandler.deleteSavedPostByPostId(postId, userId);
+                  if (response.statusCode == 200) {
+                    Map<String, dynamic> map = json.decode(response.body);
+                    if (map['code'] == 200) {
+                      await getSavedPostList(userId);
+                    }
+                  }
+                },
+                child: Text('Xóa địa điểm'),
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Không'),
+              ),
+            ],
+          ),
+    );
   }
 
   dispose() {
