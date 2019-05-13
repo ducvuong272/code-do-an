@@ -226,10 +226,35 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                                         Icons.fastfood,
                                         '${post.postCategory} - ${post.city}',
                                       ),
-                                      _postInfor(
-                                        Icons.attach_money,
-                                        '${post.lowestPrice} đồng - ${post.highestPrice} đồng',
-                                      ),
+                                      Container(
+                                        child: Row(
+                                          children: <Widget>[
+                                            Container(
+                                              padding: EdgeInsets.only(
+                                                left: 5,
+                                                right: 10,
+                                              ),
+                                              child: CircleAvatar(
+                                                child: Icon(
+                                                  Icons.attach_money,
+                                                  color: Colors.white,
+                                                ),
+                                                backgroundColor: Colors.blue,
+                                                radius: 12,
+                                              ),
+                                            ),
+                                            Flexible(
+                                              child: Text(
+                                                '${post.lowestPrice} đồng - ${post.highestPrice} đồng',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),
@@ -258,25 +283,40 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                               ),
                               Padding(
                                 padding: EdgeInsets.only(top: 5),
-                                child: GestureDetector(
-                                  onTap: () =>
-                                      print(MediaQuery.of(context).size.height),
-                                  child: Container(
-                                    color: Colors.white,
-                                    padding: EdgeInsets.only(
-                                      top: 15,
-                                      bottom: 15,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Xem tất cả thông tin',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.blue,
-                                          fontWeight: FontWeight.w500,
+                                child: Container(
+                                  color: Colors.white,
+                                  padding: EdgeInsets.only(
+                                    top: 15,
+                                    bottom: 15,
+                                  ),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        padding: EdgeInsets.only(
+                                          left: 5,
+                                          right: 10,
+                                        ),
+                                        child: CircleAvatar(
+                                          child: Icon(
+                                            Icons.list,
+                                            color: Colors.white,
+                                          ),
+                                          backgroundColor: Colors.blue,
+                                          radius: 12,
                                         ),
                                       ),
-                                    ),
+                                      Flexible(
+                                        child: Text(
+                                         post.postDetail == null ?
+                                          'Mô tả: Không có' :
+                                          'Mô tả: ${post.postDetail}',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),

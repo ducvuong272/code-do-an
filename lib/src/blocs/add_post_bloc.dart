@@ -62,9 +62,12 @@ class AddPostBloc {
     });
   }
 
-  Future<File> _pickImageFromCamera() async {
+  _pickImageFromCamera(BuildContext context) async {
+    Navigator.pop(context);
     File imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
-    return imageFile;
+    if (imageFile != null) {
+      _getImageFileController.sink.add(imageFile);
+    }
   }
 
   Future<Null> _pickImageFromAlbum(BuildContext context) async {
@@ -91,7 +94,7 @@ class AddPostBloc {
                 child: Text('Album ảnh'),
               ),
               FlatButton(
-                onPressed: () => _pickImageFromCamera(),
+                onPressed: () => _pickImageFromCamera(context),
                 child: Text('Máy ảnh'),
               ),
             ],
@@ -99,41 +102,57 @@ class AddPostBloc {
         });
   }
 
-  addPost(Post post, BuildContext context, CustomDialog dialog,
-      File imageFile) async {
-    dialog.showCustomDialog(
-      msg: 'Đang tiến hành thêm địa điểm',
-      barrierDismissible: false,
-      context: context,
-      showprogressIndicator: true,
-    );
-    PostRepository postRepository = PostRepository();
-    FirebaseServices firebaseServices = FirebaseServices();
-    String imageUri =
-        await firebaseServices.uploadImageToFireBaseStorage(imageFile);
-    post.imageUrl = imageUri;
-    print(imageUri);
-    Future future = postRepository.addPost(post);
-    future.then((onValue) {
-      print(onValue["success"]);
-      if (onValue['code'] == 200) {
-        dialog.hideCustomDialog(context);
-        dialog.showCustomDialog(
-          msg: onValue['success'],
+  addPost(
+    Post post,
+    BuildContext context,
+    CustomDialog dialog,
+    File imageFile,
+  ) async {
+    if (post.address.trim() == '' ||
+        post.postTitle == null ||
+        post.phoneNumber == null ||
+        post.highestPrice == null ||
+        post.lowestPrice == null || post.postDetail ==null) {
+      dialog.showCustomDialog(
           barrierDismissible: true,
           context: context,
-          showprogressIndicator: false,
-        );
-      } else {
-        dialog.hideCustomDialog(context);
-        dialog.showCustomDialog(
-          msg: onValue['success'],
-          barrierDismissible: true,
-          context: context,
-          showprogressIndicator: false,
-        );
-      }
-    });
+          msg: 'Vui lòng điền đầy đủ thông tin',
+          showprogressIndicator: false);
+    } else {
+      dialog.showCustomDialog(
+        msg: 'Đang tiến hành thêm địa điểm',
+        barrierDismissible: false,
+        context: context,
+        showprogressIndicator: true,
+      );
+      PostRepository postRepository = PostRepository();
+      FirebaseServices firebaseServices = FirebaseServices();
+      String imageUri =
+          await firebaseServices.uploadImageToFireBaseStorage(imageFile);
+      post.imageUrl = imageUri;
+      print(imageUri);
+      Future future = postRepository.addPost(post);
+      future.then((onValue) {
+        print(onValue["success"]);
+        if (onValue['code'] == 200) {
+          dialog.hideCustomDialog(context);
+          dialog.showCustomDialog(
+            msg: onValue['success'],
+            barrierDismissible: true,
+            context: context,
+            showprogressIndicator: false,
+          );
+        } else {
+          dialog.hideCustomDialog(context);
+          dialog.showCustomDialog(
+            msg: onValue['success'],
+            barrierDismissible: true,
+            context: context,
+            showprogressIndicator: false,
+          );
+        }
+      });
+    }
   }
 
   Future<Null> getAllPostCategory() async {

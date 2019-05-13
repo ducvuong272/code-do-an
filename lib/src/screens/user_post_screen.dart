@@ -1,4 +1,5 @@
 import 'package:do_an_tn/src/blocs/post_bloc.dart';
+import 'package:do_an_tn/src/models/enum.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/add_post_screen.dart';
@@ -71,19 +72,27 @@ class _PostsOfUserScreenState extends State<PostsOfUserScreen> {
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           List<Post> listPost = snapshot.data;
-                          print('length: ' + listPost.length.toString());
-                          return ListView.builder(
-                            itemCount: listPost.length,
-                            itemBuilder: (context, index) {
-                              return PostList(
-                                user: widget.user,
-                                post: listPost[index],
-                              );
-                            },
+                          return Center(
+                            child: listPost.length > 0 == false
+                                ? Text(
+                                    'Tài khoản này chưa có địa điểm',
+                                    style: TextStyle(fontSize: 18),
+                                  )
+                                : ListView.builder(
+                                    itemCount: listPost.length,
+                                    itemBuilder: (context, index) {
+                                      return PostList(
+                                        user: widget.user,
+                                        post: listPost[index],
+                                        typeOfPostList:
+                                            TypeOfPostList.userPostList,
+                                      );
+                                    },
+                                  ),
                           );
                         }
                         return Center(
-                          child: Text('Không có địa điểm'),
+                          child: CircularProgressIndicator(),
                         );
                       },
                     ),

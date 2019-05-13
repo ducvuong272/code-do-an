@@ -32,6 +32,7 @@ class CommentScreenState extends State<CommentScreen> {
   List<File> _listImage = [];
   ScrollController _scrollController = ScrollController();
   CommentBloc _commentBloc = CommentBloc();
+  List<String> _comemntImageList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -53,11 +54,12 @@ class CommentScreenState extends State<CommentScreen> {
                   postID: widget.post.postId,
                   userID: widget.user.userId,
                   ratingPoint: _averageRatingPoint,
+                  commentImageUrlList: _comemntImageList,
                 );
                 _commentBloc.postComment(
                   context,
                   comment,
-                  widget.postBloc, 
+                  widget.postBloc,
                   widget.post.postId,
                 );
               },

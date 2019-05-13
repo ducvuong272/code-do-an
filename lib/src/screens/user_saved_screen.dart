@@ -1,5 +1,6 @@
 import 'package:do_an_tn/src/blocs/post_bloc.dart';
 import 'package:do_an_tn/src/blocs/save_post_bloc.dart';
+import 'package:do_an_tn/src/models/enum.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/widgets/login_notify_button.dart';
@@ -60,7 +61,7 @@ class _UserSavedScreenState extends State<UserSavedScreen> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     List<Post> postList = snapshot.data;
-                    print('lenght: ' + postList.length.toString());
+                    print(postList.length);
                     return postList.length > 0 == false
                         ? Center(
                             child: Text(
@@ -75,6 +76,8 @@ class _UserSavedScreenState extends State<UserSavedScreen> {
                                   ? PostList(
                                       post: postList[index],
                                       user: widget.user,
+                                      typeOfPostList:
+                                          TypeOfPostList.savedPostList,
                                       function: () {
                                         _postBloc.deleteSavedPostByPostId(
                                           postId: postList[index].postId,

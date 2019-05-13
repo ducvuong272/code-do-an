@@ -3,3 +3,9 @@ enum TypeOfList {
   cityList,
   districtList,
 }
+
+enum TypeOfPostList{
+  searchPostList,
+  savedPostList,
+  userPostList,
+}

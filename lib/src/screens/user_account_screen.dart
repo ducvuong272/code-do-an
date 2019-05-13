@@ -177,11 +177,7 @@ class UserAccountScreen extends StatelessWidget {
                         height: 50,
                         color: Colors.white,
                         child: FlatButton(
-                          onPressed: () {
-                            FirebaseServices fbsv = FirebaseServices();
-                            fbsv.deleteImageFromFirebaseStorage(
-                                'https://firebasestorage.googleapis.com/v0/b/do-an-tn-ducvuong.appspot.com/o/39541.jpg?alt=media&token=30a68b57-ae0f-4a33-bd21-abbfb7f143b7');
-                          },
+                          onPressed: () {},
                           splashColor: Color(0xff8df4a0),
                           padding: EdgeInsets.only(left: 10),
                           child: Row(

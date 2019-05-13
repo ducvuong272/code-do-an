@@ -90,7 +90,7 @@ class PostBloc {
     _getPostDetailController.sink.add(post);
   }
 
-  Future<Null> deleteSavedPostByPostId({
+  Future<String> deleteSavedPostByPostId({
     BuildContext context,
     int postId,
     int userId,
@@ -104,13 +104,6 @@ class PostBloc {
               FlatButton(
                 onPressed: () async {
                   Navigator.of(context).pop();
-                  CustomDialog dialog = CustomDialog();
-                  dialog.showCustomDialog(
-                    barrierDismissible: false,
-                    context: context,
-                    msg: 'Đang tiến hành xóa địa điểm ...',
-                    showprogressIndicator: true,
-                  );
                   ApiHandler apiHandler = ApiHandler();
                   final response =
                       await apiHandler.deleteSavedPostByPostId(postId, userId);
@@ -132,6 +125,7 @@ class PostBloc {
             ],
           ),
     );
+    return 'ok';
   }
 
   dispose() {

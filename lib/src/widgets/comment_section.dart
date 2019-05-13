@@ -26,7 +26,7 @@ class CommentSection extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 _avatarSection(
-                  commentList[index].imageUrl,
+                  commentList[index].userAvataImageUrl,
                   commentList[index].firstName,
                   commentList[index].lastName,
                   commentList[index].ratingPoint.toString(),

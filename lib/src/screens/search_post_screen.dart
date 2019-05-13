@@ -1,4 +1,5 @@
 import 'package:do_an_tn/src/blocs/post_bloc.dart';
+import 'package:do_an_tn/src/models/enum.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/widgets/post_list.dart';
 import 'package:flutter/material.dart';
@@ -89,6 +90,7 @@ class SearchPostScreenState extends State<SearchPostScreen>
                         itemBuilder: (context, index) {
                           return PostList(
                             post: _listPostData[index],
+                            typeOfPostList: TypeOfPostList.savedPostList,
                           );
                         },
                       );

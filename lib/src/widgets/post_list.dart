@@ -1,3 +1,4 @@
+import 'package:do_an_tn/src/models/enum.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/post_detail_screen.dart';
@@ -7,8 +8,10 @@ class PostList extends StatelessWidget {
   final Post post;
   final User user;
   final Function function;
+  final TypeOfPostList typeOfPostList;
 
-  const PostList({Key key, this.post, this.user, this.function})
+  const PostList(
+      {Key key, this.post, this.user, this.function, this.typeOfPostList})
       : super(key: key);
 
   @override
@@ -81,20 +84,38 @@ class PostList extends StatelessWidget {
                   ],
                 ),
               ),
-              Column(
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    ),
-                    onPressed: () {
-                     function();
-                    },
-                  ),
-                  Text('Xóa')
-                ],
-              ),
+              typeOfPostList == TypeOfPostList.userPostList
+                  ? GestureDetector(
+                      onTap: () {},
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Column(
+                          children: <Widget>[
+                            Icon(
+                              Icons.edit,
+                              color: Colors.blue,
+                            ),
+                            Text('Sửa')
+                          ],
+                        ),
+                      ),
+                    )
+                  : Container(),
+              typeOfPostList == TypeOfPostList.savedPostList ||
+                      typeOfPostList == TypeOfPostList.userPostList
+                  ? GestureDetector(
+                      onTap: () => function(),
+                      child: Column(
+                        children: <Widget>[
+                          Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
+                          Text('Xóa')
+                        ],
+                      ),
+                    )
+                  : Container(),
             ],
           ),
         ),

@@ -2,19 +2,20 @@ class Comment {
   String commentContent, commentTime, firstName, lastName;
   double ratingPoint;
   int postID, userID, commentId;
-  String imageUrl;
-  // List<String> imageUrl;
+  String userAvataImageUrl;
+  List<String> commentImageUrlList;
 
   Comment({
     this.commentContent,
     this.ratingPoint,
     this.postID,
     this.userID,
-    this.imageUrl,
+    this.commentImageUrlList,
     this.lastName,
     this.firstName,
     this.commentId,
     this.commentTime,
+    this.userAvataImageUrl,
   });
 
   // Chưa có get hình ảnh
@@ -27,7 +28,8 @@ class Comment {
     firstName = json["Ho"];
     lastName = json["Ten"];
     commentTime = json["ThoiGianBinhLuan"];
-    imageUrl = json["TapTinDaiDien"];
+    userAvataImageUrl = json["TapTinDaiDien"];
+    commentImageUrlList = json["TapTinBinhLuanS"];
   }
 
 // Chưa có get hình ảnh
@@ -37,6 +39,7 @@ class Comment {
     data["Id_DiaDiem"] = postID;
     data["NoiDung"] = commentContent;
     data["DiemDanhGia"] = ratingPoint.toString();
+    data["TapTinBinhLuanS"] = commentImageUrlList;
     return data;
   }
 }
