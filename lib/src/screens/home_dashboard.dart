@@ -95,7 +95,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Icons.account_circle,
               color: _index == 3 ? Colors.red : Colors.black38,
             ),
-            title: Text('Cài đặt'),
+            title: Text('Tài khoản'),
           ),
         ],
       ),

@@ -4,6 +4,7 @@ import 'package:do_an_tn/src/blocs/post_bloc.dart';
 import 'package:do_an_tn/src/models/comment.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
+import 'package:do_an_tn/src/services/firebase_services.dart';
 import 'package:do_an_tn/src/widgets/image_edit_widget.dart';
 import 'package:flutter/material.dart';
 // import 'package:multi_image_picker/multi_image_picker.dart';
@@ -28,11 +29,10 @@ class CommentScreenState extends State<CommentScreen> {
       _viewRating = 5;
   double _averageRatingPoint = 5.0;
   TextEditingController _commentContentController = TextEditingController();
-  // List<Asset> _images = List<Asset>();
   List<File> _listImage = [];
   ScrollController _scrollController = ScrollController();
   CommentBloc _commentBloc = CommentBloc();
-  List<String> _comemntImageList = [];
+  List<String> _commentImageList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -46,21 +46,19 @@ class CommentScreenState extends State<CommentScreen> {
           actions: <Widget>[
             GestureDetector(
               onTap: () {
-                // _listImage.forEach((f) =>
-                //     Future.delayed(Duration(seconds: 2), () => print(f.path)));
-                //     print(_listImage);
                 Comment comment = Comment(
                   commentContent: _commentContentController.text,
                   postID: widget.post.postId,
                   userID: widget.user.userId,
                   ratingPoint: _averageRatingPoint,
-                  commentImageUrlList: _comemntImageList,
+                  commentImageUrlList: _commentImageList,
                 );
                 _commentBloc.postComment(
                   context,
                   comment,
                   widget.postBloc,
                   widget.post.postId,
+                  _listImage,
                 );
               },
               child: Container(

@@ -16,4 +16,6 @@ String kgetAllCity = '$kApiUrl/lay-tinh-thanh-pho';
 String kgetDistrictByCity = '$kApiUrl/lay-quan-huyen';
 String kGetPostDetailByPostId = '$kApiUrl/chi-tiet-dia-diem';
 String kDeleteSavedPostByPostId = '$kApiUrl/xoa-dia-diem-da-luu';
+String kChangePasswordByUserId = '$kApiUrl/doi-mat-khau';
+String kUpdateUserInformationByUserId = '$kApiUrl/sua-thong-tin-tai-khoan';
 Map<String, String> kApiHeader = {"Content-Type" : "application/json"};

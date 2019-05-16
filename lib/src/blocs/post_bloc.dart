@@ -95,36 +95,14 @@ class PostBloc {
     int postId,
     int userId,
   }) async {
-    showDialog<AlertDialog>(
-      context: context,
-      builder: (context) => AlertDialog(
-            title: Text('Xác nhận xóa địa điểm'),
-            content: Text('Bạn muốn xóa địa điểm này ?'),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  ApiHandler apiHandler = ApiHandler();
-                  final response =
-                      await apiHandler.deleteSavedPostByPostId(postId, userId);
-                  if (response.statusCode == 200) {
-                    Map<String, dynamic> map = json.decode(response.body);
-                    if (map['code'] == 200) {
-                      await getSavedPostList(userId);
-                    }
-                  }
-                },
-                child: Text('Xóa địa điểm'),
-              ),
-              FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('Không'),
-              ),
-            ],
-          ),
-    );
+    ApiHandler apiHandler = ApiHandler();
+    final response = await apiHandler.deleteSavedPostByPostId(postId, userId);
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = json.decode(response.body);
+      if (map['code'] == 200) {
+        await getSavedPostList(userId);
+      }
+    }
     return 'ok';
   }
 

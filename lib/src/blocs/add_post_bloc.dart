@@ -1,14 +1,12 @@
 import 'dart:async';
+import 'package:do_an_tn/src/blocs/post_bloc.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/repository/post_repository.dart';
-import 'package:do_an_tn/src/services/api_handler.dart';
 import 'package:do_an_tn/src/services/firebase_services.dart';
 import 'package:do_an_tn/src/widgets/dialog.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:path/path.dart';
 
 class AddPostBloc {
   StreamController<TimeOfDay> _openTimeController =
@@ -27,10 +25,6 @@ class AddPostBloc {
       _getAllCityController.stream;
   StreamController<File> _getImageFileController = StreamController<File>();
   Stream<File> get getImageFileStream => _getImageFileController.stream;
-  // StreamController<List<String>> _getDistrictListController =
-  //     StreamController<List<String>>();
-  // Stream<List<String>> get getDistrictListStream =>
-  //     _getDistrictListController.stream;
 
   setOpenTimePicked(
     BuildContext context,
@@ -107,18 +101,26 @@ class AddPostBloc {
     BuildContext context,
     CustomDialog dialog,
     File imageFile,
+    PostBloc postBloc,
+    int userId,
   ) async {
+    print(post.phoneNumber);
+    print(post.highestPrice);
+    print(post.lowestPrice);
+    print(post.postDetail);
     if (post.address.trim() == '' ||
-        post.postTitle == null ||
-        post.phoneNumber == null ||
-        post.highestPrice == null ||
-        post.lowestPrice == null || post.postDetail ==null) {
+        post.postTitle.trim() == '' ||
+        post.phoneNumber == '' ||
+        post.highestPrice == '' ||
+        post.lowestPrice == '' ||
+        post.postDetail == '') {
       dialog.showCustomDialog(
           barrierDismissible: true,
           context: context,
           msg: 'Vui lòng điền đầy đủ thông tin',
           showprogressIndicator: false);
-    } else {
+    }
+     else {
       dialog.showCustomDialog(
         msg: 'Đang tiến hành thêm địa điểm',
         barrierDismissible: false,
@@ -135,6 +137,7 @@ class AddPostBloc {
       future.then((onValue) {
         print(onValue["success"]);
         if (onValue['code'] == 200) {
+          postBloc.getAllPostOfUser(userId);
           dialog.hideCustomDialog(context);
           dialog.showCustomDialog(
             msg: onValue['success'],

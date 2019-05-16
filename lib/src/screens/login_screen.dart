@@ -1,6 +1,4 @@
 import 'package:do_an_tn/src/blocs/login_bloc.dart';
-import 'package:do_an_tn/src/models/user.dart';
-import 'package:do_an_tn/src/screens/home_dashboard.dart';
 import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

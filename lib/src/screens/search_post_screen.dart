@@ -22,7 +22,6 @@ class SearchPostScreenState extends State<SearchPostScreen>
   PostBloc _postBloc = PostBloc();
   List<Post> _listPostData = []; //Tất cả địa điểm theo thành phố
   List<Post> _listPostValue = []; //Tất cả điểm theo kết quả tìm kiếm
-  // Map<String, dynamic> widget.cityMap = {};
   int _cityIndex = 0;
   bool _showAreaPicker = false;
   ScrollController _scrollController = ScrollController();
@@ -78,6 +77,7 @@ class SearchPostScreenState extends State<SearchPostScreen>
                           onTap: () {},
                           child: PostList(
                             post: _listPostValue[index],
+                            typeOfPostList: TypeOfPostList.searchPostList,
                           ),
                         );
                       },
@@ -90,7 +90,7 @@ class SearchPostScreenState extends State<SearchPostScreen>
                         itemBuilder: (context, index) {
                           return PostList(
                             post: _listPostData[index],
-                            typeOfPostList: TypeOfPostList.savedPostList,
+                            typeOfPostList: TypeOfPostList.searchPostList,
                           );
                         },
                       );

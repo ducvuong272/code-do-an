@@ -55,9 +55,10 @@ class CommentSection extends StatelessWidget {
               UserAvatar(
                 userAvatarImageUrl: imageUrl,
                 lastName: lastName,
+                avatarSize: 30,                
               ),
               Text(
-                '$firstname $lastName',
+                '${lastName.trim()} $firstname',
                 style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w500,

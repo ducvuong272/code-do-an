@@ -80,7 +80,7 @@ class Post {
     district = json['TenQuanHuyen'];
     exellent = json['TuyetVoi'];
     nice = json['Kha'];
-    // postDetail = json['MoTa'];
+    postDetail = json['MoTa'];
     average = json['TrungBinh'];
     bad = json['Kem'];
     openTimeStatus = json['TrangThaiMoCua'];

@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:convert';
-import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/services/api_handler.dart';
 import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';

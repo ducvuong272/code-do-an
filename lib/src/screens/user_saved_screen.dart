@@ -1,5 +1,4 @@
 import 'package:do_an_tn/src/blocs/post_bloc.dart';
-import 'package:do_an_tn/src/blocs/save_post_bloc.dart';
 import 'package:do_an_tn/src/models/enum.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
@@ -79,12 +78,44 @@ class _UserSavedScreenState extends State<UserSavedScreen> {
                                       typeOfPostList:
                                           TypeOfPostList.savedPostList,
                                       function: () {
-                                        _postBloc.deleteSavedPostByPostId(
-                                          postId: postList[index].postId,
-                                          userId: widget.user.userId,
+                                        showDialog<AlertDialog>(
                                           context: context,
+                                          builder: (context) => AlertDialog(
+                                                title: Text(
+                                                    'Xác nhận xóa địa điểm'),
+                                                content: Text(
+                                                    'Bạn muốn bỏ lưu địa điểm này ?'),
+                                                actions: <Widget>[
+                                                  FlatButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+
+                                                      _postBloc
+                                                          .deleteSavedPostByPostId(
+                                                        context: context,
+                                                        postId: postList[index]
+                                                            .postId,
+                                                        userId:
+                                                            widget.user.userId,
+                                                      );
+                                                      postList.removeAt(index);
+                                                      setState(() {});
+                                                    },
+                                                    child: Text('Xóa địa điểm'),
+                                                  ),
+                                                  FlatButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    child: Text('Không'),
+                                                  ),
+                                                ],
+                                              ),
                                         );
-                                      })
+                                      },
+                                    )
                                   : Center(
                                       child: Text('Bạn chưa lưu địa điểm nào'),
                                     );

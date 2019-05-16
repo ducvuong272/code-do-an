@@ -1,12 +1,12 @@
-import 'package:do_an_tn/src/blocs/add_post_bloc.dart';
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/home_dashboard.dart';
-import 'package:do_an_tn/src/screens/user_avatar_screen.dart';
-import 'package:do_an_tn/src/services/firebase_services.dart';
+import 'package:do_an_tn/src/screens/user_information.dart';
 import 'package:do_an_tn/src/widgets/login_notify_button.dart';
 import 'package:do_an_tn/src/widgets/user_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'change_password_screen.dart';
 
 class UserAccountScreen extends StatelessWidget {
   final User user;
@@ -44,6 +44,7 @@ class UserAccountScreen extends StatelessWidget {
                             UserAvatar(
                               lastName: user.lastName,
                               userAvatarImageUrl: user.imageUrl,
+                              avatarSize: 40,
                             ),
                             Text(
                               '${user.lastName.trim()} ${user.firstName.trim()}',
@@ -125,127 +126,128 @@ class UserAccountScreen extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: 5),
                   ),
-                  Column(
-                    children: <Widget>[
-                      Container(
-                        height: 50,
-                        color: Colors.white,
-                        child: FlatButton(
-                          splashColor: Color(0xff8df4a0),
-                          padding: EdgeInsets.only(left: 10),
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => UserAvatarScreen(
-                                      user: user,
-                                    ),
-                              ),
-                            );
-                          },
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              Container(
-                                margin: EdgeInsets.only(right: 20),
-                                height: 40,
-                                width: 40,
-                                child: Icon(
-                                  Icons.image,
-                                  size: 30,
-                                  color: Colors.white,
-                                ),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              Text(
-                                'Ảnh đại diện & bìa',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                  Container(
+                    height: 50,
+                    color: Colors.white,
+                    child: FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => ChangeUserPasswordScreen(
+                                  user: user,
+                                )));
+                      },
+                      splashColor: Color(0xff8df4a0),
+                      padding: EdgeInsets.only(left: 10),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(right: 20),
+                            height: 40,
+                            width: 40,
+                            child: Icon(
+                              Icons.lock_outline,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.blue,
+                            ),
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 5),
-                      ),
-                      Container(
-                        height: 50,
-                        color: Colors.white,
-                        child: FlatButton(
-                          onPressed: () {},
-                          splashColor: Color(0xff8df4a0),
-                          padding: EdgeInsets.only(left: 10),
-                          child: Row(
-                            children: <Widget>[
-                              Container(
-                                margin: EdgeInsets.only(right: 20),
-                                height: 40,
-                                width: 40,
-                                child: Icon(
-                                  Icons.lock_outline,
-                                  size: 30,
-                                  color: Colors.white,
-                                ),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              Text(
-                                'Đổi mật khẩu',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                          Text(
+                            'Đổi mật khẩu',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 5),
-                      ),
-                      Container(
-                        height: 50,
-                        color: Colors.white,
-                        child: FlatButton(
-                          onPressed: () {},
-                          splashColor: Color(0xff8df4a0),
-                          padding: EdgeInsets.only(left: 10),
-                          child: Row(
-                            children: <Widget>[
-                              Container(
-                                margin: EdgeInsets.only(right: 20),
-                                height: 40,
-                                width: 40,
-                                child: Icon(
-                                  Icons.person_outline,
-                                  size: 30,
-                                  color: Colors.white,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5),
+                  ),
+                  Container(
+                    height: 50,
+                    color: Colors.white,
+                    child: FlatButton(
+                      splashColor: Color(0xff8df4a0),
+                      padding: EdgeInsets.only(left: 10),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => UserInformationScreen(
+                                  user: user,
                                 ),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              Text(
-                                'Thông tin & liên hệ',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
                           ),
-                        ),
+                        );
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(right: 20),
+                            height: 40,
+                            width: 40,
+                            child: Icon(
+                              Icons.person_outline,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.blue,
+                            ),
+                          ),
+                          Text(
+                            'Thông tin & liên hệ',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  )
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5),
+                  ),
+                  Container(
+                    height: 50,
+                    color: Colors.white,
+                    child: FlatButton(
+                      onPressed: () {},
+                      splashColor: Color(0xff8df4a0),
+                      padding: EdgeInsets.only(left: 10),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(right: 20),
+                            height: 40,
+                            width: 40,
+                            child: Icon(
+                              Icons.person_outline,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.blue,
+                            ),
+                          ),
+                          Text(
+                            'Quản trị viên',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               )
             : LoginNotifyWidget(),

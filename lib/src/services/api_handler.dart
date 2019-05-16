@@ -45,7 +45,6 @@ class ApiHandler {
       headers: kApiHeader,
       body: json.encode(post.toAddPostJson()),
     );
-    print(json.encode(post.toAddPostJson()));
     return response.body;
   }
 
@@ -153,6 +152,37 @@ class ApiHandler {
       ..headers["Content-Type"] = "application/json"
       ..body = json.encode({"Id_TaiKhoan": userId}));
     http.Response result = await http.Response.fromStream(response);
+    print(result.body);
     return result;
+  }
+
+  Future<http.Response> changePasswordById(
+    int userId,
+    String oldPassword,
+    String newPassword,
+  ) async {
+    final apiUrl = '$kChangePasswordByUserId/$userId';
+    Map<String, dynamic> changePasswordMap = {
+      "MatKhauCu": "$oldPassword",
+      "MatKhauMoi": "$newPassword"
+    };
+    print(changePasswordMap);
+    final response = await http.put(
+      apiUrl,
+      headers: kApiHeader,
+      body: json.encode(changePasswordMap),
+    );
+    return response;
+  }
+
+  Future<http.Response> updateUserInformationByUserId(User user) async {
+    final apiUrl = '$kUpdateUserInformationByUserId/${user.userId}';
+    final response = await http.put(
+      apiUrl,
+      headers: kApiHeader,
+      body: json.encode(user.toUpdateUserInfoJson()),
+    );
+    print(response);
+    return response;
   }
 }

@@ -37,8 +37,8 @@ class _PostsOfUserScreenState extends State<PostsOfUserScreen> {
 
   @override
   void dispose() {
-    _postBloc.dispose();
     super.dispose();
+    _postBloc.dispose();
   }
 
   @override

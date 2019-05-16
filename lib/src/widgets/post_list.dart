@@ -74,7 +74,7 @@ class PostList extends StatelessWidget {
                           ),
                         ),
                         CircleAvatar(
-                          child: post.ratingPoint.toString() == 'null'
+                          child: post.ratingPoint == null
                               ? Text('N/A')
                               : Text(post.ratingPoint),
                           maxRadius: 16,
@@ -101,8 +101,7 @@ class PostList extends StatelessWidget {
                       ),
                     )
                   : Container(),
-              typeOfPostList == TypeOfPostList.savedPostList ||
-                      typeOfPostList == TypeOfPostList.userPostList
+              typeOfPostList != TypeOfPostList.searchPostList
                   ? GestureDetector(
                       onTap: () => function(),
                       child: Column(

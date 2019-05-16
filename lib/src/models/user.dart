@@ -46,4 +46,13 @@ class User {
     data['Email'] = this.email;
     return data;
   }
+
+  Map<String, dynamic> toUpdateUserInfoJson(){
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['Ho'] = firstName;
+    data['Ten'] = lastName;
+    data['Email'] = email;
+    data['TapTinDaiDien'] = imageUrl;
+    return data;
+  }
 }

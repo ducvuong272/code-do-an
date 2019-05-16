@@ -8,7 +8,6 @@ class FirebaseServices {
     StorageReference ref = FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = ref.putFile(imageFile);
     var uri = await (await uploadTask.onComplete).ref.getDownloadURL();
-    print(uri);
     return uri;
   }
 

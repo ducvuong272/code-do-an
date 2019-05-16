@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:do_an_tn/src/blocs/post_bloc.dart';
+import 'package:do_an_tn/src/services/firebase_services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
@@ -52,11 +53,22 @@ class CommentBloc {
     _listImageController.sink.add(listImage);
   }
 
+  Future<List<String>> _uploadImageToFirebase(List<File> listImage) async {
+    FirebaseServices firebaseServices = FirebaseServices();
+    List<String> imageUriList = [];
+    for (int i = 0; i < listImage.length; i++) {
+      imageUriList.add(
+          await firebaseServices.uploadImageToFireBaseStorage(listImage[i]));
+    }
+    return imageUriList;
+  }
+
   postComment(
     BuildContext context,
     Comment comment,
     PostBloc postBloc,
     int postId,
+    List<File> commentImageList,
   ) {
     CustomDialog dialog = CustomDialog();
     if (comment.commentContent.trim() == '') {
@@ -73,28 +85,58 @@ class CommentBloc {
         msg: 'Đang xử lý...',
         showprogressIndicator: true,
       );
-      CommentRepository commentRepository = CommentRepository(comment: comment);
-      Future future = commentRepository.postComment();
-      future.then((onValue) async {
-        if (onValue == "200") {
-          await postBloc.getPostDetailByPostId(postId);
-          dialog.hideCustomDialog(context);
-          dialog.showCustomDialog(
-            context: context,
-            barrierDismissible: true,
-            msg: 'Đăng bình luận thành công!',
-            showprogressIndicator: false,
-          );
-        } else {
-          dialog.hideCustomDialog(context);
-          dialog.showCustomDialog(
-            context: context,
-            barrierDismissible: true,
-            msg: 'Đăng bình luận thất bại!',
-            showprogressIndicator: false,
-          );
-        }
-      });
+      if (commentImageList.isNotEmpty) {
+        _uploadImageToFirebase(commentImageList).then((onValue) {
+          comment.commentImageUrlList = onValue;
+          CommentRepository commentRepository =
+              CommentRepository(comment: comment);
+          Future future = commentRepository.postComment();
+          future.then((onValue) async {
+            if (onValue == "200") {
+              await postBloc.getPostDetailByPostId(postId);
+              dialog.hideCustomDialog(context);
+              dialog.showCustomDialog(
+                context: context,
+                barrierDismissible: true,
+                msg: 'Đăng bình luận thành công!',
+                showprogressIndicator: false,
+              );
+            } else {
+              dialog.hideCustomDialog(context);
+              dialog.showCustomDialog(
+                context: context,
+                barrierDismissible: true,
+                msg: 'Đăng bình luận thất bại!',
+                showprogressIndicator: false,
+              );
+            }
+          });
+        });
+      } else {
+        CommentRepository commentRepository =
+            CommentRepository(comment: comment);
+        Future future = commentRepository.postComment();
+        future.then((onValue) async {
+          if (onValue == "200") {
+            await postBloc.getPostDetailByPostId(postId);
+            dialog.hideCustomDialog(context);
+            dialog.showCustomDialog(
+              context: context,
+              barrierDismissible: true,
+              msg: 'Đăng bình luận thành công!',
+              showprogressIndicator: false,
+            );
+          } else {
+            dialog.hideCustomDialog(context);
+            dialog.showCustomDialog(
+              context: context,
+              barrierDismissible: true,
+              msg: 'Đăng bình luận thất bại!',
+              showprogressIndicator: false,
+            );
+          }
+        });
+      }
     }
   }
 

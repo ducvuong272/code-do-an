@@ -5,7 +5,6 @@ import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/comment_screen.dart';
 import 'package:do_an_tn/src/screens/login_dashboard.dart';
 import 'package:do_an_tn/src/widgets/comment_section.dart';
-import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 
 class PostDetailScreen extends StatefulWidget {
@@ -33,6 +32,13 @@ class PostDetailScreenState extends State<PostDetailScreen> {
     print(widget.postId);
     _postBloc.getPostDetailByPostId(widget.postId);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _postBloc.dispose();
   }
 
   @override
@@ -307,9 +313,9 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                                       ),
                                       Flexible(
                                         child: Text(
-                                         post.postDetail == null ?
-                                          'Mô tả: Không có' :
-                                          'Mô tả: ${post.postDetail}',
+                                          post.postDetail == null
+                                              ? 'Mô tả: Không có'
+                                              : 'Mô tả: ${post.postDetail}',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,
@@ -353,29 +359,24 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                                                   style: TextStyle(
                                                     fontSize: 17,
                                                     fontWeight: FontWeight.w800,
-                                                    color: post
-                                                                .ratingPoint ==
+                                                    color: post.ratingPoint ==
                                                             null
                                                         ? Colors.black
                                                         : double.parse(post
                                                                     .ratingPoint) >=
-                                                                8.0
+                                                                9.0
                                                             ? Colors.blue
                                                             : double.parse(post
                                                                         .ratingPoint) >=
-                                                                    6.5
+                                                                    7.0
                                                                 ? Colors.green
                                                                 : double.parse(post
                                                                             .ratingPoint) >=
-                                                                        6.5
+                                                                        4.0
                                                                     ? Colors
                                                                         .black
-                                                                    : double.parse(post.ratingPoint) >=
-                                                                            5.0
-                                                                        ? Colors
-                                                                            .black
-                                                                        : Colors
-                                                                            .red,
+                                                                    : Colors
+                                                                        .red,
                                                   ),
                                                 ),
                                                 Text(
@@ -383,43 +384,38 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                                                       ? 'Chưa có đánh giá'
                                                       : double.parse(post
                                                                   .ratingPoint) >=
-                                                              8.0
+                                                              9.0
                                                           ? 'Tuyệt vời'
                                                           : double.parse(post
                                                                       .ratingPoint) >=
-                                                                  6.5
+                                                                  7.0
                                                               ? 'Khá tốt'
                                                               : double.parse(post
                                                                           .ratingPoint) >=
-                                                                      5.0
+                                                                      4.0
                                                                   ? 'Trung bình'
                                                                   : 'Kém',
                                                   style: TextStyle(
                                                     fontSize: 17,
                                                     fontWeight: FontWeight.w800,
-                                                    color: post
-                                                                .ratingPoint ==
+                                                    color: post.ratingPoint ==
                                                             null
                                                         ? Colors.black
                                                         : double.parse(post
                                                                     .ratingPoint) >=
-                                                                8.0
+                                                                9.0
                                                             ? Colors.blue
                                                             : double.parse(post
                                                                         .ratingPoint) >=
-                                                                    6.5
+                                                                    7.0
                                                                 ? Colors.green
                                                                 : double.parse(post
                                                                             .ratingPoint) >=
-                                                                        6.5
+                                                                        4.0
                                                                     ? Colors
                                                                         .black
-                                                                    : double.parse(post.ratingPoint) >=
-                                                                            5.0
-                                                                        ? Colors
-                                                                            .black
-                                                                        : Colors
-                                                                            .red,
+                                                                    : Colors
+                                                                        .red,
                                                   ),
                                                 ),
                                               ],

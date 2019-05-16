@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:do_an_tn/src/blocs/add_post_bloc.dart';
+import 'package:do_an_tn/src/blocs/post_bloc.dart';
 import 'package:do_an_tn/src/models/enum.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
@@ -9,8 +10,9 @@ import 'package:flutter/material.dart';
 
 class AddPostScreen extends StatefulWidget {
   final User user;
+  final PostBloc postBloc;
 
-  const AddPostScreen({Key key, this.user}) : super(key: key);
+  const AddPostScreen({Key key, this.user, this.postBloc}) : super(key: key);
 
   @override
   AddPostScreenState createState() => AddPostScreenState();
@@ -117,7 +119,14 @@ class AddPostScreenState extends State<AddPostScreen> {
                     city: _cityListMap.elementAt(_cityIndex)['TenTinhThanhPho'],
                     country: 'Vietnam',
                   );
-                  await _addPostBloc.addPost(post, context, dialog, _imageFile);
+                  await _addPostBloc.addPost(
+                    post,
+                    context,
+                    dialog,
+                    _imageFile,
+                    widget.postBloc,
+                    widget.user.userId,
+                  );
                 }
               },
               child: Center(
@@ -687,17 +696,6 @@ class AddPostScreenState extends State<AddPostScreen> {
             },
           );
         });
-  }
-
-  Widget _buildImageSection(double height) {
-    return _imageFile == null
-        ? Container()
-        : Container(
-            height: height,
-            child: Image.file(
-              _imageFile,
-            ),
-          );
   }
 
   @override
