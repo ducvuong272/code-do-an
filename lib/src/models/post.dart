@@ -62,6 +62,7 @@ class Post {
     address = json["DiaChi"];
     imageUrl = json["TapTinDaiDien"];
     userId = json["Id_TaiKhoan"];
+    ratingPoint = json["DanhGia"];
   }
 
   Post.fromPostDetailJson(Map<String, dynamic> json) {

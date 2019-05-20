@@ -34,7 +34,10 @@ class CommentSection extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 1),
-                  child: _commentSection(commentList[index].commentContent),
+                  child: _commentSection(
+                    commentList[index].commentContent,
+                    commentList[index].commentImageUrlList,
+                  ),
                 ),
               ],
             ),
@@ -55,7 +58,7 @@ class CommentSection extends StatelessWidget {
               UserAvatar(
                 userAvatarImageUrl: imageUrl,
                 lastName: lastName,
-                avatarSize: 30,                
+                avatarSize: 30,
               ),
               Text(
                 '${lastName.trim()} $firstname',
@@ -90,7 +93,7 @@ class CommentSection extends StatelessWidget {
     );
   }
 
-  Widget _commentSection(String commentContent) {
+  Widget _commentSection(String commentContent, List<String> commentImageList) {
     return Container(
       color: Colors.white,
       child: Container(
@@ -114,6 +117,27 @@ class CommentSection extends StatelessWidget {
                 style: TextStyle(fontSize: 16),
               ),
             ),
+            commentImageList == null
+                ? Container()
+                : GridView.count(
+                    shrinkWrap: true,
+                    controller: scrollController,
+                    crossAxisCount: 3,
+                    physics: NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    crossAxisSpacing: 5,
+                    mainAxisSpacing: 5,
+                    children: List.generate(commentImageList.length, (index) {
+                      return Container(
+                        height: 300,
+                        width: 300,
+                        child: Image.network(
+                          commentImageList[index],
+                          fit: BoxFit.fill,
+                        ),
+                      );
+                    }),
+                  ),
           ],
         ),
       ),

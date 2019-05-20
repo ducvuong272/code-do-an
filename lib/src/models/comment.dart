@@ -4,6 +4,7 @@ class Comment {
   int postID, userID, commentId;
   String userAvataImageUrl;
   List<String> commentImageUrlList;
+  
 
   Comment({
     this.commentContent,
@@ -29,7 +30,19 @@ class Comment {
     lastName = json["Ten"];
     commentTime = json["ThoiGianBinhLuan"];
     userAvataImageUrl = json["TapTinDaiDien"];
-    commentImageUrlList = json["TapTinBinhLuanS"];
+    if (json["TapTinBinhLuan"] != null) {
+      var imageUrlList = (json["TapTinBinhLuan"] as List).map((f) {
+       return _getListImageUrl(f);
+      }).toList();
+      commentImageUrlList = imageUrlList;
+    }
+    else{
+      commentImageUrlList = null;
+    }
+  }
+
+  String _getListImageUrl(Map<String, dynamic> json){
+    return json["TapTinBinhLuan"];
   }
 
 // Chưa có get hình ảnh

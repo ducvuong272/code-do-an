@@ -57,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen>
         _addPostBloc.getAllCity();
         _addPostBloc.getAllCityStream.listen((onData) async {
           _cityMap = onData;
+          print(_cityMap);
           await _postBLoc.getPromotionImages().whenComplete(() {
             setState(() {
               _finishLoading = true;
@@ -262,6 +263,7 @@ class _HomeScreenState extends State<HomeScreen>
                                   MaterialPageRoute(
                                     builder: (context) => SearchPostScreen(
                                           cityMap: _cityMap,
+                                          user: widget.user,
                                         ),
                                   ),
                                 ),

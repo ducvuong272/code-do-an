@@ -46,6 +46,10 @@ class EmailBloc {
       _emailController.sink.addError('Email không được để trống');
       return false;
     }
+    else if(!email.contains('@')){
+      _emailController.sink.addError('Email sai định dạng');
+      return false;
+    }
     _emailController.sink.add('OK');
     return true;
   }

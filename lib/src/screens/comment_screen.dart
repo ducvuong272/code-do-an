@@ -4,10 +4,8 @@ import 'package:do_an_tn/src/blocs/post_bloc.dart';
 import 'package:do_an_tn/src/models/comment.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
-import 'package:do_an_tn/src/services/firebase_services.dart';
 import 'package:do_an_tn/src/widgets/image_edit_widget.dart';
 import 'package:flutter/material.dart';
-// import 'package:multi_image_picker/multi_image_picker.dart';
 
 class CommentScreen extends StatefulWidget {
   final User user;
@@ -32,7 +30,6 @@ class CommentScreenState extends State<CommentScreen> {
   List<File> _listImage = [];
   ScrollController _scrollController = ScrollController();
   CommentBloc _commentBloc = CommentBloc();
-  List<String> _commentImageList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +48,6 @@ class CommentScreenState extends State<CommentScreen> {
                   postID: widget.post.postId,
                   userID: widget.user.userId,
                   ratingPoint: _averageRatingPoint,
-                  commentImageUrlList: _commentImageList,
                 );
                 _commentBloc.postComment(
                   context,

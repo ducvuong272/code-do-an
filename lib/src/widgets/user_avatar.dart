@@ -32,8 +32,8 @@ class UserAvatar extends StatelessWidget {
         : Padding(
             padding: EdgeInsets.only(right: 5),
             child: CircleAvatar(
-              backgroundImage: NetworkImage(userAvatarImageUrl),
-              radius: avatarSize,
+              backgroundImage: NetworkImage(userAvatarImageUrl,scale: 1.0),
+              maxRadius: avatarSize*2/3,
             ),
           );
   }

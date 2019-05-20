@@ -55,8 +55,6 @@ class PostBloc {
         .where((data) =>
             data.postTitle.toLowerCase().contains(value.toLowerCase()))
         .toList();
-    print(listPostResult.length);
-    print(listPostData.length);
     _postSearchResultController.sink.add(listPostResult);
   }
 
@@ -104,6 +102,80 @@ class PostBloc {
       }
     }
     return 'ok';
+  }
+
+  Future<String> deletePostByPostId(
+    Post post,
+    BuildContext context,
+    PostBloc postBloc,
+    int userId,
+  ) async {
+    String result = '';
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            content: Text('Bạn có chắc muốn xóa địa điểm này ?'),
+            title: Text('Xác nhận xóa địa điểm'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () async {
+                  CustomDialog dialog = CustomDialog();
+                  dialog.showCustomDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    msg: 'Đang xử lý ...',
+                    showprogressIndicator: true,
+                  );
+                  ApiHandler apiHandler = ApiHandler();
+                  final response =
+                      await apiHandler.deletePostByPostId(post.postId);
+                  if (response.statusCode == 200) {
+                    Map<String, dynamic> map = json.decode(response.body);
+                    if (map['code'] == 200) {
+                     await postBloc.getAllPostOfUser(userId);
+                      dialog.hideCustomDialog(context);
+                      Navigator.of(context).pop();
+                      dialog.showCustomDialog(
+                        barrierDismissible: true,
+                        context: context,
+                        msg: 'Xóa địa điểm thành công !',
+                        showprogressIndicator: false,
+                      );
+                      result = 'success';
+                      return result;
+                    } else {
+                      dialog.hideCustomDialog(context);
+                      dialog.showCustomDialog(
+                        barrierDismissible: true,
+                        context: context,
+                        msg: 'Xóa địa điểm thất bại !',
+                        showprogressIndicator: false,
+                      );
+                      result = 'fail';
+                    }
+                  } else {
+                    dialog.hideCustomDialog(context);
+                    dialog.showCustomDialog(
+                      barrierDismissible: true,
+                      context: context,
+                      msg: 'Xóa thất bại !',
+                      showprogressIndicator: false,
+                    );
+                    result = 'fail';
+                  }
+                },
+                child: Text('Xác nhận'),
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  result = 'fail';
+                },
+                child: Text('Hủy'),
+              ),
+            ],
+          ),
+    );
   }
 
   dispose() {

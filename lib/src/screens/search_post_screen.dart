@@ -1,14 +1,16 @@
 import 'package:do_an_tn/src/blocs/post_bloc.dart';
 import 'package:do_an_tn/src/models/enum.dart';
 import 'package:do_an_tn/src/models/post.dart';
+import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/widgets/post_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class SearchPostScreen extends StatefulWidget {
   final List<Map<String, dynamic>> cityMap;
+  final User user;
 
-  const SearchPostScreen({Key key, this.cityMap}) : super(key: key);
+  const SearchPostScreen({Key key, this.cityMap, this.user}) : super(key: key);
 
   @override
   SearchPostScreenState createState() => SearchPostScreenState();
@@ -73,9 +75,12 @@ class SearchPostScreenState extends State<SearchPostScreen>
                       controller: _scrollController,
                       itemCount: _listPostValue.length,
                       itemBuilder: (context, index) {
+                        print(_listPostValue[index].ratingPoint);
+
                         return InkWell(
                           onTap: () {},
                           child: PostList(
+                            user: widget.user,
                             post: _listPostValue[index],
                             typeOfPostList: TypeOfPostList.searchPostList,
                           ),
@@ -91,6 +96,7 @@ class SearchPostScreenState extends State<SearchPostScreen>
                           return PostList(
                             post: _listPostData[index],
                             typeOfPostList: TypeOfPostList.searchPostList,
+                            user: widget.user,
                           );
                         },
                       );

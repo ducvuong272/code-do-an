@@ -53,6 +53,7 @@ class User {
     data['Ten'] = lastName;
     data['Email'] = email;
     data['TapTinDaiDien'] = imageUrl;
+    print(data);
     return data;
   }
 }

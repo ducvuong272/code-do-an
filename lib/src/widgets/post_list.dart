@@ -7,12 +7,18 @@ import 'package:flutter/material.dart';
 class PostList extends StatelessWidget {
   final Post post;
   final User user;
-  final Function function;
+  final Function deletePostfunction;
+  final Function updatePostFunction;
   final TypeOfPostList typeOfPostList;
 
-  const PostList(
-      {Key key, this.post, this.user, this.function, this.typeOfPostList})
-      : super(key: key);
+  const PostList({
+    Key key,
+    this.post,
+    this.user,
+    this.deletePostfunction,
+    this.typeOfPostList,
+    this.updatePostFunction,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +92,7 @@ class PostList extends StatelessWidget {
               ),
               typeOfPostList == TypeOfPostList.userPostList
                   ? GestureDetector(
-                      onTap: () {},
+                      onTap: () => updatePostFunction(),
                       child: Padding(
                         padding: EdgeInsets.only(right: 10),
                         child: Column(
@@ -103,7 +109,7 @@ class PostList extends StatelessWidget {
                   : Container(),
               typeOfPostList != TypeOfPostList.searchPostList
                   ? GestureDetector(
-                      onTap: () => function(),
+                      onTap: () => deletePostfunction(),
                       child: Column(
                         children: <Widget>[
                           Icon(

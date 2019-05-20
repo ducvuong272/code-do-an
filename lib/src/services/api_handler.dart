@@ -31,10 +31,12 @@ class ApiHandler {
 
   Future<String> getAllPostsByCityId(int cityId) async {
     final apiUrl = '$kAllPostsUrl/$cityId';
+    print(apiUrl);
     final response = await http.get(
       apiUrl,
       headers: kApiHeader,
     );
+    print(response.body);
     return response.statusCode == 200 ? response.body : 'Lỗi';
   }
 
@@ -182,7 +184,16 @@ class ApiHandler {
       headers: kApiHeader,
       body: json.encode(user.toUpdateUserInfoJson()),
     );
-    print(response);
+    return response;
+  }
+
+  Future<http.Response> deletePostByPostId(int postId) async {
+    final apiUrl = '$kDeleteUserPost/$postId';
+    final response = await http.delete(
+      apiUrl,
+      headers: kApiHeader,
+    );
+    print(response.body);
     return response;
   }
 }

@@ -77,7 +77,7 @@ class _UserSavedScreenState extends State<UserSavedScreen> {
                                       user: widget.user,
                                       typeOfPostList:
                                           TypeOfPostList.savedPostList,
-                                      function: () {
+                                      deletePostfunction: () {
                                         showDialog<AlertDialog>(
                                           context: context,
                                           builder: (context) => AlertDialog(
@@ -90,7 +90,6 @@ class _UserSavedScreenState extends State<UserSavedScreen> {
                                                     onPressed: () {
                                                       Navigator.of(context)
                                                           .pop();
-
                                                       _postBloc
                                                           .deleteSavedPostByPostId(
                                                         context: context,

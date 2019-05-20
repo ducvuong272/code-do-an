@@ -137,6 +137,7 @@ class AddPostBloc {
       future.then((onValue) {
         print(onValue["success"]);
         if (onValue['code'] == 200) {
+          print(userId);
           postBloc.getAllPostOfUser(userId);
           dialog.hideCustomDialog(context);
           dialog.showCustomDialog(

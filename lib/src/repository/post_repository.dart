@@ -73,7 +73,6 @@ class PostRepository {
       if (map['code'] == 200) {
         List<dynamic> listCategory = map['data'];
         for (int i = 0; i < listCategory.length; i++) {
-          print(listCategory[i]['TenLoaiHinhDiaDiem']);
           Map<String, dynamic> mapFromDataList = {};
           mapFromDataList.putIfAbsent('Id', () => listCategory[i]['Id_Cha']);
           mapFromDataList.putIfAbsent('TenLoaiHinhDiaDiem',
@@ -82,7 +81,6 @@ class PostRepository {
         }
       }
     }
-    print(categoryListMap);
     return categoryListMap;
   }
 

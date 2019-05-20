@@ -1,7 +1,7 @@
 String kAppName = 'Foody';
 String kApiUrl = 'https://projectapi-khanhpham.herokuapp.com';
 String kLoginUrl = '$kApiUrl/dang-nhap';
-String kAllPostsUrl = '$kApiUrl/dia-diem';
+String kAllPostsUrl = '$kApiUrl/lay-dia-diem';
 String kSingUpUrl = '$kApiUrl/dang-ky';
 String kAddPostUrl = '$kApiUrl/them-dia-diem';
 String kPostCommentUrl = '$kApiUrl/binh-luan';
@@ -18,4 +18,5 @@ String kGetPostDetailByPostId = '$kApiUrl/chi-tiet-dia-diem';
 String kDeleteSavedPostByPostId = '$kApiUrl/xoa-dia-diem-da-luu';
 String kChangePasswordByUserId = '$kApiUrl/doi-mat-khau';
 String kUpdateUserInformationByUserId = '$kApiUrl/sua-thong-tin-tai-khoan';
+String kDeleteUserPost = '$kApiUrl/xoa-dia-diem';
 Map<String, String> kApiHeader = {"Content-Type" : "application/json"};

@@ -3,6 +3,7 @@ import 'package:do_an_tn/src/models/enum.dart';
 import 'package:do_an_tn/src/models/post.dart';
 import 'package:do_an_tn/src/models/user.dart';
 import 'package:do_an_tn/src/screens/add_post_screen.dart';
+import 'package:do_an_tn/src/screens/update_post_screen.dart';
 import 'package:do_an_tn/src/widgets/login_notify_button.dart';
 import 'package:do_an_tn/src/widgets/post_list.dart';
 import 'package:flutter/material.dart';
@@ -86,6 +87,32 @@ class _PostsOfUserScreenState extends State<PostsOfUserScreen> {
                                         post: listPost[index],
                                         typeOfPostList:
                                             TypeOfPostList.userPostList,
+                                        deletePostfunction: () async {
+                                          await _postBloc
+                                              .deletePostByPostId(
+                                            listPost[index],
+                                            context,
+                                            _postBloc,
+                                            widget.user.userId,
+                                          )
+                                              .then((onValue) {
+                                            print(onValue);
+                                            if (onValue == 'success') {
+                                              listPost.removeAt(index);
+                                              setState(() {});
+                                            }
+                                          });
+                                        },
+                                        updatePostFunction: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  UpdatePostScreen(
+                                                    post: listPost[index],
+                                                  ),
+                                            ),
+                                          );
+                                        },
                                       );
                                     },
                                   ),
@@ -106,6 +133,7 @@ class _PostsOfUserScreenState extends State<PostsOfUserScreen> {
                   MaterialPageRoute(
                     builder: (context) => AddPostScreen(
                           user: widget.user,
+                          postBloc: _postBloc,
                         ),
                   ),
                 );

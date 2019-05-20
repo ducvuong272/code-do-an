@@ -60,6 +60,7 @@ class CommentBloc {
       imageUriList.add(
           await firebaseServices.uploadImageToFireBaseStorage(listImage[i]));
     }
+    print(imageUriList);
     return imageUriList;
   }
 
@@ -113,6 +114,7 @@ class CommentBloc {
           });
         });
       } else {
+        comment.commentImageUrlList = [];
         CommentRepository commentRepository =
             CommentRepository(comment: comment);
         Future future = commentRepository.postComment();
