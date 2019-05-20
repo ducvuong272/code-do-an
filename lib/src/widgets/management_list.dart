@@ -2,8 +2,16 @@ import 'package:flutter/material.dart';
 
 class ManagementList extends StatelessWidget {
   final Map<String, dynamic> map;
+  final Function updateFunction;
+  final Function addFunction;
 
-  const ManagementList({Key key, this.map}) : super(key: key);
+  const ManagementList({
+    Key key,
+    this.map,
+    this.updateFunction,
+    this.addFunction,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -28,48 +36,54 @@ class ManagementList extends StatelessWidget {
         ),
       ),
       child: Container(
-          height: 50,
-          color: Colors.white,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-      Container(
-        width: MediaQuery.of(context).size.width - 100,
-        child: Center(
-          child: Text(
-            '${map['TenLoaiHinhDiaDiem']}',
-            style: TextStyle(fontSize: 20),
-          ),
-        ),
-      ),
-      Expanded(
+        height: 50,
+        color: Colors.white,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            Column(
-              children: <Widget>[
-                Icon(
-                  Icons.edit,
-                  color: Colors.blue,
+            Container(
+              width: MediaQuery.of(context).size.width - 100,
+              child: Center(
+                child: Text(
+                  '${map['TenLoaiHinhDiaDiem']}',
+                  style: TextStyle(fontSize: 20),
                 ),
-                Text('Sửa'),
-              ],
+              ),
             ),
-            Column(
-              children: <Widget>[
-                Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                ),
-                Text('Xóa'),
-              ],
-            ),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () => updateFunction(),
+                    child: Column(
+                      children: <Widget>[
+                        Icon(
+                          Icons.edit,
+                          color: Colors.blue,
+                        ),
+                        Text('Sửa'),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: (){},
+                                      child: Column(
+                      children: <Widget>[
+                        Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                        Text('Xóa'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
-      )
-            ],
-          ),
-        ),
+      ),
     );
   }
 }

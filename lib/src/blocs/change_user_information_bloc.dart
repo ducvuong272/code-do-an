@@ -60,7 +60,7 @@ class UpdateUserInfoBloc {
           Map<String, dynamic> map = json.decode(response.body);
           if (map['code'] == 200) {
             // _userController.sink.add(user);
-            dialog.hideCustomDialog(context);
+            // dialog.hideCustomDialog(context);
             dialog.showCustomDialog(
               barrierDismissible: true,
               context: context,

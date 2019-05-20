@@ -1,5 +1,6 @@
 import 'package:do_an_tn/src/blocs/register_bloc.dart';
 import 'package:do_an_tn/src/models/user.dart';
+import 'package:do_an_tn/src/services/check_network_connectivity.dart';
 import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -71,8 +72,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         text: 'Họ',
                         textController: _firstNameController,
                         iconData: Icons.list,
-                        error:
-                            snapshot.hasError ? '${snapshot.error}' : null,
+                        error: snapshot.hasError ? '${snapshot.error}' : null,
                         context: context,
                         nextNode: _lastNameFocusNode,
                         currentNode: _firstNameFocusNode,
@@ -89,8 +89,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         textController: _lastNameController,
                         text: 'Tên',
                         iconData: Icons.list,
-                        error:
-                            snapshot.hasError ? '${snapshot.error}' : null,
+                        error: snapshot.hasError ? '${snapshot.error}' : null,
                         context: context,
                         nextNode: _emailFocusNode,
                         currentNode: _lastNameFocusNode,
@@ -129,9 +128,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 .requestFocus(_password2FocusNode);
                           },
                           decoration: InputDecoration(
-                            errorText: snapshot.hasError
-                                ? '${snapshot.error}'
-                                : null,
+                            errorText:
+                                snapshot.hasError ? '${snapshot.error}' : null,
                             errorStyle: TextStyle(fontSize: 15),
                             prefixIcon: Padding(
                               padding: EdgeInsets.only(right: 10),
@@ -188,9 +186,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _passwordController2,
                           focusNode: _password2FocusNode,
                           decoration: InputDecoration(
-                            errorText: snapshot.hasError
-                                ? '${snapshot.error}'
-                                : null,
+                            errorText:
+                                snapshot.hasError ? '${snapshot.error}' : null,
                             contentPadding: EdgeInsets.all(0),
                             errorStyle: TextStyle(fontSize: 15),
                             prefixIcon: Padding(
@@ -237,31 +234,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 RaisedButton(
                   color: Color(0xff557ce0),
                   onPressed: () {
-                    var _isValidInfo = _registerBloc.isValidInfo(
-                      _emailController.text,
-                      _firstNameController.text,
-                      _lastNameController.text,
-                      _userNameController.text,
-                      _passwordController1.text,
-                      _passwordController2.text,
-                    );
-                    if (_isValidInfo) {
-                      CustomDialog dialog = CustomDialog();
-                      dialog.showCustomDialog(
-                        barrierDismissible: false,
-                        showprogressIndicator: true,
-                        msg: 'Đang tiến hành đăng ký...',
-                        context: context,
-                      );
-                      User user = User(
-                        username: _userNameController.text,
-                        password: _passwordController1.text,
-                        firstName: _firstNameController.text,
-                        lastName: _lastNameController.text,
-                        email: _emailController.text,
-                      );
-                      _registerBloc.signUp(user, context);
-                    }
+                    NetworkConnection()
+                        .checkNetworkConnectivity(context)
+                        .then((onValue) {
+                      if (onValue == true) {
+                        var _isValidInfo = _registerBloc.isValidInfo(
+                          _emailController.text,
+                          _firstNameController.text,
+                          _lastNameController.text,
+                          _userNameController.text,
+                          _passwordController1.text,
+                          _passwordController2.text,
+                        );
+                        if (_isValidInfo) {
+                          CustomDialog dialog = CustomDialog();
+                          dialog.showCustomDialog(
+                            barrierDismissible: false,
+                            showprogressIndicator: true,
+                            msg: 'Đang tiến hành đăng ký...',
+                            context: context,
+                          );
+                          User user = User(
+                            username: _userNameController.text,
+                            password: _passwordController1.text,
+                            firstName: _firstNameController.text,
+                            lastName: _lastNameController.text,
+                            email: _emailController.text,
+                          );
+                          _registerBloc.signUp(user, context);
+                        }
+                      }
+                    });
                   },
                   child: Container(
                     height: 50,

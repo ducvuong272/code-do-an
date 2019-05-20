@@ -1,4 +1,5 @@
 import 'package:do_an_tn/src/blocs/send_email_bloc.dart';
+import 'package:do_an_tn/src/services/check_network_connectivity.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -79,8 +80,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     elevation: 0.0,
                     color: Colors.blue,
                     onPressed: () {
-                      _emailBloc.recoverPassword(
-                          context, _emailController.text);
+                      NetworkConnection()
+                          .checkNetworkConnectivity(context)
+                          .then((onValue) {
+                        if (onValue == true) {
+                          _emailBloc.recoverPassword(
+                              context, _emailController.text);
+                        }
+                      });
                     },
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

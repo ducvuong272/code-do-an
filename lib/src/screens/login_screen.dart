@@ -1,4 +1,5 @@
 import 'package:do_an_tn/src/blocs/login_bloc.dart';
+import 'package:do_an_tn/src/services/check_network_connectivity.dart';
 import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -190,13 +191,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   RaisedButton(
                     color: Color(0xff50ce5f),
                     onPressed: () {
-                      CustomDialog _dialog = CustomDialog();
-                      _loginBloc.login(
-                        _userNameController.text.trim(),
-                        _passwordController.text,
-                        context,
-                        _dialog,
-                      );
+                      NetworkConnection()
+                          .checkNetworkConnectivity(context)
+                          .then((onValue) {
+                        if (onValue == true) {
+                          CustomDialog _dialog = CustomDialog();
+                          _loginBloc.login(
+                            _userNameController.text.trim(),
+                            _passwordController.text,
+                            context,
+                            _dialog,
+                          );
+                        }
+                      });
                     },
                     child: Container(
                       height: 50,

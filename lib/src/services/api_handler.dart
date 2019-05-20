@@ -193,6 +193,26 @@ class ApiHandler {
       apiUrl,
       headers: kApiHeader,
     );
+    return response;
+  }
+
+  Future<http.Response> addPostCategory(String postCategory) async {
+    final apiUrl = kAddPostCategory;
+    Map<String, dynamic> map = {"TenLoaiHinhDiaDiem": '$postCategory'};
+    final response = await http.post(
+      apiUrl,
+      body: json.encode(map),
+      headers: kApiHeader,
+    );
+    return response;
+  }
+
+  Future<http.Response> deletePostCategoryById(int postCategoryId) async {
+    final apiUrl = '$kDeletePostCategory/$postCategoryId';
+    final response = await http.delete(
+      apiUrl,
+      headers: kApiHeader,
+    );
     print(response.body);
     return response;
   }

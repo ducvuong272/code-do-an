@@ -19,4 +19,6 @@ String kDeleteSavedPostByPostId = '$kApiUrl/xoa-dia-diem-da-luu';
 String kChangePasswordByUserId = '$kApiUrl/doi-mat-khau';
 String kUpdateUserInformationByUserId = '$kApiUrl/sua-thong-tin-tai-khoan';
 String kDeleteUserPost = '$kApiUrl/xoa-dia-diem';
+String kAddPostCategory = '$kApiUrl/them-loai-hinh-dia-diem';
+String kDeletePostCategory = '$kApiUrl/xoa-loai-hinh-dia-diem';
 Map<String, String> kApiHeader = {"Content-Type" : "application/json"};
