@@ -42,7 +42,7 @@ class UpdateUserInfoBloc {
                 title: Text('Lỗi'),
               ));
     } else {
-      String imageUri = '';
+      String imageUri = user.imageUrl;
       CustomDialog dialog = CustomDialog();
       dialog.showCustomDialog(
         barrierDismissible: false,
@@ -61,6 +61,7 @@ class UpdateUserInfoBloc {
           if (map['code'] == 200) {
             // _userController.sink.add(user);
             // dialog.hideCustomDialog(context);
+            dialog.hideCustomDialog(context);
             dialog.showCustomDialog(
               barrierDismissible: true,
               context: context,
@@ -72,32 +73,33 @@ class UpdateUserInfoBloc {
             dialog.showCustomDialog(
               barrierDismissible: true,
               context: context,
-              msg: 'Cập nhật thông tin tài thất bại!',
+              msg: 'Cập nhật thông tin tài khoản thất bại!',
               showprogressIndicator: false,
             );
           }
         }
-      }
-      user.imageUrl = imageUri;
-      final response = await _apiHandler.updateUserInformationByUserId(user);
-      if (response.statusCode == 200) {
-        Map<String, dynamic> map = json.decode(response.body);
-        if (map['code'] == 200) {
-          dialog.hideCustomDialog(context);
-          dialog.showCustomDialog(
-            barrierDismissible: true,
-            context: context,
-            msg: 'Cập nhật thông tin tài khoản thành công!',
-            showprogressIndicator: false,
-          );
-        } else {
-          dialog.hideCustomDialog(context);
-          dialog.showCustomDialog(
-            barrierDismissible: true,
-            context: context,
-            msg: 'Cập nhật thông tin tài khoản thất bại!',
-            showprogressIndicator: false,
-          );
+      } else {
+        user.imageUrl = imageUri;
+        final response = await _apiHandler.updateUserInformationByUserId(user);
+        if (response.statusCode == 200) {
+          Map<String, dynamic> map = json.decode(response.body);
+          if (map['code'] == 200) {
+            dialog.hideCustomDialog(context);
+            dialog.showCustomDialog(
+              barrierDismissible: true,
+              context: context,
+              msg: 'Cập nhật thông tin tài khoản thành công!',
+              showprogressIndicator: false,
+            );
+          } else {
+            dialog.hideCustomDialog(context);
+            dialog.showCustomDialog(
+              barrierDismissible: true,
+              context: context,
+              msg: 'Cập nhật thông tin tài khoản thất bại!',
+              showprogressIndicator: false,
+            );
+          }
         }
       }
     }

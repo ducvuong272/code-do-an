@@ -488,7 +488,7 @@ class PostDetailScreenState extends State<PostDetailScreen> {
                                       postTitle: post.postTitle,
                                       commentList: post.commentList,
                                       scrollController: _scrollController,
-                                    )
+                                    ),
                             ],
                           ),
                         ],

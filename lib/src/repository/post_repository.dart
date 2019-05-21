@@ -74,7 +74,7 @@ class PostRepository {
         List<dynamic> listCategory = map['data'];
         for (int i = 0; i < listCategory.length; i++) {
           Map<String, dynamic> mapFromDataList = {};
-          mapFromDataList.putIfAbsent('Id', () => listCategory[i]['Id_Cha']);
+          mapFromDataList.putIfAbsent('Id', () => listCategory[i]['Id_LoaiHinhDiaDiem']);
           mapFromDataList.putIfAbsent('TenLoaiHinhDiaDiem',
               () => listCategory[i]['TenLoaiHinhDiaDiem']);
           categoryListMap.add(mapFromDataList);

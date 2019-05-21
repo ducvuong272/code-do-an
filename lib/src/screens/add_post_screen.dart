@@ -101,15 +101,14 @@ class AddPostScreenState extends State<AddPostScreen> {
                     barrierDismissible: true,
                   );
                 } else {
-                  var timeOpen = _time1.format(context);
-                  if(timeOpen.length < 8){
-                    timeOpen = '0$timeOpen';
-                  }
-                  print(timeOpen);
+                  var timeOpen = _time1.format(context);                  
+                  // if(timeOpen.length < 8){
+                  //   timeOpen = '0$timeOpen';
+                  // }
                   var timeClose = _time2.format(context);
-                  if(timeClose.length < 8){
-                    timeClose = '0$timeClose';
-                  }
+                  // if(timeClose.length < 8){
+                  //   timeClose = '0$timeClose';
+                  // }
                   Post post = Post(
                     userId: widget.user.userId,
                     postTitle: _postTitleController.text,

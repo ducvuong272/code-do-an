@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class ManagementList extends StatelessWidget {
   final Map<String, dynamic> map;
   final Function updateFunction;
-  final Function addFunction;
+  final Function deleteFunction;
 
   const ManagementList({
     Key key,
     this.map,
     this.updateFunction,
-    this.addFunction,
+    this.deleteFunction,
   }) : super(key: key);
 
   @override
@@ -55,7 +55,9 @@ class ManagementList extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   GestureDetector(
-                    onTap: () => updateFunction(),
+                    onTap: () {
+                      updateFunction();
+                    },
                     child: Column(
                       children: <Widget>[
                         Icon(
@@ -67,8 +69,10 @@ class ManagementList extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: (){},
-                                      child: Column(
+                    onTap: () {
+                      deleteFunction();
+                    },
+                    child: Column(
                       children: <Widget>[
                         Icon(
                           Icons.delete,

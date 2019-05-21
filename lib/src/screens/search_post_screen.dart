@@ -96,7 +96,7 @@ class SearchPostScreenState extends State<SearchPostScreen>
                           return PostList(
                             post: _listPostData[index],
                             typeOfPostList: TypeOfPostList.searchPostList,
-                            user: widget.user,
+                            user: widget.user,                            
                           );
                         },
                       );

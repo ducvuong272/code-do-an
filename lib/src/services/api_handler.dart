@@ -216,4 +216,16 @@ class ApiHandler {
     print(response.body);
     return response;
   }
+
+  Future<http.Response> updatePostCategory(
+      int postCategoryId, String updateName) async {
+    final apiUrl = '$kUpdatePostCategory/$postCategoryId';
+    Map<String, dynamic> inputMap = {"TenLoaiHinhDiaDiem": "$updateName"};
+    final response = await http.put(
+      apiUrl,
+      body: json.encode(inputMap),
+      headers: kApiHeader,
+    );
+    return response;
+  }
 }

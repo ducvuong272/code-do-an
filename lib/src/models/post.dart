@@ -62,7 +62,7 @@ class Post {
     address = json["DiaChi"];
     imageUrl = json["TapTinDaiDien"];
     userId = json["Id_TaiKhoan"];
-    ratingPoint = json["DanhGia"];
+    ratingPoint = json["DiemDanhGia"];
   }
 
   Post.fromPostDetailJson(Map<String, dynamic> json) {
@@ -89,9 +89,14 @@ class Post {
     numberOfComments = json['SoLuongBinhLuan'];
     numberOfUserSavedPost = json['SoLuongLuuLai'];
     numberOfImage = json['SoLuongHinhAnh'];
-    var commentListMap =
-        (json['ListBinhLuan'] as List).map((f) => Comment.fromJson(f)).toList();
-    commentList = commentListMap;
+    if (json['ListBinhLuan'] != null) {
+      var commentListMap = (json['ListBinhLuan'] as List)
+          .map((f) => Comment.fromJson(f))
+          .toList();
+      commentList = commentListMap;
+    } else {
+      commentList = [];
+    }
   }
 
   Post.fromSavedPostJson(Map<String, dynamic> json) {

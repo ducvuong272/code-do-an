@@ -80,9 +80,10 @@ class PostList extends StatelessWidget {
                           ),
                         ),
                         CircleAvatar(
-                          child: post.ratingPoint == null
-                              ? Text('N/A')
-                              : Text(post.ratingPoint),
+                          child:
+                              post.ratingPoint == null || post.ratingPoint == ''
+                                  ? Text('N/A')
+                                  : Text(post.ratingPoint),
                           maxRadius: 16,
                         ),
                       ],
