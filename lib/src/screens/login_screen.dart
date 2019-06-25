@@ -1,3 +1,6 @@
+import 'package:do_an_tn/src/blocs/login_bloc.dart';
+import 'package:do_an_tn/src/services/check_network_connectivity.dart';
+import 'package:do_an_tn/src/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -18,6 +21,14 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _userNameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   bool _passwordInvisible = true;
+  FocusNode _usernameFocusNode = FocusNode(), _passwordFocusNode = FocusNode();
+  LoginBloc _loginBloc = LoginBloc();
+
+  @override
+  void dispose() {
+    _loginBloc.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Column(
           children: <Widget>[
             Container(
-              height: 350,
+              padding: EdgeInsets.only(bottom: 20),
               margin: EdgeInsets.fromLTRB(30, 150, 30, 20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
@@ -60,18 +71,35 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   Container(
                     padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                    child: TextField(
-                      autocorrect: false,
-                      controller: _userNameController,
-                      decoration: InputDecoration(
-                        suffix: GestureDetector(
-                          child: Icon(
-                            Icons.clear,
-                          ),
-                          onTap: () => _userNameController.clear(),
-                        ),
-                      ),
-                    ),
+                    child: StreamBuilder<Object>(
+                        stream: _loginBloc.usernameStream,
+                        builder: (context, snapshot) {
+                          return TextField(
+                            style: TextStyle(fontSize: 25),
+                            autocorrect: false,
+                            controller: _userNameController,
+                            focusNode: _usernameFocusNode,
+                            onEditingComplete: () {
+                              FocusScope.of(context)
+                                  .requestFocus(_passwordFocusNode);
+                              _passwordController.selection = TextSelection(
+                                baseOffset: 0,
+                                extentOffset: _passwordController.text.length,
+                              );
+                            },
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(0),
+                              errorText:
+                                  snapshot.hasError ? snapshot.error : null,
+                              suffix: GestureDetector(
+                                child: Icon(
+                                  Icons.clear,
+                                ),
+                                onTap: () => _userNameController.clear(),
+                              ),
+                            ),
+                          );
+                        }),
                   ),
                   Row(
                     children: <Widget>[
@@ -97,42 +125,86 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   Container(
-                    padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
-                    child: TextField(
-                      obscureText: _passwordInvisible,
-                      autocorrect: false,
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                        suffix: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.only(right: 15),
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _passwordInvisible = !_passwordInvisible;
-                                  });
-                                },
-                                child: Icon(
-                                  Icons.remove_red_eye,
-                                ),
+                    padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+                    child: StreamBuilder<Object>(
+                        stream: _loginBloc.passwordStream,
+                        builder: (context, snapshot) {
+                          return TextField(
+                            style: TextStyle(fontSize: 25),
+                            obscureText: _passwordInvisible,
+                            autocorrect: false,
+                            controller: _passwordController,
+                            focusNode: _passwordFocusNode,
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(0),
+                              errorText:
+                                  snapshot.hasError ? snapshot.error : null,
+                              suffix: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Container(
+                                    padding: EdgeInsets.only(right: 15),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          _passwordInvisible =
+                                              !_passwordInvisible;
+                                        });
+                                      },
+                                      child: Icon(
+                                        Icons.remove_red_eye,
+                                      ),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () => _passwordController.clear(),
+                                    child: Icon(
+                                      Icons.clear,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            GestureDetector(
-                              onTap: () => _passwordController.clear(),
-                              child: Icon(
-                                Icons.clear,
-                              ),
+                          );
+                        }),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 20, right: 25),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        GestureDetector(
+                          onTap: () {
+                            widget.onForgetPassTapped();
+                          },
+                          child: Text(
+                            'Quên mật khẩu ?',
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              fontSize: 20,
                             ),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
                   RaisedButton(
                     color: Color(0xff50ce5f),
-                    onPressed: () {},
+                    onPressed: () {
+                      NetworkConnection()
+                          .checkNetworkConnectivity(context)
+                          .then((onValue) {
+                        if (onValue == true) {
+                          CustomDialog _dialog = CustomDialog();
+                          _loginBloc.login(
+                            _userNameController.text.trim(),
+                            _passwordController.text,
+                            context,
+                            _dialog,
+                          );
+                        }
+                      });
+                    },
                     child: Container(
                       height: 50,
                       width: 250,
@@ -148,60 +220,33 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     elevation: 0.0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(30),
                     ),
                   ),
-                ],
-              ),
-            ),
-            Container(
-              height: 100,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      widget.onForgetPassTapped();
-                    },
-                    child: Text(
-                      'Quên mật khẩu ?',
-                      style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Text(
-                      'Hoặc',
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  RaisedButton(
-                    color: Color(0xff557ce0),
-                    onPressed: () {
-                      widget.onSignUpTapped();
-                    },
-                    child: Container(
-                      height: 50,
-                      width: 250,
-                      child: Center(
-                        child: Text(
-                          'Tại tài khoản mới',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
+                  Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: RaisedButton(
+                      color: Color(0xff557ce0),
+                      onPressed: () {
+                        widget.onSignUpTapped();
+                      },
+                      child: Container(
+                        height: 50,
+                        width: 250,
+                        child: Center(
+                          child: Text(
+                            'Tạo tài khoản mới',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    elevation: 0.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                      elevation: 0.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
                     ),
                   ),
                 ],

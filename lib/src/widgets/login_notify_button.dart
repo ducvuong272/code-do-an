@@ -9,16 +9,18 @@ class LoginNotifyWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(
-            Icons.lock,
-            size: 100,
-          ),
-          _loginNotifyButton(context),
-        ],
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.lock,
+              size: 100,
+            ),
+            _loginNotifyButton(context),
+          ],
+        ),
       ),
     );
   }
@@ -31,6 +33,7 @@ class LoginNotifyWidget extends StatelessWidget {
             MaterialPageRoute(builder: (context) => LoginDashboard()));
       },
       child: Container(
+        height: 50,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           mainAxisSize: MainAxisSize.min,
@@ -38,14 +41,17 @@ class LoginNotifyWidget extends StatelessWidget {
             Icon(
               Icons.account_circle,
               color: Colors.white,
-              size: 35.0,
+              size: 50.0,
             ),
             Padding(
               padding: EdgeInsets.only(left: 10),
             ),
             Text(
-              'Vui lòng đăng nhập để tiếp tục',
-              style: TextStyle(color: Colors.white),
+              'Đăng nhập để tiếp tục',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
             ),
           ],
         ),

@@ -1,8 +1,17 @@
+import 'package:do_an_tn/src/models/user.dart';
+import 'package:do_an_tn/src/screens/user_account_screen.dart';
+import 'package:do_an_tn/src/screens/user_post_screen.dart';
+import 'package:do_an_tn/src/screens/user_saved_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:do_an_tn/src/utils/export_screen.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
+import 'home_screen.dart';
+
 class DashboardScreen extends StatefulWidget {
+  final User user;
+
+  const DashboardScreen({Key key, this.user}) : super(key: key);
+
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
 }
@@ -10,17 +19,11 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   SwiperController _pageController = new SwiperController();
   int _index = 0;
-  List<Widget> _widgetList = [
-    HomeScreen(),
-    UserSavedScreen(),
-    NotificationScreen(),
-    UserAccountScreen(),
-  ];
 
   @override
   void dispose() {
     _pageController.dispose();
-    print('object');
+    print('home dashboard disposed');
     super.dispose();
   }
 
@@ -30,6 +33,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> _widgetList = [
+      HomeScreen(
+        user: widget.user,
+      ),
+      UserSavedScreen(
+        user: widget.user,
+      ),
+      PostsOfUserScreen(
+        user: widget.user,
+      ),
+      UserAccountScreen(
+        user: widget.user,
+      ),
+    ];
     return Scaffold(
       body: Swiper(
         itemBuilder: (context, index) =>
@@ -55,28 +72,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.home,
-              color: _index == 0 ? Colors.purple : Colors.black38,
+              color: _index == 0 ? Colors.red : Colors.black38,
             ),
             title: Text('Trang chủ'),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.library_books,
-              color: _index == 1 ? Colors.purple : Colors.black38,
+              color: _index == 1 ? Colors.red : Colors.black38,
             ),
             title: Text('Đã Lưu'),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.notification_important,
-              color: _index == 2 ? Colors.purple : Colors.black38,
+              color: _index == 2 ? Colors.red : Colors.black38,
             ),
-            title: Text('Thông báo'),
+            title: Text('Địa điểm của tôi'),
           ),
           BottomNavigationBarItem(
             icon: Icon(
               Icons.account_circle,
-              color: _index == 3 ? Colors.purple : Colors.black38,
+              color: _index == 3 ? Colors.red : Colors.black38,
             ),
             title: Text('Tài khoản'),
           ),
